@@ -1,0 +1,9 @@
+{
+	"status": "error",
+	"message": "it broke",
+	"code": 15,
+	"data": {
+		"you": "broke",
+		"it": "bad"
+	}
+}
