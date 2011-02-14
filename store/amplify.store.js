@@ -41,7 +41,7 @@ function createSimpleStorage( storageType, storage ) {
 	var values = storage.__amplify__ ? JSON.parse( storage.__amplify__ ) : {};
 	amplify.store.addType( storageType, function( key, value, options ) {
 		var ret = value,
-			now = $.now(),
+			now = (new Date()).getTime(),
 			storedValue,
 			parsed;
 
@@ -128,7 +128,7 @@ if ( window.globalStorage ) {
 
 		amplify.store.addType( "userData", function( key, value, options ) {
 			var ret = value,
-				now = $.now(),
+				now = (new Date()).getTime(),
 				attr,
 				parsed;
 

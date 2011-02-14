@@ -655,8 +655,10 @@ asyncTest( "cache: true", function() {
 	expect( 14 );
 
 	var ajaxCalls = 0;
-	$( "#ajax-listener" ).ajaxComplete(function() {
-		ok( !ajaxCalls++, "ajax call completed" );
+	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
+		if ( xhr.statusText !== "abort" ) {
+			ok( !ajaxCalls++, "ajax call completed" );
+		}
 	});
 	amplify.request.define( "memory-cache", "ajax", {
 		url: "data/data.json",
@@ -727,8 +729,10 @@ asyncTest( "cache: Number", function() {
 	expect( 22 );
 	
 	var shouldCache = false;
-	$( "#ajax-listener" ).ajaxComplete(function() {
-		ok( !shouldCache, "ajax call completed" );
+	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
+		if ( xhr.statusText !== "abort" ) {
+			ok( !shouldCache, "ajax call completed" );
+		}
 	});
 	amplify.request.define( "cache-duration", "ajax", {
 		url: "data/data.json",
@@ -789,8 +793,10 @@ if ( amplify.store ) {
 		expect( 14 );
 
 		var ajaxCalls = 0;
-		$( "#ajax-listener" ).ajaxComplete(function() {
-			ok( !ajaxCalls++, "ajax call completed" );
+		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
+			if ( xhr.statusText !== "abort" ) {
+				ok( !ajaxCalls++, "ajax call completed" );
+			}
 		});
 		amplify.request.define( "persist-cache", "ajax", {
 			url: "data/data.json",
