@@ -101,7 +101,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 			});
 		}
 
-		$.ajax({
+		$.ajax($.extend( {}, defnSettings, {
 			url: url,
 			type: defnSettings.type,
 			data: data,
@@ -123,7 +123,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 				return ret && amplify.publish( "request.before.ajax",
 					defnSettings, settings, ajaxSettings, xhr );
 			}
-		});
+		}) );
 	};
 };
 
