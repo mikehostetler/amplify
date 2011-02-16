@@ -3,7 +3,7 @@
  * 
  * Version: @VERSION
  * Released: @DATE
- * Source: http://amplifyjs.com/request
+ * Source: http://amplifyjs.com
  * 
  * Copyright 2011 appendTo LLC. (http://appendto.com/team)
  * Dual licensed under the MIT or GPL licenses.
