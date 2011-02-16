@@ -121,16 +121,6 @@ There is a built-in memory cache. You can pass a boolean to enable caching of a 
 You can also pass a number to specify that the response should be cached for a certain amount of time.
 For example, cache: 30 will cache the response for 30 milliseconds.
 
-### Persistent Client-side Cache
-
-You can also persist a cache if `amplify.store` has been loaded.
-You can specify `cache: "persist"` to cache in the default store
-or you can specify any of the specific stores available, e.g., `cache: "localStorage"`.
-
-### Custom Cache
-
-You can also create additional cache types by adding to the `amplify.request.cache` hash.
-
 `cache: boolean`
 
 Cache the data in memory for the remainder of this page load.
@@ -142,8 +132,16 @@ Cache the data in memory for the specified number of milliseconds.
 `cache: string`
 
 Cache the data in memory using a pre-defined caching mechanism.
-`persist` is provided as a mechanism for caching results when
-`amplify.store` is loaded.
+
+#### Persistent Client-side Cache
+
+You can also persist a cache if `amplify.store` has been loaded.
+You can specify `cache: "persist"` to cache in the default store
+or you can specify any of the specific stores available, e.g., `cache: "localStorage"`.
+
+### Custom Cache
+
+You can also create additional cache types by adding to the `amplify.request.cache` hash.
 
 `amplify.request.cache.customCacheName( hash resource, hash settings, hash ajaxSettings )`
 
