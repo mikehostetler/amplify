@@ -251,7 +251,16 @@ Fail ( or Error ):
 	}
 
 Example:
-	amplify.request.decoders.appEnvelope = 
+	amplify.request.decoders.appEnvelope =
+		function ( data, status, xhr, success, error ) {
+			if ( data.status === "success" ) {
+				success ( data.data );
+			} else if ( data.status === "fail" || data.status === "error" ) {
+				error( data.message, data.status );
+			} else {
+				error( data.message , "fatal" )
+			}
+		};
 
 	amplify.request.define( "decoderExample", "ajax" {
 		error: function( message, level ) {
