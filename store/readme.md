@@ -21,8 +21,9 @@ Stores a value for a given key using the default storage type.
 
 * `key`: Identifier for the value being stored.
 * `value`: The value to store. The value can be anything that can be serialized as JSON.
-* [options]: a set of key/value pairs that relate to settings for storing the value.
+* [`options`]: A set of key/value pairs that relate to settings for storing the value.
 
+ 
 
 	amplify.store( string key )
 
@@ -118,7 +119,7 @@ bandwidth and performance overhead incurred for all requests.
 
 ### Store data to a cookie
 
-	amplify.store.cookie( "cookieExample", { foo3: "qux"} );
+	amplify.store.cookie( "cookieExample", { foo3: "qux" } );
 	// retrieve the data later via the key
 	var myCookieValue = amplify.store.cookie( "cookieExample" );
 	myCookieValue.foo3; // qux

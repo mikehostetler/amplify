@@ -2,7 +2,7 @@
 
 The core of `amplify` provides a pub/sub system.
 
-## Subscribing to a message.
+## Subscribing to a message
 
 	amplify.subscribe( string topic, function callback )
 	amplify.subscribe( string topic, object context, function callback )
@@ -16,7 +16,7 @@ The core of `amplify` provides a pub/sub system.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
 
-## Removing a subscription.
+## Removing a subscription
 
 	amplify.unsubscribe( string topic, function callback )
 
@@ -30,7 +30,7 @@ The core of `amplify` provides a pub/sub system.
 * `topic`: The name of the message to publish.
 * Any additional parameters will be passed to the subscriptions.
 
-> `amplify.publish` Returns a boolean indicating whether any subscriptions returned `false`.
+> `amplify.publish` returns a boolean indicating whether any subscriptions returned `false`.
 > The return value is `true` if none of the subscriptions returned `false`, and `false` otherwise. Note that only one subscription can return `false` because doing so will prevent additional subscriptions from being invoked.
 
 ## Examples
@@ -42,7 +42,7 @@ published on the bus for any event (user or code related) that needs communicate
 is needed along with the event.
 
 	amplify.subscribe( "nodataexample", function() {
-		alert( "nodatademo topic published!" );
+		alert( "nodataexample topic published!" );
 	});
 	//...
 	amplify.publish( "nodataexample" );
@@ -73,13 +73,13 @@ callback. It can be a reasonable strategy to have the context be set to
 a jQuery object that will be used inside of the subscription, or even a
 native DOM element.
 > Note: the following example assumes jQuery is already loaded on the
-> page, and assumes one paragraph within the body of the page.
+> page, and assumes at least one paragraph exists within the body of the page.
 
-	amplify.subscribe( "datacontextexample", $( "p:first" ) function( data ) {
-		this.text( data ); // first p element would have "foo bar baz" as text
+	amplify.subscribe( "datacontextexample", $( "p:first" ), function( data ) {
+		this.text( data.exampleText ); // first p element would have "foo bar baz" as text
 	});
 	//...
-	amplify.subscribe( "datacontextexample", { exampleText: "foo bar baz"} );
+	amplify.publish( "datacontextexample", { exampleText: "foo bar baz" } );
 
 ### Subscribe to a topic with high priority
 
@@ -88,14 +88,14 @@ handler or anytime data may need to be checked or augmented before
 proceeding.
 
 	amplify.subscribe( "priorityexample", function( data ) {
+		alert( data.foo );
+	});
+
+	amplify.subscribe( "priorityexample", function( data ) {
 		if ( data.foo === "oops" ) {
 			return false;
 		}
 	}, 1 );
-
-	amplify.subscribe( "priorityexample", function( data ) {
-		alert( data.foo );
-	});
 	//...
 	amplify.publish( "priorityexample", { foo: "bar" } );
-	amplify.publish( "priorityexample", { foo: "bar" } );
+	amplify.publish( "priorityexample", { foo: "oops" } );

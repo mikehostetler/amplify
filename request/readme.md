@@ -23,6 +23,8 @@ Request a resource.
 * `data`: an object literal of data to be sent to the resource.
 * `callback`: a function to call once the resource has been retrieved.
 
+ 
+
 	amplify.request( hash settings )
 
 Request a resource.
@@ -33,7 +35,11 @@ Request a resource.
   * `success` (optional): Function to invoke on success.
   * `error` (optional): Function to invoke on error.
 
+ 
+
 	amplify.request.define( string resourceId , string requestType [, hash settings ] )
+
+Define a resource.
 
 * `resourceId`: Identifier string for the resource.
 * `requestType`: The type of data retrieval method from the server. See the [request types][requestTypes] sections for more information.
@@ -44,13 +50,15 @@ Request a resource.
   * [ajax and ajax-poll] decoder: see the [decoder][decoder] section for more details
   * [ajax-poll] frequency: the polling frequency in milliseconds.
 
+ 
+
 	amplify.request.define( string resourceId , function resource )
 
 Define a custom request.
 
-* `resourceId`: Unique identifier used to make a request later.
+* `resourceId`: Identifier string for the resource.
 * `resource`: Function to handle requests. Receives a hash with the following properties:
-  * `resourceId`: Identifier for the request.
+  * `resourceId`: Identifier string for the resource.
   * `data`: Data provided by the user.
   * `success`: Callback to invoke on success.
   * `error`: Callback to invoke on error.
@@ -117,9 +125,9 @@ of your choosing.
 
 ### In-memory Cache
 
-There is a built-in memory cache. You can pass a boolean to enable caching of a request, e.g., cache: true.
+There is a built-in memory cache. You can pass a boolean to enable caching of a request, e.g., `cache: true`.
 You can also pass a number to specify that the response should be cached for a certain amount of time.
-For example, cache: 30 will cache the response for 30 milliseconds.
+For example, `cache: 30` will cache the response for 30 milliseconds.
 
 `cache: boolean`
 
@@ -129,9 +137,11 @@ Cache the data in memory for the remainder of this page load.
 
 Cache the data in memory for the specified number of milliseconds.
 
+### Named Caches
+
 `cache: string`
 
-Cache the data in memory using a pre-defined caching mechanism.
+Cache the data using a pre-defined caching mechanism.
 
 #### Persistent Client-side Cache
 
@@ -143,19 +153,19 @@ or you can specify any of the specific stores available, e.g., `cache: "localSto
 
 You can also create additional cache types by adding to the `amplify.request.cache` hash.
 
-`amplify.request.cache.customCacheName( hash resource, hash settings, hash ajaxSettings )`
+`amplify.request.cache.customCacheName = function( hash resource, hash settings, hash ajaxSettings )`
 
 Definition for a caching mechanism. `customCacheName` should be replaced
 with the custom name of your choosing.
 
 * `resource`: The definition of the resource being requested.
 * `settings`: The settings for the request.
-* `ajaxSettings`: The settings that will be passed to `jQuery.ajax()`
+* `ajaxSettings`: The settings that will be passed to `jQuery.ajax()`.
 
 ## Examples
 
-The examples assume the the request location returns the following as
-json unless specified others:
+The examples assume that the request location returns the following as
+json unless specified otherwise:
 
 	{
 		"foo" : "bar",
@@ -180,7 +190,7 @@ json unless specified others:
 	amplify.request.define( "ajaxExample2", "ajax", {
 		url: "/myApiUrl",
 		dataType: "json",
-		type: "GET"
+		type: "GET",
 		cache: "persist"
 	});
 
@@ -202,7 +212,7 @@ json unless specified others:
 	})
 
 	// later in code
-	amplify.request( "ajaxRESTFul",
+	amplify.request( "ajaxRESTFulExample",
 		{
 			type: "foo",
 			id: "bar"
@@ -224,7 +234,7 @@ json unless specified others:
 	amplify.request( "ajaxPostExample",
 		{
 			type: "foo",
-			id: "bar")
+			id: "bar"
 		},
 		functon( data ) {
 			data.foo; // bar
