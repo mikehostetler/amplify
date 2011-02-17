@@ -17,7 +17,7 @@ Subscribe to a message.
 * [`priority`]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
-
+&nbsp;
 
 	amplify.unsubscribe( string topic, function callback )
 
@@ -25,7 +25,7 @@ Remove a subscription.
 
 * `topic`: The topic being unsubscribed from.
 * `callback`: The callback that was originally subscribed.
-
+&nbsp;
 
 	amplify.publish( string topic, ... )
 
