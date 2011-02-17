@@ -2,12 +2,14 @@
 
 The core of `amplify` provides a pub/sub system.
 
-## Subscribing to a message
+## Usage
 
 	amplify.subscribe( string topic, function callback )
 	amplify.subscribe( string topic, object context, function callback )
 	amplify.subscribe( string topic, function callback, number priority )
 	amplify.subscribe( string topic, object context, function callback, number priority )
+
+Subscribe to a message.
 
 * `topic`: Name of the message to subscribe to.
 * [`context`]: What `this` will be when the callback is invoked.
@@ -16,16 +18,18 @@ The core of `amplify` provides a pub/sub system.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
 
-## Removing a subscription
 
 	amplify.unsubscribe( string topic, function callback )
+
+Remove a subscription.
 
 * `topic`: The topic being unsubscribed from.
 * `callback`: The callback that was originally subscribed.
 
-## Publishing a message
 
 	amplify.publish( string topic, ... )
+
+Publish a message.
 
 * `topic`: The name of the message to publish.
 * Any additional parameters will be passed to the subscriptions.

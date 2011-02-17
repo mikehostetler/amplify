@@ -268,21 +268,24 @@ Example:
 			} else if ( data.status === "fail" || data.status === "error" ) {
 				error( data.message, data.status );
 			} else {
-				error( data.message , "fatal" )
+				error( data.message , "fatal" );
 			}
 		};
 
-	amplify.request.define( "decoderExample", "ajax" {
-		error: function( message, level ) {
-			alert( "always handle errors with alerts." );
-		},
+	amplify.request.define( "decoderExample", "ajax", {
 		url: "/myAjaxUrl",
 		type: "POST",
 		decoder: "appEnvelope"
 	});
 
-	amplify.request( "decoderExample", function( data ) {
-		data.foo; // bar
+	amplify.request({
+		resourceId: "decoderExample",
+		success: function( data ) {
+			data.foo; // bar
+		},
+		error: function( message, level ) {
+			alert( "always handle errors with alerts." );
+		}
 	});
 
 ### POST with caching and single-use decoder
@@ -306,10 +309,7 @@ Fail ( or Error ):
 
 Example:
 
-	amplify.request.define( "decoderSingleExample", "ajax" {
-		error: function( message, level ) {
-			alert( "always handle errors with alerts." );
-		},
+	amplify.request.define( "decoderSingleExample", "ajax", {
 		url: "/myAjaxUrl",
 		type: "POST",
 		decoder: function ( data, status, xhr, success, error ) {
@@ -318,13 +318,19 @@ Example:
 			} else if ( data.status === "fail" || data.status === "error" ) {
 				error( data.message, data.status );
 			} else {
-				error( data.message , "fatal" )
+				error( data.message , "fatal" );
 			}
 		}
 	});
 
-	amplify.request( "decoderSingleExample", function( data ) {
-		data.foo; // bar
+	amplify.request({
+		resourceId: "decoderSingleExample",
+		success: function( data ) {
+			data.foo; // bar
+		},
+		error: function( message, level ) {
+			alert( "always handle errors with alerts." );
+		}
 	});
 
 [requestTypes]: #request_types "request types"
