@@ -45,10 +45,9 @@ Define a resource.
 * `requestType`: The type of data retrieval method from the server. See the [request types][requestTypes] sections for more information.
 * `settings`: a set of key/value pairs that relate to the server
   communication technology. The following settings are available:
-  * [ajax and ajax-poll] any settings found in jQuery.ajax()
-  * [ajax and ajax-poll] cache: see the [cache][cache] section for more details.
-  * [ajax and ajax-poll] decoder: see the [decoder][decoder] section for more details
-  * [ajax-poll] frequency: the polling frequency in milliseconds.
+  * any settings found in jQuery.ajax()
+  * cache: see the [cache][cache] section for more details.
+  * decoder: see the [decoder][decoder] section for more details.
 
  
 
@@ -67,12 +66,12 @@ Define a custom request.
 
 ### Built-in Types
 
-`amplify.request` comes with built-in types of `ajax` and `ajax-poll`.
+`amplify.request` comes with built-in type of `ajax`
 
 ### Custom Types
 
-You can also create additional types by adding to the `amplify.request.types` hash.
-You can also define custom one-off types for single requests.
+You can choose to create additional types by adding to the `amplify.request.types` hash.
+There is also an option to define custom one-off types for single requests.
 
 ## Data Handling
 
