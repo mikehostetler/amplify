@@ -1,0 +1,9 @@
+/*
+---
+name: amplify.core pub/sub with priority
+description: amplify.core pub/sub with priority
+authors:
+  - The appendTo Team
+resources:
+  - http://github.com/appendto/amplify/raw/master/core/amplify.core.js
+...

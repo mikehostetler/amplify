@@ -1,0 +1,8 @@
+---
+name: amplify.core pub/sub with data.
+description: amplify.core pub/sub with data.
+authors:
+  - The appendTo Team
+resources:
+  - http://github.com/appendto/amplify/raw/master/core/amplify.core.js
+...

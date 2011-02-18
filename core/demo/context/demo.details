@@ -1,0 +1,8 @@
+---
+name: amplify.core pub/sub with context.
+description: amplify.core pub/sub with context.
+authors:
+  - The appendTo Team
+resources:
+  - http://github.com/appendto/amplify/raw/master/core/amplify.core.js
+...
