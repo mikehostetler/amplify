@@ -1,7 +1,7 @@
 $( function() {
 
 	// check for the cookie plugin and cookies enabled
-	if( !$.cookie || !$.cookie.status ) {
+	if( !$.cookie || !$.support.cookie ) {
 		$( "p" ).append( "cookie plugin not found or cookies disabled" );
 		return;
 	}

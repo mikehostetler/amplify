@@ -95,6 +95,10 @@ Support for cookies is available as a convenience.
 Cookies will never automatically become the default storage type because of the
 bandwidth and performance overhead incurred for all requests.
 
+In order to use cookies as part of `amplify.store`, you must include the
+JSON cookies plugin. The plugin comes as part of the amplify download.
+You can download the plugin seperately [on GitHub](http://github.com/appendto/jquery-jsoncookie)
+
 ## Examples
 
 ### Store data with amplify storage picking the default storage technology:
@@ -110,6 +114,9 @@ bandwidth and performance overhead incurred for all requests.
 	myStoredValues.storeExample1.foo; // bar
 	myStoredValues.storeExample2; // baz
 
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/hZgDw/embedded/js,html,result/"> </iframe>
+[Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/store/demo/implicit/)
+
 ### Store data explicitly with local storage
 
 	amplify.store.localStorage( "explicitExample", { foo2: "baz" } );
@@ -117,9 +124,15 @@ bandwidth and performance overhead incurred for all requests.
 	var myStoredValue2 = amplify.store.localStorage( "explicitExample" );
 	myStoredValue2.foo2; // baz
 
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/qM5Db/embedded/js,html,result/"> </iframe>
+[Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/store/demo/localstorage/)
+
 ### Store data to a cookie
 
 	amplify.store.cookie( "cookieExample", { foo3: "qux" } );
 	// retrieve the data later via the key
 	var myCookieValue = amplify.store.cookie( "cookieExample" );
 	myCookieValue.foo3; // qux
+
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/EauZm/embedded/js,html,result/"> </iframe>
+[Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/store/demo/cookies/)
