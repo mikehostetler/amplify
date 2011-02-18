@@ -1,0 +1,11 @@
+/*
+---
+name: amplify.store normal usage.
+description: amplify.store with amplify choosing persistence technology.
+authors:
+  - The appendTo Team
+resources:
+  - http://github.com/appendto/amplify/raw/master/core/amplify.core.js
+  - http://github.com/appendto/amplify/raw/master/store/amplify.store.js
+...
+*/

@@ -100,7 +100,7 @@ bandwidth and performance overhead incurred for all requests.
 ### Store data with amplify storage picking the default storage technology:
 
 	amplify.store( "storeExample1", { foo: "bar" } );
-	amplify.store( "storeExample2", "baz" )
+	amplify.store( "storeExample2", "baz" );
 	// retrieve the data later via the key
 	var myStoredValue = amplify.store( "storeExample1" ),
 		myStoredValue2 = amplify.store( "storeExample2" ),
