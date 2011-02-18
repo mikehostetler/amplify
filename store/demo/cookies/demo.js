@@ -1,5 +1,11 @@
 $( function() {
 
+	// check for the cookie plugin and cookies enabled
+	if( !$.cookie || !$.cookie.status ) {
+		$( "p" ).append( "cookie plugin not found or cookies disabled" );
+		return;
+	}
+
 	// cookie storage is done only by explicitly specifying
 	// storage through amplify.store.cookie.
 	// cookie will also serialize to/from JSON, allowing

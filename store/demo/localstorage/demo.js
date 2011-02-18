@@ -3,6 +3,8 @@ $( function() {
 	// are responsible for checking.
 	// use the right tool for the job.
 	if( !Modernizr.localstorage ) {
+		$( "p" )
+			.append( "local storage not available in this browser." );
 		return;
 	}
 
