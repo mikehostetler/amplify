@@ -1,19 +1,21 @@
-// since we are using a specific tech, we
-// are responsible for checking.
-// use the right tool for the job.
-if( !Modernizr.localStorage ) {
-	return;
-}
+$( function() {
+	// since we are using a specific tech, we
+	// are responsible for checking.
+	// use the right tool for the job.
+	if( !Modernizr.localstorage ) {
+		return;
+	}
 
-// you can store any type of data using store
-// amplify will take care of serializing/deserializing
-// the data for you.
-amplify.store.localStorage( "explicitExample",
-							{ foo2: "baz" } );
+	// you can store any type of data using store
+	// amplify will take care of serializing/deserializing
+	// the data for you.
+	amplify.store.localStorage( "explicitExample",
+								{ foo2: "baz" } );
 
-// retrieve the data later via the key
-var myStoredValue2 =
-	amplify.store.localStorage( "explicitExample" );
+	// retrieve the data later via the key
+	var myStoredValue2 =
+		amplify.store.localStorage( "explicitExample" );
 
-$( "p" )
-	.append( myStoredValue2.foo2 ); // baz
+	$( "p" )
+		.append( myStoredValue2.foo2 ); // baz
+});
