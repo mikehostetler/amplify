@@ -26,17 +26,18 @@ amplify.request = function( resourceId, data, callback ) {
 		};
 	}
 
-	var resource = amplify.request.resources[ settings.resourceId ],
+	var request = { abort: $.noop },
+		resource = amplify.request.resources[ settings.resourceId ],
 		success = settings.success || $.noop,
 		error = settings.error || $.noop;
-	settings.success = function( data, extra ) {
-		amplify.publish( "request.success", settings, data, extra );
-		amplify.publish( "request.complete", settings, data, extra );
+	settings.success = function( data, extra, status ) {
+		amplify.publish( "request.success", settings, data, extra, status );
+		amplify.publish( "request.complete", settings, data, extra, status );
 		success.apply( this, arguments );
 	};
-	settings.error = function( data, extra ) {
-		amplify.publish( "request.error", settings, data, extra );
-		amplify.publish( "request.complete", settings, data, extra );
+	settings.error = function( data, extra, status ) {
+		amplify.publish( "request.error", settings, data, extra, status );
+		amplify.publish( "request.complete", settings, data, extra, status );
 		error.apply( this, arguments );
 	};
 
@@ -48,8 +49,10 @@ amplify.request = function( resourceId, data, callback ) {
 	}
 
 	if ( amplify.publish( "request.before", settings ) ) {
-		amplify.request.resources[ settings.resourceId ]( settings );
+		amplify.request.resources[ settings.resourceId ]( settings, request );
 	}
+
+	return request;
 };
 
 $.extend( amplify.request, {
@@ -82,11 +85,13 @@ amplify.request.types.ajax = function( defnSettings ) {
 		type: "GET"
 	}, defnSettings );
 
-	return function( settings ) {
+	return function( settings, request ) {
 		var url = defnSettings.url,
 			data = settings.data,
+			abort = request.abort,
 			ajaxSettings,
-			regex;
+			regex,
+			xhr;
 
 		if ( typeof data !== "string" ) {
 			data = $.extend( true, {}, defnSettings.data, data );
@@ -99,13 +104,13 @@ amplify.request.types.ajax = function( defnSettings ) {
 			});
 		}
 
-		$.ajax($.extend( {}, defnSettings, {
+		xhr = $.ajax($.extend( {}, defnSettings, {
 			url: url,
 			type: defnSettings.type,
 			data: data,
 			dataType: defnSettings.dataType,
 			success: function( data, status, xhr ) {
-				settings.success( data, xhr );
+				settings.success( data, xhr, status );
 			},
 			// data parameter is for custom overrides that proxy this function
 			error: function( xhr, status, error, data ) {
@@ -113,7 +118,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 					// TODO: add support for ajax errors with data
 					data = null;
 				} 
-				settings.error( data, xhr );
+				settings.error( data, xhr, status );
 			},
 			beforeSend: function( xhr, ajaxSettings ) {
 				var ret = defnSettings.beforeSend ?
@@ -122,6 +127,11 @@ amplify.request.types.ajax = function( defnSettings ) {
 					defnSettings, settings, ajaxSettings, xhr );
 			}
 		}) );
+
+		request.abort = function() {
+			xhr.abort();
+			abort.call( this );
+		};
 	};
 };
 
@@ -211,7 +221,7 @@ amplify.request.decoders = {
 			error( data.data, "fail" );
 		} else if ( data.status === "error" ) {
 			delete data.status;
-			error( data );
+			error( data, "error" );
 		}
 	}
 };
@@ -230,20 +240,20 @@ amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSett
 	}
 
 	function success( xhr ) {
-		return function( data ) {
-			_success( data, "success", xhr );
+		return function( data, status ) {
+			_success( data, status || "success", xhr );
 		};
 	}
-	function error( xhr ) {
-		return function( data ) {
-			_error( xhr, "error", null, data );
+	function error( xhr, _status ) {
+		return function( data, status ) {
+			_error( xhr, status || _status, null, data );
 		};
 	}
 	ajaxSettings.success = function( data, status, xhr ) {
-		decoder( data, status, xhr, success( xhr ), error( xhr ) );
+		decoder( data, status, xhr, success( xhr ), error( xhr, "error" ) );
 	};
 	ajaxSettings.error = function( xhr, status ) {
-		decoder( null, status, xhr, success( xhr ), error( xhr ) );
+		decoder( null, status, xhr, success( xhr ), error( xhr, status ) );
 	};
 });
 

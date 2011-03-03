@@ -311,7 +311,7 @@ test( "prevent request", function() {
 module( "amplify.request.define - ajax", lifecycle );
 
 asyncTest( "request( id )", function() {
-	expect( 23 );
+	expect( 25 );
 
 	var ajax = $.ajax;
 	$.ajax = function( settings ) {
@@ -340,17 +340,19 @@ asyncTest( "request( id )", function() {
 		equal( ajaxSettings.type, "GET", "before.ajax message: ajaxSettings.type" );
 		ok( "abort" in xhr, "before.ajax message: xhr object provided" );
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( settings.data, {}, "success message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( settings.data, {}, "complete message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
 	subscribe( "request.error", function() {
@@ -360,74 +362,82 @@ asyncTest( "request( id )", function() {
 });
 
 asyncTest( "request( id, fn )", function() {
-	expect( 10 );
+	expect( 13 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
 		dataType: "json"
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( settings.data, {}, "success message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( settings.data, {}, "complete message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
-	amplify.request( "test", function( data, xhr ) {
+	amplify.request( "test", function( data, xhr, status ) {
 		deepEqual( data, { foo: "bar" }, "success callback: data" );
 		ok( "abort" in xhr, "success callback: xhr object provided" );
+		equal( status, "success", "success callback: status" );
 	});
 });
 
 asyncTest( "request( id, data, fn )", function() {
-	expect( 10 );
+	expect( 13 );
 	
 	amplify.request.define( "test", "ajax", {
 		url: "data/echo.php",
 		dataType: "json",
 		type: "POST"
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( settings.data, { open: "source" }, "success message: settings.data" );
 		deepEqual( data, { open: "source", echoed: true }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( settings.data, { open: "source" }, "complete message: settings.data" );
 		deepEqual( data, { open: "source", echoed: true }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
-	amplify.request( "test", { open: "source" }, function( data, xhr ) {
+	amplify.request( "test", { open: "source" }, function( data, xhr, status ) {
 		deepEqual( data, { open: "source", echoed: true }, "success callback: data" );
 		ok( "abort" in xhr, "success callback: xhr object provided" );
+		equal( status, "success", "success callback: status" );
 	});
 });
 
 asyncTest( "request( hash ) success", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
 		dataType: "json"
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
 	subscribe( "request.error", function() {
@@ -435,9 +445,10 @@ asyncTest( "request( hash ) success", function() {
 	});
 	amplify.request({
 		resourceId: "test",
-		success: function( data, xhr ) {
+		success: function( data, xhr, status ) {
 			deepEqual( data, { foo: "bar" }, "success callback: data" );
 			ok( "abort" in xhr, "success callback: xhr object provided" );
+			equal( status, "success", "success callback: status" );
 		},
 		error: function() {
 			ok( false, "error callback invoked" );
@@ -446,21 +457,23 @@ asyncTest( "request( hash ) success", function() {
 });
 
 asyncTest( "request( hash ) error", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/missing.html",
 		dataType: "json"
 	});
-	subscribe( "request.error", function( settings, data, xhr ) {
+	subscribe( "request.error", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
 		deepEqual( data, null, "error message: data" );
 		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "error", "error message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, null, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "error", "complete message: status" );
 		start();
 	});
 	subscribe( "request.success", function() {
@@ -468,9 +481,10 @@ asyncTest( "request( hash ) error", function() {
 	});
 	amplify.request({
 		resourceId: "test",
-		error: function( data, xhr ) {
+		error: function( data, xhr, status ) {
 			deepEqual( data, null, "error callback: data" );
 			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "error", "error callback: status" );
 		},
 		success: function() {
 			ok( false, "success callback invoked" );
@@ -642,6 +656,46 @@ asyncTest( "data as string", function() {
 		equal( data, "sending {raw} [data]" );
 		start();
 	});
+});
+
+test( "abort", function() {
+	expect( 12 );
+
+	amplify.request.define( "test", "ajax", {
+		url: "data/delay.php",
+		dataType: "json"
+	});
+	var request = amplify.request({
+		resourceId: "test",
+		error: function( data, xhr, status ) {
+			deepEqual( data, null, "error callback: data" );
+			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "abort", "error callback: status" );
+		},
+		success: function() {
+			ok( false, "success callback invoked" );
+		}
+	});
+	subscribe( "request.error", function( settings, data, xhr, status ) {
+		equal( settings.resourceId, "test", "error message: resourceId" );
+		deepEqual( data, null, "error message: data" );
+		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "abort", "error message: status" );
+	});
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
+		equal( settings.resourceId, "test", "complete message: resourceId" );
+		deepEqual( data, null, "complete message: data" );
+		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "abort", "complete message: status" );
+	});
+	subscribe( "request.success", function() {
+		ok( false, "success message published" );
+	});
+	ok( "abort" in request, "request object has abort method" );
+	request.abort();
+	// make sure calling abort() multiple times does nothing
+	// tested via expected number of assertions
+	request.abort();
 });
 
 test( "cache keys", function() {
@@ -841,7 +895,7 @@ if ( amplify.store ) {
 }
 
 asyncTest( "decoder: Function - success", function() {
-	expect( 11 );
+	expect( 14 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
@@ -853,15 +907,17 @@ asyncTest( "decoder: Function - success", function() {
 			success({ baz: "qux" });
 		}
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( data, { baz: "qux" }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { baz: "qux" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
 	subscribe( "request.error", function() {
@@ -869,9 +925,10 @@ asyncTest( "decoder: Function - success", function() {
 	});
 	amplify.request({
 		resourceId: "test",
-		success: function( data, xhr ) {
+		success: function( data, xhr, status ) {
 			deepEqual( data, { baz: "qux" }, "success callback: data" );
 			ok( "abort" in xhr, "success callback: xhr object provided" );
+			equal( status, "success", "success callback: status" );
 		},
 		error: function() {
 			ok( false, "error callback invoked" );
@@ -880,7 +937,7 @@ asyncTest( "decoder: Function - success", function() {
 });
 
 asyncTest( "decoder: Function - error", function() {
-	expect( 11 );
+	expect( 14 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
@@ -892,15 +949,17 @@ asyncTest( "decoder: Function - error", function() {
 			error({ baz: "qux" });
 		}
 	});
-	subscribe( "request.error", function( settings, data, xhr ) {
+	subscribe( "request.error", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
 		deepEqual( data, { baz: "qux" }, "error message: data" );
 		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "error", "error message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { baz: "qux" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "error", "complete message: status" );
 		start();
 	});
 	subscribe( "request.success", function() {
@@ -911,30 +970,33 @@ asyncTest( "decoder: Function - error", function() {
 		success: function() {
 			ok( false, "success callback invoked" );
 		},
-		error: function( data, xhr ) {
+		error: function( data, xhr, status ) {
 			deepEqual( data, { baz: "qux" }, "error callback: data" );
 			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "error", "error callback: status" );
 		}
 	});
 });
 
 asyncTest( "decoder: jsend - success", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/jsend.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( data, { unwrapped: true }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "success", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { unwrapped: true }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "success", "complete message: status" );
 		start();
 	});
 	subscribe( "request.error", function() {
@@ -942,9 +1004,10 @@ asyncTest( "decoder: jsend - success", function() {
 	});
 	amplify.request({
 		resourceId: "test",
-		success: function( data, xhr ) {
+		success: function( data, xhr, status ) {
 			deepEqual( data, { unwrapped: true }, "success callback: data" );
 			ok( "abort" in xhr, "success callback: xhr object provided" );
+			equal( status, "success", "success callback: status" );
 		},
 		error: function() {
 			ok( false, "error callback invoked" );
@@ -953,22 +1016,24 @@ asyncTest( "decoder: jsend - success", function() {
 });
 
 asyncTest( "decoder: jsend - fail", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/jsend-fail.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
-	subscribe( "request.error", function( settings, data, xhr ) {
+	subscribe( "request.error", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
 		deepEqual( data, { broken: true }, "error message: data" );
 		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "fail", "error message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { broken: true }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "fail", "complete message: status" );
 		start();
 	});
 	subscribe( "request.success", function() {
@@ -979,30 +1044,33 @@ asyncTest( "decoder: jsend - fail", function() {
 		success: function() {
 			ok( false, "success callback invoked" );
 		},
-		error: function( data, xhr ) {
+		error: function( data, xhr, status ) {
 			deepEqual( data, { broken: true }, "error callback: data" );
 			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "fail", "error callback: status" );
 		}
 	});
 });
 
 asyncTest( "decoder: jsend - error", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/jsend-error.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
-	subscribe( "request.error", function( settings, data, xhr ) {
+	subscribe( "request.error", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
 		deepEqual( data, { message: "it broke" }, "error message: data" );
 		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "error", "error message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { message: "it broke" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "error", "complete message: status" );
 		start();
 	});
 	subscribe( "request.success", function() {
@@ -1013,22 +1081,23 @@ asyncTest( "decoder: jsend - error", function() {
 		success: function() {
 			ok( false, "success callback invoked" );
 		},
-		error: function( data, xhr ) {
+		error: function( data, xhr, status ) {
 			deepEqual( data, { message: "it broke" }, "error callback: data" );
 			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "error", "error callback: status" );
 		}
 	});
 });
 
 asyncTest( "decoder: jsend - error with details", function() {
-	expect( 8 );
+	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/jsend-error2.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
-	subscribe( "request.error", function( settings, data, xhr ) {
+	subscribe( "request.error", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
 		deepEqual( data, {
 			message: "it broke",
@@ -1036,8 +1105,9 @@ asyncTest( "decoder: jsend - error with details", function() {
 			data: { you: "broke", it: "bad" }
 		}, "error message: data" );
 		ok( "abort" in xhr, "error message: xhr object provided" );
+		equal( status, "error", "error message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, {
 			message: "it broke",
@@ -1045,6 +1115,7 @@ asyncTest( "decoder: jsend - error with details", function() {
 			data: { you: "broke", it: "bad" }
 		}, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "error", "complete message: status" );
 		start();
 	});
 	subscribe( "request.success", function() {
@@ -1055,19 +1126,20 @@ asyncTest( "decoder: jsend - error with details", function() {
 		success: function() {
 			ok( false, "success callback invoked" );
 		},
-		error: function( data, xhr ) {
+		error: function( data, xhr, status ) {
 			deepEqual( data, {
 				message: "it broke",
 				code: 15,
 				data: { you: "broke", it: "bad" }
 			}, "error callback: data" );
 			ok( "abort" in xhr, "error callback: xhr object provided" );
+			equal( status, "error", "error callback: status" );
 		}
 	});
 });
 
 asyncTest( "decoder: custom", function() {
-	expect( 11 );
+	expect( 14 );
 
 	amplify.request.decoders.silly = function( data, status, xhr, success, error ) {
 		deepEqual( data, { foo: "bar" }, "data in decoder" );
@@ -1077,22 +1149,24 @@ asyncTest( "decoder: custom", function() {
 		$.each( data, function( key, value ) {
 			sillyData[ "silly-" + key ] = value;
 		});
-		success( sillyData );
+		success( sillyData, "silly" );
 	};
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
 		dataType: "json",
 		decoder: "silly"
 	});
-	subscribe( "request.success", function( settings, data, xhr ) {
+	subscribe( "request.success", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
 		deepEqual( data, { "silly-foo": "bar" }, "success message: data" );
 		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "silly", "success message: status" );
 	});
-	subscribe( "request.complete", function( settings, data, xhr ) {
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
 		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
 		deepEqual( data, { "silly-foo": "bar" }, "complete message: data" );
 		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "silly", "complete message: status" );
 		start();
 		delete amplify.request.decoders.silly;
 	});
@@ -1101,9 +1175,10 @@ asyncTest( "decoder: custom", function() {
 	});
 	amplify.request({
 		resourceId: "test",
-		success: function( data, xhr ) {
+		success: function( data, xhr, status ) {
 			deepEqual( data, { "silly-foo": "bar" }, "success callback: data" );
 			ok( "abort" in xhr, "success callback: xhr object provided" );
+			equal( status, "silly", "success callback: status" );
 		},
 		error: function() {
 			ok( false, "error callback invoked" );
