@@ -7,12 +7,18 @@
  * 
  * http://amplifyjs.com
  */
-(function( $, undefined ) {
+(function( undefined ) {
 
-var slice = [].slice,
+var $ = ( this.jQuery || this.AMPLIFY ),
+	slice = [].slice,
 	subscriptions = {};
 
 this.amplify = {
+	each: $.each,
+	extend: $.extend
+};
+
+amplify.extend( amplify, {
 	publish: function( topic ) {
 		var args = slice.call( arguments, 1 ),
 			ret;
@@ -73,6 +79,6 @@ this.amplify = {
 			}
 		});
 	}
-};
+});
 
-}( jQuery ) );
+}() );

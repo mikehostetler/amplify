@@ -7,7 +7,7 @@
  * 
  * http://amplifyjs.com
  */
-(function( amplify, $, undefined ) {
+(function( amplify, undefined ) {
 
 amplify.store = function( key, value, options ) {
 	var type = amplify.store.type;
@@ -17,7 +17,7 @@ amplify.store = function( key, value, options ) {
 	return amplify.store.types[ type ]( key, value, options || {} );
 };
 
-$.extend( amplify.store, {
+amplify.extend( amplify.store, {
 	types: {},
 
 	type: null,
@@ -30,7 +30,7 @@ $.extend( amplify.store, {
 		this.types[ type ] = store;
 		amplify.store[ type ] = function( key, value, options ) {
 			return amplify.store( key, value,
-				$.extend( { type: type }, options ) );
+				amplify.extend( { type: type }, options ) );
 		};
 	}
 });
@@ -93,7 +93,7 @@ function createSimpleStorage( storageType, storage ) {
 
 // localStorage + sessionStorage
 // IE 8+, Firefox 3.5+, Safari 4+, Chrome 4+, Opera 10.5+, iPhone 2+, Android 2+
-$.each( [ "localStorage", "sessionStorage" ], function( i, storageType ) {
+amplify.each( [ "localStorage", "sessionStorage" ], function( i, storageType ) {
 	// try/catch for file protocol in Firefox
 	try {
 		if ( window[ storageType ].getItem ) {
@@ -115,10 +115,11 @@ if ( window.globalStorage ) {
 // http://msdn.microsoft.com/en-us/library/ms531424(v=vs.85).aspx
 (function() {
 	// append to html instead of body so we can do this from the head
-	var div = $( "<div>" ).hide().appendTo( "html" )[ 0 ],
+	var div = document.createElement( "div" ),
 		attrKey = "amplify",
 		attrs;
-
+	div.style.display = "none";
+	document.documentElement.appendChild( div );
 	if ( div.addBehavior ) {
 		div.addBehavior( "#default#userdata" );
 		div.load( attrKey );
@@ -191,13 +192,15 @@ createSimpleStorage( "memory", {} );
 // cookie
 // supported to enable a common API
 // never registers as the default for performance reasons
-if ( $.cookie && $.support.cookie ) {
-	amplify.store.addType( "cookie", function( key, value, options ) {
-		return $.cookie( key, value, {
-			expires: options.expires || 99e9,
-			path: "/"
+(function( $ ) {
+	if ( $ && $.cookie && $.support.cookie ) {
+		amplify.store.addType( "cookie", function( key, value, options ) {
+			return $.cookie( key, value, {
+				expires: options.expires || 99e9,
+				path: "/"
+			});
 		});
-	});
-}
+	}
+}( jQuery ) );
 
-}( amplify, jQuery ) );
+}( amplify ) );
