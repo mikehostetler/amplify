@@ -9,35 +9,32 @@
  */
 (function( amplify, undefined ) {
 
-amplify.store = function( key, value, options ) {
-	var type = amplify.store.type;
-	if ( options && options.type && options.type in amplify.store.types ) {
+var store = amplify.store = function( key, value, options, type ) {
+	var type = store.type;
+	if ( options && options.type && options.type in store.types ) {
 		type = options.type;
 	}
-	return amplify.store.types[ type ]( key, value, options || {} );
+	return store.types[ type ]( key, value, options || {} );
 };
 
-amplify.extend( amplify.store, {
-	types: {},
-
-	type: null,
-
-	addType: function( type, store ) {
-		if ( !this.type ) {
-			this.type = type;
-		}
-
-		this.types[ type ] = store;
-		amplify.store[ type ] = function( key, value, options ) {
-			return amplify.store( key, value,
-				amplify.extend( { type: type }, options ) );
-		};
+store.types = {};
+store.type = null;
+store.addType = function( type, storage ) {
+	if ( !store.type ) {
+		store.type = type;
 	}
-});
+
+	store.types[ type ] = storage;
+	store[ type ] = function( key, value, options ) {
+		options = options || {};
+		options.type = type;
+		return store( key, value, options );
+	};
+}
 
 function createSimpleStorage( storageType, storage ) {
 	var values = storage.__amplify__ ? JSON.parse( storage.__amplify__ ) : {};
-	amplify.store.addType( storageType, function( key, value, options ) {
+	store.addType( storageType, function( key, value, options ) {
 		var ret = value,
 			now = (new Date()).getTime(),
 			storedValue,
@@ -93,14 +90,14 @@ function createSimpleStorage( storageType, storage ) {
 
 // localStorage + sessionStorage
 // IE 8+, Firefox 3.5+, Safari 4+, Chrome 4+, Opera 10.5+, iPhone 2+, Android 2+
-amplify.each( [ "localStorage", "sessionStorage" ], function( storageType ) {
+for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
 	// try/catch for file protocol in Firefox
 	try {
-		if ( window[ storageType ].getItem ) {
-			createSimpleStorage( storageType, window[ storageType ] );
+		if ( window[ webStorageType ].getItem ) {
+			createSimpleStorage( webStorageType, window[ webStorageType ] );
 		}
 	} catch( e ) {}
-});
+}
 
 // globalStorage
 // non-standard: Firefox 2+
@@ -125,7 +122,7 @@ if ( window.globalStorage ) {
 		div.load( attrKey );
 		attrs = div.getAttribute( attrKey ) ? JSON.parse( div.getAttribute( attrKey ) ) : {};
 
-		amplify.store.addType( "userData", function( key, value, options ) {
+		store.addType( "userData", function( key, value, options ) {
 			var ret = value,
 				now = (new Date()).getTime(),
 				attr,
@@ -183,7 +180,7 @@ if ( window.globalStorage ) {
 			return ret;
 		});
 	}
-}());
+}() );
 
 // in-memory storage
 // fallback for all browsers to enable the API even if we can't persist data
@@ -194,7 +191,7 @@ createSimpleStorage( "memory", {} );
 // never registers as the default for performance reasons
 (function( $ ) {
 	if ( $ && $.cookie && $.support.cookie ) {
-		amplify.store.addType( "cookie", function( key, value, options ) {
+		store.addType( "cookie", function( key, value, options ) {
 			return $.cookie( key, value, {
 				expires: options.expires || 99e9,
 				path: "/"
@@ -203,4 +200,4 @@ createSimpleStorage( "memory", {} );
 	}
 }( jQuery ) );
 
-}( amplify ) );
+}( this.amplify = this.amplify || {} ) );
