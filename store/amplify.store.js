@@ -93,7 +93,7 @@ function createSimpleStorage( storageType, storage ) {
 
 // localStorage + sessionStorage
 // IE 8+, Firefox 3.5+, Safari 4+, Chrome 4+, Opera 10.5+, iPhone 2+, Android 2+
-amplify.each( [ "localStorage", "sessionStorage" ], function( i, storageType ) {
+amplify.each( [ "localStorage", "sessionStorage" ], function( storageType ) {
 	// try/catch for file protocol in Firefox
 	try {
 		if ( window[ storageType ].getItem ) {

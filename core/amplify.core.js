@@ -9,13 +9,23 @@
  */
 (function( undefined ) {
 
-var $ = ( this.jQuery || this.AMPLIFY ),
-	slice = [].slice,
+var slice = [].slice,
 	subscriptions = {};
 
-this.amplify = {
-	each: $.each,
-	extend: $.extend
+var amplify = this.amplify = {
+	each: function( arr, fn ) {
+		for ( var i = 0, length = arr.length; i < length; i++ ) {
+			if ( false === fn( arr[ i ], i, arr ) ) {
+				return;
+			}
+		}
+	},
+	extend: function( a, b ) {
+		for ( var prop in b ) {
+			a[ prop ] = b[ prop ];
+		}
+		return a;
+	}
 };
 
 amplify.extend( amplify, {
@@ -27,7 +37,7 @@ amplify.extend( amplify, {
 			return true;
 		}
 
-		$.each( subscriptions[ topic ], function( i, subscription ) {
+		amplify.each( subscriptions[ topic ], function( subscription ) {
 			return ( ret = subscription.callback.apply( subscription.context, args ) );
 		});
 		return ret !== false;
@@ -72,7 +82,7 @@ amplify.extend( amplify, {
 			return;
 		}
 
-		$.each( subscriptions[ topic ], function( i, subscription ) {
+		amplify.each( subscriptions[ topic ], function( subscription, i ) {
 			if ( subscription.callback === callback ) {
 				subscriptions[ topic ].splice( i, 1 );
 				return false;
