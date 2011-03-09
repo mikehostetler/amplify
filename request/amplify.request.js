@@ -7,7 +7,12 @@
  * 
  * http://amplifyjs.com
  */
-(function( amplify, $, undefined ) {
+(function( amplify, undefined ) {
+
+function noop() {}
+function isFunction( obj ) {
+	return ({}).toString.call( obj ) === "[object Function]";
+}
 
 amplify.request = function( resourceId, data, callback ) {
 	// default to an empty hash just so we can handle a missing resourceId
@@ -15,7 +20,7 @@ amplify.request = function( resourceId, data, callback ) {
 	var settings = resourceId || {};
 
 	if ( typeof settings === "string" ) {
-		if ( $.isFunction( data ) ) {
+		if ( isFunction( data ) ) {
 			callback = data;
 			data = {};
 		}
@@ -26,10 +31,10 @@ amplify.request = function( resourceId, data, callback ) {
 		};
 	}
 
-	var request = { abort: $.noop },
+	var request = { abort: noop },
 		resource = amplify.request.resources[ settings.resourceId ],
-		success = settings.success || $.noop,
-		error = settings.error || $.noop;
+		success = settings.success || noop,
+		error = settings.error || noop;
 	settings.success = function( data, extra, status ) {
 		amplify.publish( "request.success", settings, data, extra, status );
 		amplify.publish( "request.complete", settings, data, extra, status );
@@ -55,30 +60,30 @@ amplify.request = function( resourceId, data, callback ) {
 	return request;
 };
 
-$.extend( amplify.request, {
-	types: {},
-
-	resources: {},
-
-	define: function( resourceId, type, settings ) {
-		if ( typeof type === "string" ) {
-			if ( !( type in amplify.request.types ) ) {
-				throw "amplify.request.define: unknown type: " + type;
-			}
-
-			settings.resourceId = resourceId;
-			amplify.request.resources[ resourceId ] =
-				amplify.request.types[ type ]( settings );
-		} else {
-			// no pre-processor or settings for one-off types (don't invoke)
-			amplify.request.resources[ resourceId ] = type;
+amplify.request.types = {};
+amplify.request.resources = {};
+amplify.request.define = function( resourceId, type, settings ) {
+	if ( typeof type === "string" ) {
+		if ( !( type in amplify.request.types ) ) {
+			throw "amplify.request.define: unknown type: " + type;
 		}
+
+		settings.resourceId = resourceId;
+		amplify.request.resources[ resourceId ] =
+			amplify.request.types[ type ]( settings );
+	} else {
+		// no pre-processor or settings for one-off types (don't invoke)
+		amplify.request.resources[ resourceId ] = type;
 	}
-});
+};
+
+}( amplify ) );
 
 
 
 
+
+(function( amplify, $, undefined ) {
 
 amplify.request.types.ajax = function( defnSettings ) {
 	defnSettings = $.extend({
