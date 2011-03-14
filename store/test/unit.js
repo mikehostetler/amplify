@@ -1,7 +1,7 @@
 module( "amplify.store" );
 
 test( "Built-in storage types", function() {
-	expect( 6 );
+	expect( 5 );
 	equal( "localStorage" in amplify.store.types,
 		"localStorage" in window, "localStorage" );
 	try {
@@ -16,7 +16,6 @@ test( "Built-in storage types", function() {
 	equal( "userData" in amplify.store.types,
 		"addBehavior" in $( "<div>" )[0], "userData" );
 	equal( "memory" in amplify.store.types, true, "memory" );
-	equal( "cookie" in amplify.store.types, $.support.cookie, "cookie" );
 });
 
 test( "amplify.store.addType", function() {
@@ -275,61 +274,4 @@ asyncTest( "memory expiration", function() {
 		deepEqual( amplify.store.memory(), {}, "both expired" );
 		start();
 	}, 700 );
-});
-
-if ( "cookie" in amplify.store.types ) {
-	module( "amplify.store.cookie", {
-		setup: function() {
-			var paths = [ "" ];
-			$.each( window.location.pathname.substr( 1 ).split( "/" ), function( i, path ) {
-				paths.push( paths[ paths.length - 1 ] + "/" + path );
-			});
-			paths[ 0 ] = "/";
-
-			$.each( $.cookie(), function( key ) {
-				$.each( paths, function( i, path ) {
-					$.cookie( key, null, { path: path } );
-				});
-			});
-		}
-	});
-
-	test( "cookie", function() {
-		expect( 9 );
-		deepEqual( amplify.store.cookie(), {}, "empty store" );
-		equal( amplify.store.cookie( "foo" ), undefined, "get; miss" );
-		equal( amplify.store.cookie( "foo", "bar" ), "bar", "set" );
-		equal( amplify.store.cookie( "foo" ), "bar", "get" );
-		deepEqual( amplify.store.cookie( "baz", { qux: "quux" } ),
-			{ qux: "quux" }, "set object" );
-		deepEqual( amplify.store.cookie( "baz" ), { qux: "quux" }, "get object" );
-		deepEqual( amplify.store.cookie(),
-			{ foo: "bar", baz: { qux: "quux" } }, "get all" );
-		equal( amplify.store.cookie( "foo", null ), null, "delete" );
-		equal( amplify.store.cookie( "foo" ), undefined, "deleted" );
-	});
-}
-
-// we use higher delays with cookies because we can't get fine-grained control
-// due to the browser using its own timers
-asyncTest( "cookie expiration", function() {
-	expect( 4 );
-	amplify.store.cookie( "expiring1", "i disappear",
-		{ expires: 2000 } );
-	amplify.store.cookie( "expiring2", "i disappear too",
-		{ expires: 4000 } );
-	deepEqual( amplify.store.cookie(), {
-		expiring1: "i disappear",
-		expiring2: "i disappear too"
-	}, "values with expiration exist" );
-	setTimeout(function() {
-		equal( amplify.store.cookie( "expiring1" ), undefined,
-			"2000 expired" );
-		equal( amplify.store.cookie( "expiring2" ), "i disappear too",
-		"4000 still valid" );
-	}, 2500 );
-	setTimeout(function() {
-		deepEqual( amplify.store.cookie(), {}, "both expired" );
-		start();
-	}, 4500 );
 });

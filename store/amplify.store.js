@@ -186,18 +186,4 @@ if ( window.globalStorage ) {
 // fallback for all browsers to enable the API even if we can't persist data
 createSimpleStorage( "memory", {} );
 
-// cookie
-// supported to enable a common API
-// never registers as the default for performance reasons
-(function( $ ) {
-	if ( $ && $.cookie && $.support.cookie ) {
-		store.addType( "cookie", function( key, value, options ) {
-			return $.cookie( key, value, {
-				expires: options.expires || 99e9,
-				path: "/"
-			});
-		});
-	}
-}( jQuery ) );
-
 }( this.amplify = this.amplify || {} ) );
