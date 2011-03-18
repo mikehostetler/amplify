@@ -85,8 +85,16 @@ function createSimpleStorage( storageType, storage ) {
 				try {
 					storage[ key ] = parsed;
 					values[ key ] = true;
+				// quota exceeded
 				} catch( error ) {
-					throw store.error();
+					// expire old data and try again
+					store[ storageType ]();
+					try {
+						storage[ key ] = parsed;
+						values[ key ] = true;
+					} catch( error ) {
+						throw store.error();
+					}
 				}
 			}
 		}
