@@ -113,6 +113,12 @@ for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
 if ( window.globalStorage ) {
 	createSimpleStorage( "globalStorage",
 		window.globalStorage[ window.location.hostname ] );
+	// Firefox 2.0 and 3.0 have sessionStorage and globalStorage
+	// make sure we defualt to globalStorage
+	// but don't default to globalStorage in 3.5+ which also has localStorage
+	if ( store.type === "sessionStorage" ) {
+		store.type = "globalStorage";
+	}
 }
 
 // userData
