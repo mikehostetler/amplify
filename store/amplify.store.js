@@ -31,6 +31,9 @@ store.addType = function( type, storage ) {
 		return store( key, value, options );
 	};
 }
+store.error = function() {
+	return "amplify.store quota exceeded"; 
+};
 
 function createSimpleStorage( storageType, storage ) {
 	var values = storage.__amplify__ ? JSON.parse( storage.__amplify__ ) : {};
@@ -75,11 +78,16 @@ function createSimpleStorage( storageType, storage ) {
 				delete storage[ key ];
 				delete values[ key ];
 			} else {
-				storage[ key ] = JSON.stringify({
+				parsed = JSON.stringify({
 					data: value,
 					expires: options.expires ? now + options.expires : null
 				});
-				values[ key ] = true;
+				try {
+					storage[ key ] = parsed;
+					values[ key ] = true;
+				} catch( error ) {
+					throw store.error();
+				}
 			}
 		}
 
@@ -126,7 +134,8 @@ if ( window.globalStorage ) {
 			var ret = value,
 				now = (new Date()).getTime(),
 				attr,
-				parsed;
+				parsed,
+				prevValue;
 
 			if ( !key ) {
 				ret = {};
@@ -167,6 +176,8 @@ if ( window.globalStorage ) {
 					div.removeAttribute( key );
 					delete attrs[ key ];
 				} else {
+					// we need to get the previous value in case we need to rollback
+					prevValue = div.getAttribute( key );
 					div.setAttribute( key, JSON.stringify({
 						data: value,
 						expires: (options.expires ? (now + options.expires) : null)
@@ -176,7 +187,19 @@ if ( window.globalStorage ) {
 			}
 
 			div.setAttribute( attrKey, JSON.stringify( attrs ) );
-			div.save( attrKey );
+			try {
+				div.save( attrKey );
+			} catch ( error ) {
+				// roll the value back to the previous value
+				// this will avoid constantly hitting the quota
+				if ( prevValue === undefined ) {
+					div.removeAttribute( key );
+					delete attrs[ key ];
+				} else {
+					div.setAttribute( key, prevValue );
+				}
+				throw store.error();
+			}
 			return ret;
 		});
 	}
