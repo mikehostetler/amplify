@@ -192,10 +192,11 @@ if ( window.globalStorage ) {
 				} else {
 					// we need to get the previous value in case we need to rollback
 					prevValue = div.getAttribute( key );
-					div.setAttribute( key, JSON.stringify({
+					parsed = JSON.stringify({
 						data: value,
 						expires: (options.expires ? (now + options.expires) : null)
-					}) );
+					});
+					div.setAttribute( key, parsed );
 					attrs[ key ] = true;
 				}
 			}
@@ -203,16 +204,32 @@ if ( window.globalStorage ) {
 			div.setAttribute( attrKey, JSON.stringify( attrs ) );
 			try {
 				div.save( attrKey );
+			// quota exceeded
 			} catch ( error ) {
 				// roll the value back to the previous value
-				// this will avoid constantly hitting the quota
-				if ( prevValue === undefined ) {
+				if ( prevValue === null ) {
 					div.removeAttribute( key );
 					delete attrs[ key ];
 				} else {
 					div.setAttribute( key, prevValue );
 				}
-				throw store.error();
+
+				// expire old data and try again
+				store.userData();
+				try {
+					div.setAttribute( key, parsed );
+					attrs[ key ] = true;
+					div.save( attrKey );
+				} catch ( error ) {
+					// roll the value back to the previous value
+					if ( prevValue === null ) {
+						div.removeAttribute( key );
+						delete attrs[ key ];
+					} else {
+						div.setAttribute( key, prevValue );
+					}
+					throw store.error();
+				}
 			}
 			return ret;
 		});
