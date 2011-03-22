@@ -199,7 +199,11 @@ if ( amplify.store ) {
 			}
 			var success = ajaxSettings.success;
 			ajaxSettings.success = function( data ) {
-				amplify.store[ type]( cacheKey, data );
+				var expires = ( 'expires' in resource ) ? resource.expires : undefined;
+				if ( expires ) {
+					delete resource[ 'expires' ];
+				}
+				amplify.store[ type]( cacheKey, data , { expires: expires } );
 				success.apply( this, arguments );
 			};
 		};
