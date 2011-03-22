@@ -198,10 +198,8 @@ if ( amplify.store ) {
 				return false;
 			}
 			var success = ajaxSettings.success;
-			ajaxSettings.success = function( data ) {
-				var expires = ( 'expires' in resource ) ? resource.expires : undefined;
-			
-				amplify.store[ type]( cacheKey, data , { expires: expires } );
+			ajaxSettings.success = function( data ) {			
+				amplify.store[ type]( cacheKey, data , { expires: resource.expires } );
 				success.apply( this, arguments );
 			};
 		};
