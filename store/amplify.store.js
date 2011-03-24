@@ -138,7 +138,7 @@ if ( window.globalStorage ) {
 		attrKey = "amplify",
 		attrs;
 	div.style.display = "none";
-	document.documentElement.appendChild( div );
+	document.getElementsByTagName( "head" )[ 0 ].appendChild( div );
 	if ( div.addBehavior ) {
 		div.addBehavior( "#default#userdata" );
 		div.load( attrKey );
