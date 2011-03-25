@@ -1,0 +1,9 @@
+{ "testswarm" : {
+    "name"    : "Amplify Commit <a href=\"http://github.com/appendto/amplify/commit/{$REV_FULL$}\">#{$REV$}</a>",
+    "suites"  : {
+      "cache"   : "cache/test/test.html",
+      "store"   : "store/test/test.html",
+      "request" : "request/test/test.html"
+    }
+  }
+}
