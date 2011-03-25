@@ -199,7 +199,7 @@ if ( amplify.store ) {
 			}
 			var success = ajaxSettings.success;
 			ajaxSettings.success = function( data ) {	
-				amplify.store[ type]( cacheKey, data , { expires: resource.cache.expires } );
+				amplify.store[ type ]( cacheKey, data, { expires: resource.cache.expires } );
 				success.apply( this, arguments );
 			};
 		};
@@ -210,9 +210,8 @@ if ( amplify.store ) {
 amplify.subscribe( "request.before.ajax", function( resource ) {
 	var cacheType = resource.cache;
 	if ( cacheType ) {
-		if ( typeof cacheType === 'object' ) {
-			cacheType = cacheType.type;
-		}
+		// normalize between objects and strings/booleans/numbers
+		cacheType = cacheType.type || cacheType;
 		return cache[ cacheType in cache ? cacheType : "_default" ]
 			.apply( this, arguments );
 	}
