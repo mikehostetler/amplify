@@ -864,7 +864,7 @@ if ( amplify.store ) {
 		// should execute for first request only
 		subscribe( "request.before.ajax", function( resource ) {
 			equal( resource.resourceId, "persist-cache", "before.ajax message: resource.resourceId" );
-			equal( resource.expires, undefined, "before.ajax message: resource.expires");
+			equal( resource.cache.expires, undefined, "before.ajax message: resource.expires");
 		});
 		// should execute for both requests
 		subscribe( "request.success", function( settings, data ) {
@@ -888,7 +888,7 @@ if ( amplify.store ) {
 		});
 	});
 	
-	asyncTest( "cache: persist - with expires", {
+	asyncTest( "cache: persist - with cache options", {
 		setup: function() {
 			$.each( amplify.store(), function( key ) {
 				if ( /^request/.test( key ) ) {
@@ -909,8 +909,7 @@ if ( amplify.store ) {
 		amplify.request.define( "persist-cache", "ajax", {
 			url: "data/data.json",
 			dataType: "json",
-			cache: "persist",
-			expires: 450
+			cache: { type: 'persist', expires: 450 }
 		});
 		
 		// should execute for both requests
@@ -920,7 +919,7 @@ if ( amplify.store ) {
 		// should execute for first request only
 		subscribe( "request.before.ajax", function( resource ) {
 			equal( resource.resourceId, "persist-cache", "before.ajax message: resource.resourceId" );
-			equal( resource.expires, 450, "before.ajax message: resource.expires");
+			equal( resource.cache.expires, 450, "before.ajax message: resource.expires");
 		});
 		// should execute for both requests
 		subscribe( "request.success", function( settings, data ) {
