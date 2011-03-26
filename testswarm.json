@@ -3,7 +3,7 @@
     "jobs" : [
 	  { "browsers" : "popularbetamobile",
 	    "suites" : {
-		  "cache"   : "cache/test/test.html",
+		  "core"    : "core/test/test.html",
 		  "request" : "request/test/test.html",
 		  "store"   : "store/test/test.html"
 		}
