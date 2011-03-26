@@ -166,7 +166,7 @@ var cache = amplify.request.cache = {
 		var memoryStore = {};
 		return function( resource, settings, ajaxSettings ) {
 			// data is already converted to a string by the time we get here
-			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
+			var cacheKey = cache._key( resource.resourceId, ajaxSettings.url ),
 				duration = resource.cache;
 
 			if ( cacheKey in memoryStore ) {
