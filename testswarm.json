@@ -5,7 +5,7 @@
 	    "suites" : {
 		  "cache"   : "cache/test/test.html",
 		  "request" : "request/test/test.html",
-		  "store"   : "store/test/test.html",
+		  "store"   : "store/test/test.html"
 		}
 	  }
 	]
