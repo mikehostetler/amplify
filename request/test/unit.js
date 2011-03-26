@@ -947,6 +947,33 @@ if ( amplify.store ) {
 			}, 500 );
 		});
 	});
+	
+	// see issue: http://groups.google.com/group/amplifyjs/browse_thread/thread/c6d2dc7a7f0a789e
+	asyncTest( "cache: key from ajaxSettings.url", function() {
+		expect( 1 );
+
+		var ajaxCalls = 0;
+
+		amplify.request.define( "url-cache", "ajax", {
+			url: "{url}",
+			dataType: "json",
+			cache: "persist"
+		});
+
+		subscribe( "request.before.ajax", function( resource ) {
+			ajaxCalls++;
+		});
+
+		amplify.request( 'url-cache', { url: "data/data.json" }, function( data ) {
+			amplify.request( 'url-cache', { url: "data/data.json?page=1" }, function( data ) {
+				amplify.request( 'url-cache', { url: "data/data.json?page=2" }, function( data ) {
+					equal( ajaxCalls, 3, "should not cache if url changes" );
+					start();
+				});
+			});
+		});
+
+	});
 
 	test( "cache types", function() {
 		$.each( amplify.store.types, function( type ) {
