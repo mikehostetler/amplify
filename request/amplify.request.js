@@ -143,8 +143,8 @@ amplify.request.types.ajax = function( defnSettings ) {
 
 
 var cache = amplify.request.cache = {
-	_key: function( resourceId, data ) {
-		var length = data.length,
+	_key: function( resourceId, url ) {
+		var length = url.length,
 			i = 0,
 			checksum = chunk();
 
@@ -153,10 +153,10 @@ var cache = amplify.request.cache = {
 		}
 
 		function chunk() {
-			return data.charCodeAt( i++ ) << 24 |
-				data.charCodeAt( i++ ) << 16 |
-				data.charCodeAt( i++ ) << 8 |
-				data.charCodeAt( i++ ) << 0;
+			return url.charCodeAt( i++ ) << 24 |
+				url.charCodeAt( i++ ) << 16 |
+				url.charCodeAt( i++ ) << 8 |
+				url.charCodeAt( i++ ) << 0;
 		}
 
 		return "request-" + resourceId + "-" + checksum;
