@@ -190,7 +190,7 @@ var cache = amplify.request.cache = {
 if ( amplify.store ) {
 	$.each( amplify.store.types, function( type ) {
 		cache[ type ] = function( resource, settings, ajaxSettings ) {
-			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
+			var cacheKey = cache._key( resource.resourceId, ajaxSettings.url ),
 				cached = amplify.store[ type ]( cacheKey );
 
 			if ( cached ) {
