@@ -1,13 +1,15 @@
-{ "testswarm" : {
-    "name" : "Amplify Commit <a href=\"http://github.com/appendto/amplify/commit/{$REV_FULL$}\">#{$REV$}</a>",
-    "jobs" : [
-	  { "browsers" : "popularbetamobile",
-	    "suites" : {
-		  "core"    : "core/test/test.html",
-		  "request" : "request/test/test.html",
-		  "store"   : "store/test/test.html"
-		}
-	  }
-	]
-  }
+{
+	"testswarm": {
+		"name": "Amplify Commit <a href=\"http://github.com/appendto/amplify/commit/{$REV_FULL$}\">#{$REV$}</a>",
+		"jobs": [
+			{
+				"browsers": "popularbetamobile",
+				"suites": {
+					"core": "core/test/test.html",
+					"request": "request/test/test.html",
+					"store": "store/test/test.html"
+				}
+			}
+		]
+	}
 }
