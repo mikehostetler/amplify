@@ -14,7 +14,7 @@ test( "Built-in storage types", function() {
 	equal( "globalStorage" in amplify.store.types, "globalStorage" in window,
 		"globalStorage" );
 	equal( "userData" in amplify.store.types,
-		"addBehavior" in $( "<div>" )[0], "userData" );
+		"addBehavior" in document.createElement( "div" ), "userData" );
 	equal( "memory" in amplify.store.types, true, "memory" );
 });
 
@@ -46,9 +46,9 @@ test( "amplify.store.addType", function() {
 if ( "localStorage" in amplify.store.types ) {
 	module( "amplify.store.localStorage", {
 		setup: function() {
-			$.each( amplify.store.localStorage(), function( key ) {
+			for ( var key in amplify.store.localStorage() ) {
 				amplify.store.localStorage( key, null );
-			});
+			}
 		}
 	});
 
@@ -93,9 +93,9 @@ if ( "localStorage" in amplify.store.types ) {
 if ( "sessionStorage" in amplify.store.types ) {
 	module( "amplify.store.sessionStorage", {
 		setup: function() {
-			$.each( amplify.store.sessionStorage(), function( key ) {
+			for( var key in amplify.store.sessionStorage() ) {
 				amplify.store.sessionStorage( key, null );
-			});
+			}
 		}
 	});
 
@@ -140,9 +140,9 @@ if ( "sessionStorage" in amplify.store.types ) {
 if ( "globalStorage" in amplify.store.types ) {
 	module( "amplify.store.globalStorage", {
 		setup: function() {
-			$.each( amplify.store.globalStorage(), function( key ) {
+			for( var key in amplify.store.globalStorage() ) {
 				amplify.store.globalStorage( key, null );
-			});
+			}
 		}
 	});
 
@@ -187,9 +187,9 @@ if ( "globalStorage" in amplify.store.types ) {
 if ( "userData" in amplify.store.types ) {
 	module( "amplify.store.userData", {
 		setup: function() {
-			$.each( amplify.store.userData(), function( key ) {
+			for( var key in amplify.store.userData() ) {
 				amplify.store.userData( key, null );
-			});
+			}
 		}
 	});
 
@@ -233,9 +233,9 @@ if ( "userData" in amplify.store.types ) {
 
 module( "amplify.store.memory", {
 	setup: function() {
-		$.each( amplify.store.memory(), function( key ) {
+		for( var key in amplify.store.memory() ) {
 			amplify.store.memory( key, null );
-		});
+		}
 	}
 });
 
