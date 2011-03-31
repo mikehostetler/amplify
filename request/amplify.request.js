@@ -137,10 +137,14 @@ amplify.request.types.ajax = function( defnSettings ) {
 				success = ajaxSettings.success;
 				error = ajaxSettings.error;
 				ajaxSettings.success = function( data, status, xhr ) {
-					success( data, status, xhr );
+					if ( xhr.aborted || !xhr.readyState ) {
+						error( xhr, "abort", null, data );
+					} else {
+						success( data, status, xhr );
+					}
 				};
 				ajaxSettings.error = function( xhr, status, _error, data ) {
-					if ( this.aborted || !xhr.readyState ) {
+					if ( xhr.aborted || !xhr.readyState ) {
 						status = "abort";
 					}
 					error( xhr, status, error, data );
@@ -157,7 +161,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 		try {
 			var xhrAbort = xhr.abort;
 			xhr.abort = function() {
-				aborted = true;
+				this.aborted = true;
 				xhrAbort.call( this );
 			};
 		// proxying xhr.abort throws an error even when it works
