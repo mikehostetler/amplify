@@ -7,6 +7,12 @@
 				"suites": {
 					"core": "core/test/test.html",
 					"request": "request/test/test.html",
+					"request 1.5": "request/test/test.html?jquery=1.5",
+					"request 1.4.4": "request/test/test.html?jquery=1.4.4",
+					"request 1.4.3": "request/test/test.html?jquery=1.4.3",
+					"request 1.4.2": "request/test/test.html?jquery=1.4.2",
+					"request 1.4.1": "request/test/test.html?jquery=1.4.1",
+					"request 1.4": "request/test/test.html?jquery=1.4",
 					"store": "store/test/test.html"
 				}
 			}
