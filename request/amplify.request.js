@@ -109,7 +109,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 			});
 		}
 
-		xhr = $.ajax($.extend( {}, defnSettings, {
+		xhr = $.ajax( $.extend( {}, defnSettings, {
 			url: url,
 			type: defnSettings.type,
 			data: data,
@@ -122,14 +122,31 @@ amplify.request.types.ajax = function( defnSettings ) {
 				if ( data === undefined ) {
 					// TODO: add support for ajax errors with data
 					data = null;
-				} 
+				}
 				settings.error( data, xhr, status );
 			},
 			beforeSend: function( xhr, ajaxSettings ) {
 				var ret = defnSettings.beforeSend ?
-					defnSettings.beforeSend.apply( this, arguments ) : true;
-				return ret && amplify.publish( "request.before.ajax",
+					defnSettings.beforeSend.apply( this, arguments ) : true,
+					success,
+					error;
+				ret = ret && amplify.publish( "request.before.ajax",
 					defnSettings, settings, ajaxSettings, xhr );
+
+				// wrap the callbacks to handle aborted requests in jQuery <1.5
+				success = ajaxSettings.success;
+				error = ajaxSettings.error;
+				ajaxSettings.success = function( data, status, xhr ) {
+					success( data, status, xhr );
+				};
+				ajaxSettings.error = function( xhr, status, _error, data ) {
+					if ( this.aborted || !xhr.readyState ) {
+						status = "abort";
+					}
+					error( xhr, status, error, data );
+				};
+
+				return ret;
 			}
 		}) );
 
@@ -137,6 +154,14 @@ amplify.request.types.ajax = function( defnSettings ) {
 			xhr.abort();
 			abort.call( this );
 		};
+		try {
+			var xhrAbort = xhr.abort;
+			xhr.abort = function() {
+				aborted = true;
+				xhrAbort.call( this );
+			};
+		// proxying xhr.abort throws an error even when it works
+		} catch ( e ) {}
 	};
 };
 
