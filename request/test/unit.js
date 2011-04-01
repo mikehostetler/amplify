@@ -663,7 +663,8 @@ test( "abort", function() {
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/delay.php",
-		dataType: "json"
+		dataType: "json",
+		cache: false
 	});
 	var request = amplify.request({
 		resourceId: "test",

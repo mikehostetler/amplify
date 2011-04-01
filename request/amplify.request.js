@@ -116,9 +116,8 @@ amplify.request.types.ajax = function( defnSettings ) {
 					try {
 						xhr.abort();
 					// IE 7 throws an error when trying to abort
-					} catch( e ) {
-						ampXHR.error( null, "abort" );
-					}
+					} catch( e ) {}
+					handleResponse( null, "abort" );
 				},
 				success: function( data, status ) {
 					settings.success( data, ampXHR, status );
@@ -173,6 +172,10 @@ amplify.request.types.ajax = function( defnSettings ) {
 			} else {
 				ampXHR.success( data, status );
 			}
+			// avoid handling a response multiple times
+			// this can happen if a request is aborted
+			// TODO: figure out if this breaks polling or multi-part responses
+			handleResponse = $.noop;
 		}
 
 		request.abort = function() {
