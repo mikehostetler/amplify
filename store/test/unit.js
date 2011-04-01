@@ -72,7 +72,7 @@ if ( "localStorage" in amplify.store.types ) {
 		amplify.store.localStorage( "expiring1", "i disappear",
 			{ expires: 300 } );
 		amplify.store.localStorage( "expiring2", "i disappear too",
-			{ expires: 600 } );
+			{ expires: 700 } );
 		deepEqual( amplify.store.localStorage(), {
 			expiring1: "i disappear",
 			expiring2: "i disappear too"
@@ -86,7 +86,7 @@ if ( "localStorage" in amplify.store.types ) {
 		setTimeout(function() {
 			deepEqual( amplify.store.localStorage(), {}, "both expired" );
 			start();
-		}, 800 );
+		}, 900 );
 	});
 }
 
@@ -119,7 +119,7 @@ if ( "sessionStorage" in amplify.store.types ) {
 		amplify.store.sessionStorage( "expiring1", "i disappear",
 			{ expires: 300 } );
 		amplify.store.sessionStorage( "expiring2", "i disappear too",
-			{ expires: 600 } );
+			{ expires: 700 } );
 		deepEqual( amplify.store.sessionStorage(), {
 			expiring1: "i disappear",
 			expiring2: "i disappear too"
@@ -133,7 +133,7 @@ if ( "sessionStorage" in amplify.store.types ) {
 		setTimeout(function() {
 			deepEqual( amplify.store.sessionStorage(), {}, "both expired" );
 			start();
-		}, 800 );
+		}, 900 );
 	});
 }
 
@@ -166,7 +166,7 @@ if ( "globalStorage" in amplify.store.types ) {
 		amplify.store.globalStorage( "expiring1", "i disappear",
 			{ expires: 300 } );
 		amplify.store.globalStorage( "expiring2", "i disappear too",
-			{ expires: 600 } );
+			{ expires: 700 } );
 		deepEqual( amplify.store.globalStorage(), {
 			expiring1: "i disappear",
 			expiring2: "i disappear too"
@@ -180,7 +180,7 @@ if ( "globalStorage" in amplify.store.types ) {
 		setTimeout(function() {
 			deepEqual( amplify.store.globalStorage(), {}, "both expired" );
 			start();
-		}, 800 );
+		}, 900 );
 	});
 }
 
@@ -213,7 +213,7 @@ if ( "userData" in amplify.store.types ) {
 		amplify.store.userData( "expiring1", "i disappear",
 			{ expires: 300 } );
 		amplify.store.userData( "expiring2", "i disappear too",
-			{ expires: 600 } );
+			{ expires: 700 } );
 		deepEqual( amplify.store.userData(), {
 			expiring1: "i disappear",
 			expiring2: "i disappear too"
@@ -227,7 +227,7 @@ if ( "userData" in amplify.store.types ) {
 		setTimeout(function() {
 			deepEqual( amplify.store.userData(), {}, "both expired" );
 			start();
-		}, 800 );
+		}, 900 );
 	});
 }
 
@@ -259,7 +259,7 @@ asyncTest( "memory expiration", function() {
 	amplify.store.memory( "expiring1", "i disappear",
 		{ expires: 300 } );
 	amplify.store.memory( "expiring2", "i disappear too",
-		{ expires: 600 } );
+		{ expires: 700 } );
 	deepEqual( amplify.store.memory(), {
 		expiring1: "i disappear",
 		expiring2: "i disappear too"
@@ -273,5 +273,5 @@ asyncTest( "memory expiration", function() {
 	setTimeout(function() {
 		deepEqual( amplify.store.memory(), {}, "both expired" );
 		start();
-	}, 800 );
+	}, 900 );
 });
