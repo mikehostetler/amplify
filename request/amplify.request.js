@@ -164,8 +164,13 @@ amplify.request.types.ajax = function( defnSettings ) {
 
 		function handleResponse( data, status ) {
 			$.each( xhrProps, function( i, key ) {
-				ampXHR[ key ] = xhr[ key ];
+				try {
+					ampXHR[ key ] = xhr[ key ];
+				} catch( e ) {}
 			});
+			if ( ampXHR.statusText === "OK" ) {
+				ampXHR.statusText = "success";
+			}
 			if ( data === undefined ) {
 				// TODO: add support for ajax errors with data
 				data = null;
