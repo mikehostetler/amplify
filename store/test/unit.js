@@ -82,11 +82,11 @@ if ( "localStorage" in amplify.store.types ) {
 				"300 expired" );
 			equal( amplify.store.localStorage( "expiring2" ), "i disappear too",
 			"600 still valid" );
-		}, 450 );
+		}, 500 );
 		setTimeout(function() {
 			deepEqual( amplify.store.localStorage(), {}, "both expired" );
 			start();
-		}, 700 );
+		}, 800 );
 	});
 }
 
@@ -129,11 +129,11 @@ if ( "sessionStorage" in amplify.store.types ) {
 				"300 expired" );
 			equal( amplify.store.sessionStorage( "expiring2" ), "i disappear too",
 			"600 still valid" );
-		}, 450 );
+		}, 500 );
 		setTimeout(function() {
 			deepEqual( amplify.store.sessionStorage(), {}, "both expired" );
 			start();
-		}, 700 );
+		}, 800 );
 	});
 }
 
@@ -176,11 +176,11 @@ if ( "globalStorage" in amplify.store.types ) {
 				"300 expired" );
 			equal( amplify.store.globalStorage( "expiring2" ), "i disappear too",
 			"600 still valid" );
-		}, 450 );
+		}, 500 );
 		setTimeout(function() {
 			deepEqual( amplify.store.globalStorage(), {}, "both expired" );
 			start();
-		}, 700 );
+		}, 800 );
 	});
 }
 
@@ -223,11 +223,11 @@ if ( "userData" in amplify.store.types ) {
 				"300 expired" );
 			equal( amplify.store.userData( "expiring2" ), "i disappear too",
 			"600 still valid" );
-		}, 450 );
+		}, 500 );
 		setTimeout(function() {
 			deepEqual( amplify.store.userData(), {}, "both expired" );
 			start();
-		}, 700 );
+		}, 800 );
 	});
 }
 
@@ -269,9 +269,9 @@ asyncTest( "memory expiration", function() {
 			"300 expired" );
 		equal( amplify.store.memory( "expiring2" ), "i disappear too",
 		"600 still valid" );
-	}, 450 );
+	}, 500 );
 	setTimeout(function() {
 		deepEqual( amplify.store.memory(), {}, "both expired" );
 		start();
-	}, 700 );
+	}, 800 );
 });
