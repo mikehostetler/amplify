@@ -91,12 +91,42 @@ amplify.request.types.ajax = function( defnSettings ) {
 	}, defnSettings );
 
 	return function( settings, request ) {
-		var url = defnSettings.url,
+		var regex, xhr,
+			url = defnSettings.url,
 			data = settings.data,
 			abort = request.abort,
-			ajaxSettings,
-			regex,
-			xhr;
+			ajaxSettings = {},
+			aborted = false,
+			ampXHR = {
+				readyState: 0,
+				setRequestHeader: function( name, value ) {
+					return xhr.setRequestHeader( name, value );
+				},
+				getAllResponseHeaders: function() {
+					return xhr.getAllResponseHeaders();
+				},
+				getResponseHeader: function( key ) {
+					return xhr.getResponseHeader( key );
+				},
+				overrideMimeType: function( type ) {
+					return xhr.overrideMideType( type );
+				},
+				abort: function() {
+					aborted = true;
+					try {
+						xhr.abort();
+					// IE 7 throws an error when trying to abort
+					} catch( e ) {
+						ampXHR.error( null, "abort" );
+					}
+				},
+				success: function( data, status ) {
+					settings.success( data, ampXHR, status );
+				},
+				error: function( data, status ) {
+					settings.error( data, ampXHR, status );
+				}
+			};
 
 		if ( typeof data !== "string" ) {
 			data = $.extend( true, {}, defnSettings.data, data );
@@ -109,63 +139,46 @@ amplify.request.types.ajax = function( defnSettings ) {
 			});
 		}
 
-		xhr = $.ajax( $.extend( {}, defnSettings, {
+		$.extend( ajaxSettings, defnSettings, {
 			url: url,
 			type: defnSettings.type,
 			data: data,
 			dataType: defnSettings.dataType,
-			success: function( data, status, xhr ) {
-				settings.success( data, xhr, status );
+			success: function( data, status ) {
+				handleResponse( data, status );
 			},
-			// data parameter is for custom overrides that proxy this function
-			error: function( xhr, status, error, data ) {
-				if ( data === undefined ) {
-					// TODO: add support for ajax errors with data
-					data = null;
-				}
-				settings.error( data, xhr, status );
+			error: function( _xhr, status ) {
+				handleResponse( null, status );
 			},
-			beforeSend: function( xhr, ajaxSettings ) {
+			beforeSend: function( _xhr, _ajaxSettings ) {
+				ajaxSettings = _ajaxSettings;
 				var ret = defnSettings.beforeSend ?
-					defnSettings.beforeSend.apply( this, arguments ) : true,
-					success,
-					error;
-				ret = ret && amplify.publish( "request.before.ajax",
-					defnSettings, settings, ajaxSettings, xhr );
-
-				// wrap the callbacks to handle aborted requests in jQuery <1.5
-				success = ajaxSettings.success;
-				error = ajaxSettings.error;
-				ajaxSettings.success = function( data, status, xhr ) {
-					if ( xhr.aborted || !xhr.readyState ) {
-						error( xhr, "abort", null, data );
-					} else {
-						success( data, status, xhr );
-					}
-				};
-				ajaxSettings.error = function( xhr, status, _error, data ) {
-					if ( xhr.aborted || !xhr.readyState ) {
-						status = "abort";
-					}
-					error( xhr, status, error, data );
-				};
-
-				return ret;
+					defnSettings.beforeSend.call( this, ampXHR, ajaxSettings ) : true;
+				return ret && amplify.publish( "request.before.ajax",
+					defnSettings, settings, ajaxSettings, ampXHR );
 			}
-		}) );
+		});
+		xhr = $.ajax( ajaxSettings );
+
+		function handleResponse( data, status ) {
+			if ( data === undefined ) {
+				// TODO: add support for ajax errors with data
+				data = null;
+			}
+			if ( aborted ) {
+				status = "abort";
+			}
+			if ( /timeout|error|abort/.test( status ) ) {
+				ampXHR.error( data, status );
+			} else {
+				ampXHR.success( data, status );
+			}
+		}
 
 		request.abort = function() {
-			xhr.abort();
+			ampXHR.abort();
 			abort.call( this );
 		};
-		try {
-			var xhrAbort = xhr.abort;
-			xhr.abort = function() {
-				this.aborted = true;
-				xhrAbort.call( this );
-			};
-		// proxying xhr.abort throws an error even when it works
-		} catch ( e ) {}
 	};
 };
 
@@ -193,17 +206,17 @@ var cache = amplify.request.cache = {
 
 	_default: (function() {
 		var memoryStore = {};
-		return function( resource, settings, ajaxSettings ) {
+		return function( resource, settings, ajaxSettings, ampXHR ) {
 			// data is already converted to a string by the time we get here
 			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
 				duration = resource.cache;
 
 			if ( cacheKey in memoryStore ) {
-				ajaxSettings.success( memoryStore[ cacheKey ] );
+				ampXHR.success( memoryStore[ cacheKey ] );
 				return false;
 			}
-			var success = ajaxSettings.success;
-			ajaxSettings.success = function( data ) {
+			var success = ampXHR.success;
+			ampXHR.success = function( data ) {
 				memoryStore[ cacheKey ] = data;
 				if ( typeof duration === "number" ) {
 					setTimeout(function() {
@@ -218,7 +231,7 @@ var cache = amplify.request.cache = {
 
 if ( amplify.store ) {
 	$.each( amplify.store.types, function( type ) {
-		cache[ type ] = function( resource, settings, ajaxSettings ) {
+		cache[ type ] = function( resource, settings, ajaxSettings, ampXHR ) {
 			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
 				cached = amplify.store[ type ]( cacheKey );
 
@@ -226,8 +239,8 @@ if ( amplify.store ) {
 				ajaxSettings.success( cached );
 				return false;
 			}
-			var success = ajaxSettings.success;
-			ajaxSettings.success = function( data ) {	
+			var success = ampXHR.success;
+			ampXHR.success = function( data ) {	
 				amplify.store[ type ]( cacheKey, data, { expires: resource.cache.expires } );
 				success.apply( this, arguments );
 			};
@@ -250,7 +263,7 @@ amplify.subscribe( "request.before.ajax", function( resource ) {
 
 amplify.request.decoders = {
 	// http://labs.omniti.com/labs/jsend
-	jsend: function( data, status, xhr, success, error ) {
+	jsend: function( data, status, ampXHR, success, error ) {
 		if ( data.status === "success" ) {
 			success( data.data );
 		} else if ( data.status === "fail" ) {
@@ -262,9 +275,9 @@ amplify.request.decoders = {
 	}
 };
 
-amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSettings ) {
-	var _success = ajaxSettings.success,
-		_error = ajaxSettings.error,
+amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
+	var _success = ampXHR.success,
+		_error = ampXHR.error,
 		decoder = $.isFunction( resource.decoder )
 			? resource.decoder
 			: resource.decoder in amplify.request.decoders
@@ -275,21 +288,17 @@ amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSett
 		return;
 	}
 
-	function success( xhr ) {
-		return function( data, status ) {
-			_success( data, status || "success", xhr );
-		};
+	function success( data, status ) {
+		_success( data, status || "success" );
 	}
-	function error( xhr, _status ) {
-		return function( data, status ) {
-			_error( xhr, status || _status, null, data );
-		};
+	function error( data, status ) {
+		_error( data, status || "error" );
 	}
-	ajaxSettings.success = function( data, status, xhr ) {
-		decoder( data, status, xhr, success( xhr ), error( xhr, "error" ) );
+	ampXHR.success = function( data, status ) {
+		decoder( data, status, ampXHR, success, error );
 	};
-	ajaxSettings.error = function( xhr, status ) {
-		decoder( null, status, xhr, success( xhr ), error( xhr, status ) );
+	ampXHR.error = function( data, status ) {
+		decoder( data, status, ampXHR, success, error );
 	};
 });
 
