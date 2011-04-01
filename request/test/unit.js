@@ -699,6 +699,38 @@ test( "abort", function() {
 	request.abort();
 });
 
+asyncTest( "ampXHR", function() {
+	expect( 7 );
+
+	amplify.request.define( "ampXHR", "ajax", {
+		url: "data/headers.php",
+		dataType: "json"
+	});
+	subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
+		ampXHR.setRequestHeader( "X-AMPLIFY-REQUEST", "custom request header" );
+	});
+	subscribe( "request.success", function( settings, data, ampXHR, status ) {
+		equal( ampXHR.readyState, 4, "ampXHR.readyState" );
+		deepEqual( data, { header: "custom request header" }, "ampXHR.setRequestHeader()" );
+		equal( ampXHR.getResponseHeader( "X-AMPLIFY-RESPONSE" ), "custom response header",
+			"ampXHR.getResponseHeader()" );
+		ok( ampXHR.getAllResponseHeaders().indexOf(
+			"X-AMPLIFY-RESPONSE: custom response header" ) !== -1,
+			"ampXHR.getAllResponseHeaders()" );
+		equal( ampXHR.status, 200, "ampXHR.status" );
+		equal( ampXHR.statusText, "success", "ampXHR.statusText" );
+		equal( ampXHR.responseText, "{\"header\":\"custom request header\"}",
+			"ampXHR.responseText" );
+	});
+	subscribe( "request.complete", function() {
+		start();
+	});
+	subscribe( "request.error", function() {
+		ok( false, "error message published" );
+	});
+	amplify.request( "ampXHR" );
+});
+
 test( "cache keys", function() {
 	expect( 2 );
 

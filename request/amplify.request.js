@@ -85,6 +85,8 @@ amplify.request.define = function( resourceId, type, settings ) {
 
 (function( amplify, $, undefined ) {
 
+var xhrProps = [ "status", "statusText", "responseText", "responseXML", "readyState" ];
+
 amplify.request.types.ajax = function( defnSettings ) {
 	defnSettings = $.extend({
 		type: "GET"
@@ -150,6 +152,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 				handleResponse( null, status );
 			},
 			beforeSend: function( _xhr, _ajaxSettings ) {
+				xhr = _xhr;
 				ajaxSettings = _ajaxSettings;
 				var ret = defnSettings.beforeSend ?
 					defnSettings.beforeSend.call( this, ampXHR, ajaxSettings ) : true;
@@ -157,9 +160,12 @@ amplify.request.types.ajax = function( defnSettings ) {
 					defnSettings, settings, ajaxSettings, ampXHR );
 			}
 		});
-		xhr = $.ajax( ajaxSettings );
+		$.ajax( ajaxSettings );
 
 		function handleResponse( data, status ) {
+			$.each( xhrProps, function( i, key ) {
+				ampXHR[ key ] = xhr[ key ];
+			});
 			if ( data === undefined ) {
 				// TODO: add support for ajax errors with data
 				data = null;
