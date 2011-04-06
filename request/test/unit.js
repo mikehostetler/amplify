@@ -707,15 +707,15 @@ asyncTest( "ampXHR", function() {
 		dataType: "json"
 	});
 	subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
-		ampXHR.setRequestHeader( "X-AMPLIFY-REQUEST", "custom request header" );
+		ampXHR.setRequestHeader( "X-Amplify-Request", "custom request header" );
 	});
 	subscribe( "request.success", function( settings, data, ampXHR, status ) {
 		equal( ampXHR.readyState, 4, "ampXHR.readyState" );
 		deepEqual( data, { header: "custom request header" }, "ampXHR.setRequestHeader()" );
-		equal( ampXHR.getResponseHeader( "X-AMPLIFY-RESPONSE" ), "custom response header",
+		equal( ampXHR.getResponseHeader( "X-Amplify-Response" ), "custom response header",
 			"ampXHR.getResponseHeader()" );
-		ok( ampXHR.getAllResponseHeaders().indexOf(
-			"X-AMPLIFY-RESPONSE: custom response header" ) !== -1,
+		ok( ampXHR.getAllResponseHeaders().toLowerCase().indexOf(
+			"x-amplify-response: custom response header" ) !== -1,
 			"ampXHR.getAllResponseHeaders()" );
 		equal( ampXHR.status, 200, "ampXHR.status" );
 		equal( ampXHR.statusText, "success", "ampXHR.statusText" );
