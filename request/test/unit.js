@@ -1280,4 +1280,50 @@ asyncTest( "decoder: custom", function() {
 	});
 });
 
+asyncTest( "decoder: jsonp", function() {
+	expect( 14 );
+
+	amplify.request.define( "test", "ajax", {
+		url: "data/jsonp.php",
+		dataType: "jsonp",
+		decoder: function( data, status, xhr, success, error ) {
+			deepEqual( data, { foo: "bar" }, "data in decoder" );
+			equal( status, "success", "status in decoder" );
+			ok( "abort" in xhr, "xhr in decoder" );
+			var decodedData = {};
+			$.each( data, function( key, value ) {
+				decodedData[ "decoded-" + key ] = value;
+			});
+			success( decodedData, "decoded-jsonp" );
+		}
+	});
+	subscribe( "request.success", function( settings, data, xhr, status ) {
+		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		deepEqual( data, { "decoded-foo": "bar" }, "success message: data" );
+		ok( "abort" in xhr, "success message: xhr object provided" );
+		equal( status, "decoded-jsonp", "success message: status" );
+	});
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
+		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		deepEqual( data, { "decoded-foo": "bar" }, "complete message: data" );
+		ok( "abort" in xhr, "complete message: xhr object provided" );
+		equal( status, "decoded-jsonp", "complete message: status" );
+		start();
+	});
+	subscribe( "request.error", function() {
+		ok( false, "error message published" );
+	});
+	amplify.request({
+		resourceId: "test",
+		success: function( data, xhr, status ) {
+			deepEqual( data, { "decoded-foo": "bar" }, "success callback: data" );
+			ok( "abort" in xhr, "success callback: xhr object provided" );
+			equal( status, "decoded-jsonp", "success callback: status" );
+		},
+		error: function() {
+			ok( false, "error callback invoked" );
+		}
+	});
+});
+
 }());
