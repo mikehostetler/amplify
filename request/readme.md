@@ -180,7 +180,7 @@ json unless specified otherwise:
 	});
 
 	// later in code
-	amplify.request( "ajaxExample", function( data ) {
+	amplify.request( "ajaxExample1", function( data ) {
 		data.foo; // bar
 	});
 
