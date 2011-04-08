@@ -142,11 +142,21 @@ Cache the data in memory for the specified number of milliseconds.
 
 Cache the data using a pre-defined caching mechanism.
 
+	cache: {
+		type: string,
+		expires: number
+	}
+
+Cache the data using a pre-defined caching mechanism for the specified number
+of milliseconds.
+
 #### Persistent Client-side Cache
 
 You can also persist a cache if `amplify.store` has been loaded.
 You can specify `cache: "persist"` to cache in the default store
 or you can specify any of the specific stores available, e.g., `cache: "localStorage"`.
+You can also use the hash form listed above to store in a persistent cache with
+an expiration.
 
 ### Custom Cache
 
