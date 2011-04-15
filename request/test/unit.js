@@ -734,8 +734,8 @@ asyncTest( "ampXHR", function() {
 test( "cache keys", function() {
 	expect( 2 );
 
-	equal( amplify.request.cache._key( "x", "" ), "request-x-0" );
-	equal( amplify.request.cache._key( "x", "foo=bar" ), "request-x-68033853" );
+	equal( amplify.request.cache._key( "x", "" ), "request-x-1996950016" );
+	equal( amplify.request.cache._key( "x", "foo=bar" ), "request-x-50601290" );
 });
 
 asyncTest( "cache: true", function() {
@@ -807,6 +807,30 @@ asyncTest( "cache with data", function() {
 						start();
 					});
 				});
+			});
+		});
+	});
+});
+
+asyncTest( "cache with data-replaced URL", function() {
+	expect( 5 );
+
+	var expectAjax = true;
+	amplify.request.define( "data-cache-url", "ajax", {
+		url: "data/echo-raw.php?{foo}",
+		cache: true
+	});
+	subscribe( "request.before.ajax", function() {
+		ok( expectAjax );
+	});
+	amplify.request( "data-cache-url", { foo: "bar" }, function( data ) {
+		equal( data, "bar", "data; empty cache" );
+		amplify.request( "data-cache-url", { foo: "qux" }, function( data ) {
+			equal( data, "qux", "different data; empty cache" );
+			expectAjax = false;
+			amplify.request( "data-cache-url", { foo: "bar" }, function( data ) {
+				equal( data, "bar", "data; cached" );
+				start();
 			});
 		});
 	});

@@ -199,7 +199,8 @@ amplify.request.types.ajax = function( defnSettings ) {
 
 
 var cache = amplify.request.cache = {
-	_key: function( resourceId, data ) {
+	_key: function( resourceId, url, data ) {
+		data = url + data;
 		var length = data.length,
 			i = 0,
 			checksum = chunk();
@@ -222,7 +223,8 @@ var cache = amplify.request.cache = {
 		var memoryStore = {};
 		return function( resource, settings, ajaxSettings, ampXHR ) {
 			// data is already converted to a string by the time we get here
-			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
+			var cacheKey = cache._key( settings.resourceId,
+					ajaxSettings.url, ajaxSettings.data ),
 				duration = resource.cache;
 
 			if ( cacheKey in memoryStore ) {
@@ -246,7 +248,8 @@ var cache = amplify.request.cache = {
 if ( amplify.store ) {
 	$.each( amplify.store.types, function( type ) {
 		cache[ type ] = function( resource, settings, ajaxSettings, ampXHR ) {
-			var cacheKey = cache._key( resource.resourceId, ajaxSettings.data ),
+			var cacheKey = cache._key( settings.resourceId,
+					ajaxSettings.url, ajaxSettings.data ),
 				cached = amplify.store[ type ]( cacheKey );
 
 			if ( cached ) {
