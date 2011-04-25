@@ -36,14 +36,16 @@ amplify.request = function( resourceId, data, callback ) {
 		success = settings.success || noop,
 		error = settings.error || noop;
 	settings.success = function( data, extra, status ) {
+		status = status || "success";
 		amplify.publish( "request.success", settings, data, extra, status );
 		amplify.publish( "request.complete", settings, data, extra, status );
-		success.apply( this, arguments );
+		success( data, extra, status );
 	};
 	settings.error = function( data, extra, status ) {
+		status = status || "error";
 		amplify.publish( "request.error", settings, data, extra, status );
 		amplify.publish( "request.complete", settings, data, extra, status );
-		error.apply( this, arguments );
+		error( data, extra, status );
 	};
 
 	if ( !resource ) {
@@ -306,10 +308,10 @@ amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSett
 	}
 
 	function success( data, status ) {
-		_success( data, status || "success" );
+		_success( data, status );
 	}
 	function error( data, status ) {
-		_error( data, status || "error" );
+		_error( data, status );
 	}
 	ampXHR.success = function( data, status ) {
 		decoder( data, status, ampXHR, success, error );
