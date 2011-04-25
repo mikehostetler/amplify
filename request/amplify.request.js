@@ -54,7 +54,7 @@ amplify.request = function( resourceId, data, callback ) {
 	}
 
 	if ( amplify.publish( "request.before", settings ) ) {
-		amplify.request.resources[ settings.resourceId ]( settings, request );
+		resource( settings, request );
 	}
 
 	return request;
