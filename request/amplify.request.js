@@ -55,10 +55,12 @@ amplify.request = function( resourceId, data, callback ) {
 		throw "amplify.request: unknown resourceId: " + settings.resourceId;
 	}
 
-	if ( amplify.publish( "request.before", settings ) ) {
-		resource( settings, request );
+	if ( !amplify.publish( "request.before", settings ) ) {
+		settings.error( null, null, "abort" );
+		return;
 	}
 
+	amplify.request.resources[ settings.resourceId ]( settings, request );
 	return request;
 };
 

@@ -546,7 +546,7 @@ asyncTest( "prevent request - beforeSend", function() {
 });
 
 asyncTest( "prevent request - request.before", function() {
-	expect( 3 );
+	expect( 4 );
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
@@ -556,9 +556,13 @@ asyncTest( "prevent request - request.before", function() {
 		ok( true, "message published" );
 		return settings.data.pass;
 	});
-	subscribe( "request.complete", function( settings ) {
-		ok( settings.data.pass, "request completed" );
-		start();
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
+		if ( !settings.data.pass ) {
+			equal( status, "abort", "aborted" );
+		} else {
+			equal( status, "success", "successful" );
+			start();
+		}
 	});
 	amplify.request( "test", { pass: false } );
 	amplify.request( "test", { pass: true } );
@@ -575,9 +579,13 @@ asyncTest( "prevent request - request.before.ajax", function() {
 		ok( true, "message published" );
 		return settings.data.pass;
 	});
-	subscribe( "request.complete", function( settings ) {
-		ok( settings.data.pass, "request completed" );
-		start();
+	subscribe( "request.complete", function( settings, data, xhr, status ) {
+		if ( !settings.data.pass ) {
+			equal( status, "abort", "aborted" );
+		} else {
+			equal( status, "success", "successful" );
+			start();
+		}
 	});
 	amplify.request( "test", { pass: false } );
 	amplify.request( "test", { pass: true } );
