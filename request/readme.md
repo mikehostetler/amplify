@@ -49,7 +49,6 @@ Define a resource.
   * cache: see the [cache][cache] section for more details.
   * decoder: see the [decoder][decoder] section for more details.
 
- 
 
 	amplify.request.define( string resourceId , function resource )
 
@@ -115,7 +114,7 @@ Define a decoder. `decoderName` should be replaced with the decoder name
 of your choosing.
 
 * `data`: Data returned from the ajax request.
-* `status`: Status of the ajax request.
+* `status`: Status of the ajax request. See the [status][status] section below.
 * `xhr`: xhr object used to make the request.
 * `success`: Callback to invoke on success.
 * `error`: Callback to invoke on error.
@@ -273,11 +272,11 @@ Example:
 	amplify.request.decoders.appEnvelope =
 		function ( data, status, xhr, success, error ) {
 			if ( data.status === "success" ) {
-				success ( data.data );
+				success( data.data, xhr );
 			} else if ( data.status === "fail" || data.status === "error" ) {
-				error( data.message, data.status );
+				error( data.message, xhr, data.status );
 			} else {
-				error( data.message , "fatal" );
+				error( data.message , xhr, "fatal" );
 			}
 		};
 
@@ -323,11 +322,11 @@ Example:
 		type: "POST",
 		decoder: function ( data, status, xhr, success, error ) {
 			if ( data.status === "success" ) {
-				success ( data.data );
+				success( data.data, xhr );
 			} else if ( data.status === "fail" || data.status === "error" ) {
-				error( data.message, data.status );
+				error( data.message, xhr, data.status );
 			} else {
-				error( data.message , "fatal" );
+				error( data.message , xhr, "fatal" );
 			}
 		}
 	});
@@ -347,7 +346,7 @@ Example:
 
 ### Status Codes in Success and Error Callbacks
 
-`amplify.request` comes with some built in support for a few status
+`amplify.request` comes with built in support for status
 codes. Status codes appear as a parameter in the default success or
 error callbacks when using an ajax definition:
 
@@ -369,7 +368,7 @@ With the error callback two default status codes are possible: `error` and
 ### Status Codes and Decoders
 
 When specifying a custom decoder for request definition a status code
-will be passed again. You can determine results from a request based on
+will be passed in as a parameter. You can determine results from a request based on
 this status code. When a success or error callback is executed, the
 appropriate status code will be set by `amplify.request`.
 
@@ -378,9 +377,9 @@ A basic decoder example:
 	amplfiy.request.define( "statusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			if( status === "success" ) {
-				success( data, xhr )
+				success( data, xhr );
 			} else {
-				error( data, xhr )
+				error( data, xhr );
 			}
 		}
 	});
@@ -413,7 +412,7 @@ A reqeust is aborted by using the object returned by a request call:
 
 ### Subscribing to status events
 
-For an alternative to handling issues you can subscribe to a series of
+For an alternative to handling issues and statuses you can subscribe to a series of
 globally available message that are published during the request
 process.
 
@@ -451,6 +450,48 @@ subscriptions ) will be called with a status of `fail`.
 
 ### Customizing status codes
 
+When calling a success of failure callback through a decoder you can
+specify a custom status code to be sent to the callback as the third
+parameter for the callback function.
+
+An example with a success callback:
+
+	amplfiy.request.define( "customStatusExample", "ajax", {
+		decoder: function( data, status, xhr, success, error ) {
+			var customStatus = status;
+			if( someWarningCondition ) {
+				customStatus = "warning";
+			}
+			success( data, xhr, "warning" )
+		}
+	});
+	amplify.request({
+		resourceId: "customStatusExample",
+		success: function( data, xhr, status ) {
+			// status code could be "success" or "warning"
+		}
+	});
+
+
+An example with an error callback:
+
+	amplfiy.request.define( "customStatusExample2", "ajax", {
+		decoder: function( data, status, xhr, success, error ) {
+			var customStatus = status;
+			if( status === "error" && someCriticalCondition ) {
+				customStatus = "zomg";
+			}
+			if( status != "success" ) {
+				error( data, xhr, customStatus );
+			}
+		}
+	});
+	amplify.request({
+		resourceId: "customStatusExample2",
+		error: function( data, xhr, status ) {
+			// status code could be "error", "abort", or "zomg"
+		}
+	});
 
 
 [requestTypes]: #request_types "request types"
