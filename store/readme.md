@@ -33,6 +33,10 @@ Gets a stored value based on the key.
 
 Gets a hash of all stored values.
 
+	amplify.store( string key, null )
+
+Clears key/value pair from the store.
+
 	amplify.store.storageType( string key, mixed value [, hash options ] )
 
 Stores a value for a given key using an explicit storage type, where `storageType` 
@@ -46,6 +50,7 @@ Gets a stored value based upon key for the explicit storage type.
 	amplify.store.storageType()
 
 Gets a hash of all stored values which were stored through `amplify.store`.
+
 
 ### Options
 

@@ -342,7 +342,119 @@ Example:
 		}
 	});
 
+## Status Codes and Handling Issues
+
+
+### Status Codes in Success and Error Callbacks
+
+`amplify.request` comes with some built in support for a few status
+codes. Status codes appear as a parameter in the default success or
+error callbacks when using an ajax definition:
+
+	amplfiy.request.define( "statusExample1", "ajax", {
+		//...
+	});
+	amplify.request({
+		resourceId: "statusExample1",
+		success: function( data, xhr, status ) {
+		},
+		error: function( data, xhr, status ) {
+		}
+	});
+
+With the success callback, the only default status code is `success`.
+With the error callback two default status codes are possible: `error` and
+`abort`.
+
+### Status Codes and Decoders
+
+When specifying a custom decoder for request definition a status code
+will be passed again. You can determine results from a request based on
+this status code. When a success or error callback is executed, the
+appropriate status code will be set by `amplify.request`.
+
+A basic decoder example:
+
+	amplfiy.request.define( "statusExample2", "ajax", {
+		decoder: function( data, status, xhr, success, error ) {
+			if( status === "success" ) {
+				success( data, xhr )
+			} else {
+				error( data, xhr )
+			}
+		}
+	});
+	amplify.request({
+		resourceId: "statusExample2",
+		success: function( data, xhr, status ) {
+			// status code will be "success"
+		},
+		error: function( data, xhr, status ) {
+			// status code could be "error" or "abort"
+		}
+	});
+
+A reqeust is aborted by using the object returned by a request call:
+
+	amplfiy.request.define( "statusExample3", "ajax", {
+		//...
+	});
+	var myRequest = amplify.request({
+		resourceId: "statusExample3",
+		success: function( data, xhr, status ) {
+			// status code will be "success"
+		},
+		error: function( data, xhr, status ) {
+			// status code could be "abort"
+		}
+	});
+	// sometime later in code
+	myRequest.abort();
+
+### Subscribing to status events
+
+For an alternative to handling issues you can subscribe to a series of
+globally available message that are published during the request
+process.
+
+	subscribe( "request.error", function callback );
+
+Subscribe a function to be executed when any error callback is invoked
+for any request.
+
+	subscribe( "request.success", fucntion callback );
+
+Subscribe a function to be executed when any success callback is invoked
+for any request.
+
+	subscribe( "request.complete", function callback );
+
+Subscribe a function to be executed when any request complete,
+regardless of error or success.
+
+The subscriptions and status codes can be used to create issue handlers:
+
+	subscribe( "request.error", function( settings, data, xhr, status ) {
+		if( status === "abort" ) {
+			// deal with explicit abort of request
+		} else {
+			// deal with normal error
+		}
+	});
+
+### Status codes with jsend
+
+The jsend request type has an extra default status code. The [jsend
+spec](http://labs.omniti.com/labs/jsend) includes a fail status. If a
+jsend fail occurs, the error callback ( and appropriate error
+subscriptions ) will be called with a status of `fail`.
+
+### Customizing status codes
+
+
+
 [requestTypes]: #request_types "request types"
 [cache]: #cache "caching"
 [decoder]: #decoders "decoders"
 [examples]: #examples "examples"
+[statuscodes]: #statuscodes "status codes"
