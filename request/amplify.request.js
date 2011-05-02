@@ -35,17 +35,17 @@ amplify.request = function( resourceId, data, callback ) {
 		resource = amplify.request.resources[ settings.resourceId ],
 		success = settings.success || noop,
 		error = settings.error || noop;
-	settings.success = function( data, extra, status ) {
+	settings.success = function( data, status ) {
 		status = status || "success";
-		amplify.publish( "request.success", settings, data, extra, status );
-		amplify.publish( "request.complete", settings, data, extra, status );
-		success( data, extra, status );
+		amplify.publish( "request.success", settings, data, status );
+		amplify.publish( "request.complete", settings, data, status );
+		success( data, status );
 	};
-	settings.error = function( data, extra, status ) {
+	settings.error = function( data, status ) {
 		status = status || "error";
-		amplify.publish( "request.error", settings, data, extra, status );
-		amplify.publish( "request.complete", settings, data, extra, status );
-		error( data, extra, status );
+		amplify.publish( "request.error", settings, data, status );
+		amplify.publish( "request.complete", settings, data, status );
+		error( data, status );
 	};
 
 	if ( !resource ) {
@@ -56,7 +56,7 @@ amplify.request = function( resourceId, data, callback ) {
 	}
 
 	if ( !amplify.publish( "request.before", settings ) ) {
-		settings.error( null, null, "abort" );
+		settings.error( null, "abort" );
 		return;
 	}
 
@@ -126,10 +126,10 @@ amplify.request.types.ajax = function( defnSettings ) {
 					handleResponse( null, "abort" );
 				},
 				success: function( data, status ) {
-					settings.success( data, ampXHR, status );
+					settings.success( data, status );
 				},
 				error: function( data, status ) {
-					settings.error( data, ampXHR, status );
+					settings.error( data, status );
 				}
 			};
 
