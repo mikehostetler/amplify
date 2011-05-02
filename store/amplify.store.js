@@ -37,6 +37,14 @@ store.error = function() {
 
 function createSimpleStorage( storageType, storage ) {
 	var values = storage.__amplify__ ? JSON.parse( storage.__amplify__ ) : {};
+	function remove( key ) {
+		if ( storage.removeItem ) {
+			storage.removeItem( key );
+		} else {
+			delete storage[ key ];
+		}
+		delete values[ key ];
+	}
 	store.addType( storageType, function( key, value, options ) {
 		var ret = value,
 			now = (new Date()).getTime(),
@@ -49,8 +57,7 @@ function createSimpleStorage( storageType, storage ) {
 				storedValue = storage[ key ];
 				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
 				if ( parsed.expires && parsed.expires <= now ) {
-					delete storage[ key ];
-					delete values[ key ];
+					remove( key );
 				} else {
 					ret[ key.replace( /^__amplify__/, "" ) ] = parsed.data;
 				}
@@ -67,16 +74,14 @@ function createSimpleStorage( storageType, storage ) {
 				storedValue = storage[ key ];
 				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
 				if ( parsed.expires && parsed.expires <= now ) {
-					delete storage[ key ];
-					delete values[ key ];
+					remove( key );
 				} else {
 					return parsed.data;
 				}
 			}
 		} else {
 			if ( value === null ) {
-				delete storage[ key ];
-				delete values[ key ];
+				remove( key );
 			} else {
 				parsed = JSON.stringify({
 					data: value,
