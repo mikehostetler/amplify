@@ -272,11 +272,11 @@ Example:
 	amplify.request.decoders.appEnvelope =
 		function ( data, status, xhr, success, error ) {
 			if ( data.status === "success" ) {
-				success( data.data, xhr );
+				success( data.data );
 			} else if ( data.status === "fail" || data.status === "error" ) {
-				error( data.message, xhr, data.status );
+				error( data.message, data.status );
 			} else {
-				error( data.message , xhr, "fatal" );
+				error( data.message , "fatal" );
 			}
 		};
 
@@ -322,11 +322,11 @@ Example:
 		type: "POST",
 		decoder: function ( data, status, xhr, success, error ) {
 			if ( data.status === "success" ) {
-				success( data.data, xhr );
+				success( data.data );
 			} else if ( data.status === "fail" || data.status === "error" ) {
-				error( data.message, xhr, data.status );
+				error( data.message, data.status );
 			} else {
-				error( data.message , xhr, "fatal" );
+				error( data.message , "fatal" );
 			}
 		}
 	});
@@ -355,9 +355,9 @@ error callbacks when using an ajax definition:
 	});
 	amplify.request({
 		resourceId: "statusExample1",
-		success: function( data, xhr, status ) {
+		success: function( data, status ) {
 		},
-		error: function( data, xhr, status ) {
+		error: function( data, status ) {
 		}
 	});
 
@@ -377,18 +377,18 @@ A basic decoder example:
 	amplfiy.request.define( "statusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			if( status === "success" ) {
-				success( data, xhr );
+				success( data );
 			} else {
-				error( data, xhr );
+				error( data );
 			}
 		}
 	});
 	amplify.request({
 		resourceId: "statusExample2",
-		success: function( data, xhr, status ) {
+		success: function( data, status ) {
 			// status code will be "success"
 		},
-		error: function( data, xhr, status ) {
+		error: function( data, status ) {
 			// status code could be "error" or "abort"
 		}
 	});
@@ -400,10 +400,10 @@ A reqeust is aborted by using the object returned by a request call:
 	});
 	var myRequest = amplify.request({
 		resourceId: "statusExample3",
-		success: function( data, xhr, status ) {
+		success: function( data, status ) {
 			// status code will be "success"
 		},
-		error: function( data, xhr, status ) {
+		error: function( data, status ) {
 			// status code could be "abort"
 		}
 	});
@@ -462,12 +462,12 @@ An example with a success callback:
 			if( someWarningCondition ) {
 				customStatus = "warning";
 			}
-			success( data, xhr, "warning" )
+			success( data, "warning" )
 		}
 	});
 	amplify.request({
 		resourceId: "customStatusExample",
-		success: function( data, xhr, status ) {
+		success: function( data, status ) {
 			// status code could be "success" or "warning"
 		}
 	});
@@ -482,13 +482,13 @@ An example with an error callback:
 				customStatus = "zomg";
 			}
 			if( status != "success" ) {
-				error( data, xhr, customStatus );
+				error( data, customStatus );
 			}
 		}
 	});
 	amplify.request({
 		resourceId: "customStatusExample2",
-		error: function( data, xhr, status ) {
+		error: function( data, status ) {
 			// status code could be "error", "abort", or "zomg"
 		}
 	});
