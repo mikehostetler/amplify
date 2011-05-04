@@ -5,3 +5,4 @@ For more information or a distribution with minified files see the [Amplify site
 See each directory for docs regarding usage and examples for each component.
 
 Testswarm is available at [http://swarm.amplifyjs.com](http://swarm.amplifyjs.com)
+
