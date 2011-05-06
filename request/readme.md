@@ -114,7 +114,7 @@ Define a decoder. `decoderName` should be replaced with the decoder name
 of your choosing.
 
 * `data`: Data returned from the ajax request.
-* `status`: Status of the ajax request. See the [status][status] section below.
+* `status`: Status of the ajax request. See the [handling status][handlingstatus] section below.
 * `xhr`: xhr object used to make the request.
 * `success`: Callback to invoke on success.
 * `error`: Callback to invoke on error.
@@ -341,14 +341,14 @@ Example:
 		}
 	});
 
-## Status Codes and Handling Issues
+## Handling Status
 
 
-### Status Codes in Success and Error Callbacks
+### Status in Success and Error Callbacks
 
-`amplify.request` comes with built in support for status
-codes. Status codes appear as a parameter in the default success or
-error callbacks when using an ajax definition:
+`amplify.request` comes with built in support for status. The status
+parameter appaears in the default success or error callbacks when using
+an ajax definition.
 
 	amplfiy.request.define( "statusExample1", "ajax", {
 		//...
@@ -361,22 +361,22 @@ error callbacks when using an ajax definition:
 		}
 	});
 
-With the success callback, the only default status code is `success`.
-With the error callback two default status codes are possible: `error` and
+With the success callback, the only default status is `success`.
+With the error callback two default statuses are possible: `error` and
 `abort`.
 
 ### Status Codes and Decoders
 
 When specifying a custom decoder for request definition a status code
 will be passed in as a parameter. You can determine results from a request based on
-this status code. When a success or error callback is executed, the
-appropriate status code will be set by `amplify.request`.
+this status. When a success or error callback is executed, the
+appropriate status will be set by `amplify.request`.
 
 A basic decoder example:
 
 	amplfiy.request.define( "statusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
-			if( status === "success" ) {
+			if ( status === "success" ) {
 				success( data );
 			} else {
 				error( data );
@@ -386,10 +386,10 @@ A basic decoder example:
 	amplify.request({
 		resourceId: "statusExample2",
 		success: function( data, status ) {
-			// status code will be "success"
+			// status will be "success"
 		},
 		error: function( data, status ) {
-			// status code could be "error" or "abort"
+			// status could be "error" or "abort"
 		}
 	});
 
@@ -401,10 +401,10 @@ A reqeust is aborted by using the object returned by a request call:
 	var myRequest = amplify.request({
 		resourceId: "statusExample3",
 		success: function( data, status ) {
-			// status code will be "success"
+			// status will be "success"
 		},
 		error: function( data, status ) {
-			// status code could be "abort"
+			// status could be "abort"
 		}
 	});
 	// sometime later in code
@@ -431,27 +431,27 @@ for any request.
 Subscribe a function to be executed when any request complete,
 regardless of error or success.
 
-The subscriptions and status codes can be used to create issue handlers:
+The subscriptions and statuses can be used to create issue handlers:
 
-	subscribe( "request.error", function( settings, data, xhr, status ) {
-		if( status === "abort" ) {
+	subscribe( "request.error", function( settings, data, status ) {
+		if ( status === "abort" ) {
 			// deal with explicit abort of request
 		} else {
 			// deal with normal error
 		}
 	});
 
-### Status codes with jsend
+### Statuses with jsend
 
-The jsend request type has an extra default status code. The [jsend
+The jsend request type has an extra default status. The [jsend
 spec](http://labs.omniti.com/labs/jsend) includes a fail status. If a
 jsend fail occurs, the error callback ( and appropriate error
 subscriptions ) will be called with a status of `fail`.
 
-### Customizing status codes
+### Customizing statuses
 
-When calling a success of failure callback through a decoder you can
-specify a custom status code to be sent to the callback as the third
+When calling a success or error callback through a decoder you can
+specify a custom status to be sent to the callback as the second
 parameter for the callback function.
 
 An example with a success callback:
@@ -459,7 +459,7 @@ An example with a success callback:
 	amplfiy.request.define( "customStatusExample", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			var customStatus = status;
-			if( someWarningCondition ) {
+			if ( someWarningCondition ) {
 				customStatus = "warning";
 			}
 			success( data, "warning" )
@@ -468,7 +468,7 @@ An example with a success callback:
 	amplify.request({
 		resourceId: "customStatusExample",
 		success: function( data, status ) {
-			// status code could be "success" or "warning"
+			// status could be "success" or "warning"
 		}
 	});
 
@@ -478,10 +478,10 @@ An example with an error callback:
 	amplfiy.request.define( "customStatusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			var customStatus = status;
-			if( status === "error" && someCriticalCondition ) {
+			if ( status === "error" && someCriticalCondition ) {
 				customStatus = "zomg";
 			}
-			if( status != "success" ) {
+			if ( status != "success" ) {
 				error( data, customStatus );
 			}
 		}
@@ -489,7 +489,7 @@ An example with an error callback:
 	amplify.request({
 		resourceId: "customStatusExample2",
 		error: function( data, status ) {
-			// status code could be "error", "abort", or "zomg"
+			// status could be "error", "abort", or "zomg"
 		}
 	});
 
@@ -498,4 +498,4 @@ An example with an error callback:
 [cache]: #cache "caching"
 [decoder]: #decoders "decoders"
 [examples]: #examples "examples"
-[statuscodes]: #statuscodes "status codes"
+[handlingstatus]: #handling_status "handling status"
