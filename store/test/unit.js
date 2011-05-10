@@ -1,23 +1,5 @@
 module( "amplify.store" );
 
-test( "Built-in storage types", function() {
-	expect( 5 );
-	equal( "localStorage" in amplify.store.types,
-		"localStorage" in window, "localStorage" );
-	try {
-		equal( "sessionStorage" in amplify.store.types,
-			"sessionStorage" in window, "sessionStorage" );
-	} catch( e ) {
-		equal( "sessionStorage" in amplify.store.types,
-			false, "sessionStorage" );
-	}
-	equal( "globalStorage" in amplify.store.types, "globalStorage" in window,
-		"globalStorage" );
-	equal( "userData" in amplify.store.types,
-		"addBehavior" in document.createElement( "div" ), "userData" );
-	equal( "memory" in amplify.store.types, true, "memory" );
-});
-
 test( "amplify.store.addType", function() {
 	expect( 10 );
 	var testStore,
