@@ -1,6 +1,6 @@
 # amplify.request
 
-`amplify.request` is an abstraction layer that can be used for any kind of request for data. `amplify.request` sets out to sepearate the data retrieval and caching mechanisms from data requestors.
+`amplify.request` is an abstraction layer that can be used for any kind of request for data. `amplify.request` sets out to separate the data retrieval and caching mechanisms from data requestors.
 
 Using the `amplify.request.define` function you can create and maintain
 your entire server interface and caching policy in a single place,
@@ -23,9 +23,7 @@ Request a resource.
 * `data`: an object literal of data to be sent to the resource.
 * `callback`: a function to call once the resource has been retrieved.
 
- 
-
-	amplify.request( hash settings )
+<pre><code>amplify.request( hash settings )</code></pre>
 
 Request a resource.
 
@@ -35,9 +33,8 @@ Request a resource.
   * `success` (optional): Function to invoke on success.
   * `error` (optional): Function to invoke on error.
 
- 
-
-	amplify.request.define( string resourceId , string requestType [, hash settings ] )
+<pre><code>amplify.request.define(
+	string resourceId , string requestType [, hash settings ] )</code></pre>
 
 Define a resource.
 
@@ -49,8 +46,7 @@ Define a resource.
   * cache: see the [cache][cache] section for more details.
   * decoder: see the [decoder][decoder] section for more details.
 
-
-	amplify.request.define( string resourceId , function resource )
+<pre><code>amplify.request.define(string resourceId , function resource )</code></pre>
 
 Define a custom request.
 
@@ -108,7 +104,9 @@ You can also define custom one-off decoders for single requests, which
 is specified as a function in the settings hash for
 `amplify.request.define`.
 
-	amplify.request.decoders.decoderName = function( hash data, string status, object xhr, function success, function error )
+	amplify.request.decoders.decoderName = 
+	    function( hash data, string status, object xhr,
+	              function success, function error )
 
 Define a decoder. `decoderName` should be replaced with the decoder name
 of your choosing.
@@ -127,24 +125,18 @@ There is a built-in memory cache. You can pass a boolean to enable caching of a 
 You can also pass a number to specify that the response should be cached for a certain amount of time.
 For example, `cache: 30` will cache the response for 30 milliseconds.
 
-`cache: boolean`
-
-Cache the data in memory for the remainder of this page load.
-
-`cache: number`
-
-Cache the data in memory for the specified number of milliseconds.
+* `cache: boolean` Cache the data in memory for the remainder of this page load.
+* `cache: number` Cache the data in memory for the specified number of milliseconds.
 
 ### Named Caches
 
-`cache: string`
+* `cache: string` Cache the data using a pre-defined caching mechanism.
 
-Cache the data using a pre-defined caching mechanism.
-
-	cache: {
-		type: string,
-		expires: number
-	}
+<pre><code>cache: {
+	type: string,
+	expires: number
+}
+</code></pre>
 
 Cache the data using a pre-defined caching mechanism for the specified number
 of milliseconds.
@@ -161,7 +153,8 @@ an expiration.
 
 You can also create additional cache types by adding to the `amplify.request.cache` hash.
 
-`amplify.request.cache.customCacheName = function( hash resource, hash settings, hash ajaxSettings )`
+	amplify.request.cache.customCacheName = 
+		function( hash resource, hash settings, hash ajaxSettings )
 
 Definition for a caching mechanism. `customCacheName` should be replaced
 with the custom name of your choosing.
@@ -225,7 +218,7 @@ json unless specified otherwise:
 			type: "foo",
 			id: "bar"
 		},
-		functon( data ) {
+		function( data ) {
 			// /myRESTFulApi/foo/bar was the URL used
 			data.foo; // bar
 		}
@@ -244,7 +237,7 @@ json unless specified otherwise:
 			type: "foo",
 			id: "bar"
 		},
-		functon( data ) {
+		function( data ) {
 			data.foo; // bar
 		}
 	);
@@ -253,7 +246,8 @@ json unless specified otherwise:
 
 This example assumes the following envelope format:
 
-Success:
+**Success:**
+
 	{
 		"status": "success",
 		"data" : {
@@ -262,13 +256,15 @@ Success:
 		}
 	}
 
-Fail ( or Error ):
+**Fail ( or Error ):**
+
 	{
 		"status": "fail",
 		"message": "failure message."
 	}
 
-Example:
+**Example:**
+
 	amplify.request.decoders.appEnvelope =
 		function ( data, status, xhr, success, error ) {
 			if ( data.status === "success" ) {
@@ -300,7 +296,8 @@ Example:
 
 This example assumes the following envelope format:
 
-Success:
+**Success:**
+
 	{
 		"status": "success",
 		"data" : {
@@ -309,13 +306,14 @@ Success:
 		}
 	}
 
-Fail ( or Error ):
+**Fail ( or Error ):**
+
 	{
 		"status": "fail",
 		"message": "failure message."
 	}
 
-Example:
+**Example:**
 
 	amplify.request.define( "decoderSingleExample", "ajax", {
 		url: "/myAjaxUrl",
@@ -347,12 +345,13 @@ Example:
 ### Status in Success and Error Callbacks
 
 `amplify.request` comes with built in support for status. The status
-parameter appaears in the default success or error callbacks when using
+parameter appears in the default success or error callbacks when using
 an ajax definition.
 
 	amplfiy.request.define( "statusExample1", "ajax", {
 		//...
 	});
+	
 	amplify.request({
 		resourceId: "statusExample1",
 		success: function( data, status ) {
@@ -372,7 +371,7 @@ will be passed in as a parameter. You can determine results from a request based
 this status. When a success or error callback is executed, the
 appropriate status will be set by `amplify.request`.
 
-A basic decoder example:
+**A basic decoder example:**
 
 	amplfiy.request.define( "statusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
@@ -383,6 +382,7 @@ A basic decoder example:
 			}
 		}
 	});
+	
 	amplify.request({
 		resourceId: "statusExample2",
 		success: function( data, status ) {
@@ -393,11 +393,12 @@ A basic decoder example:
 		}
 	});
 
-A reqeust is aborted by using the object returned by a request call:
+**A request is aborted by using the object returned by a request call:**
 
 	amplfiy.request.define( "statusExample3", "ajax", {
 		//...
 	});
+	
 	var myRequest = amplify.request({
 		resourceId: "statusExample3",
 		success: function( data, status ) {
@@ -407,6 +408,7 @@ A reqeust is aborted by using the object returned by a request call:
 			// status could be "abort"
 		}
 	});
+	
 	// sometime later in code
 	myRequest.abort();
 
@@ -421,7 +423,7 @@ process.
 Subscribe a function to be executed when any error callback is invoked
 for any request.
 
-	subscribe( "request.success", fucntion callback );
+	subscribe( "request.success", function callback );
 
 Subscribe a function to be executed when any success callback is invoked
 for any request.
@@ -454,7 +456,7 @@ When calling a success or error callback through a decoder you can
 specify a custom status to be sent to the callback as the second
 parameter for the callback function.
 
-An example with a success callback:
+**An example with a success callback:**
 
 	amplfiy.request.define( "customStatusExample", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
@@ -465,6 +467,7 @@ An example with a success callback:
 			success( data, "warning" )
 		}
 	});
+	
 	amplify.request({
 		resourceId: "customStatusExample",
 		success: function( data, status ) {
@@ -473,7 +476,7 @@ An example with a success callback:
 	});
 
 
-An example with an error callback:
+**An example with an error callback:**
 
 	amplfiy.request.define( "customStatusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
@@ -486,6 +489,7 @@ An example with an error callback:
 			}
 		}
 	});
+	
 	amplify.request({
 		resourceId: "customStatusExample2",
 		error: function( data, status ) {
