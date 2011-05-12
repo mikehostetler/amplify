@@ -23,9 +23,7 @@ Stores a value for a given key using the default storage type.
 * `value`: The value to store. The value can be anything that can be serialized as JSON.
 * [`options`]: A set of key/value pairs that relate to settings for storing the value.
 
- 
-
-	amplify.store( string key )
+<pre><code>amplify.store( string key )</code></pre>
 
 Gets a stored value based on the key.
 
