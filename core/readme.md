@@ -7,7 +7,8 @@ The core of `amplify` provides a pub/sub system.
 	amplify.subscribe( string topic, function callback )
 	amplify.subscribe( string topic, object context, function callback )
 	amplify.subscribe( string topic, function callback, number priority )
-	amplify.subscribe( string topic, object context, function callback, number priority )
+	amplify.subscribe(
+		string topic, object context, function callback, number priority )
 
 Subscribe to a message.
 
@@ -17,17 +18,15 @@ Subscribe to a message.
 * [`priority`]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
-&nbsp;
 
-	amplify.unsubscribe( string topic, function callback )
+<pre><code>amplify.unsubscribe( string topic, function callback )</code></pre>
 
 Remove a subscription.
 
 * `topic`: The topic being unsubscribed from.
 * `callback`: The callback that was originally subscribed.
-&nbsp;
 
-	amplify.publish( string topic, ... )
+<pre><code>amplify.publish( string topic, ... )</code></pre>
 
 Publish a message.
 
@@ -48,7 +47,9 @@ is needed along with the event.
 	amplify.subscribe( "nodataexample", function() {
 		alert( "nodataexample topic published!" );
 	});
+	
 	//...
+	
 	amplify.publish( "nodataexample" );
 
 ### Subscribe and publish with data
@@ -59,15 +60,19 @@ publisher to any subscriptions listening to the topic.
 	amplify.subscribe( "dataexample", function( data ) {
 		alert( data.foo ); // bar
 	});
+	
 	//...
+	
 	amplify.publish( "dataexample", { foo: "bar" } );
 
-You can choose to pass multiple paramaters to any subscriber as well.
+You can choose to pass multiple parameters to any subscriber as well.
 
 	amplify.subscribe( "dataexample2", function( param1, param2 ) {
 		alert( param1 + param2 ); // barbaz
 	});
+	
 	//...
+	
 	amplify.publish( "dataexample2", "bar", "baz" );
 
 ### Subscribe and publish with context and data
@@ -76,13 +81,16 @@ Often there is a need to operate within a context for a subscription
 callback. It can be a reasonable strategy to have the context be set to
 a jQuery object that will be used inside of the subscription, or even a
 native DOM element.
+
 > Note: the following example assumes jQuery is already loaded on the
 > page, and assumes at least one paragraph exists within the body of the page.
 
 	amplify.subscribe( "datacontextexample", $( "p:first" ), function( data ) {
 		this.text( data.exampleText ); // first p element would have "foo bar baz" as text
 	});
+	
 	//...
+	
 	amplify.publish( "datacontextexample", { exampleText: "foo bar baz" } );
 
 ### Subscribe to a topic with high priority
@@ -100,6 +108,8 @@ proceeding.
 			return false;
 		}
 	}, 1 );
+	
 	//...
+	
 	amplify.publish( "priorityexample", { foo: "bar" } );
 	amplify.publish( "priorityexample", { foo: "oops" } );
