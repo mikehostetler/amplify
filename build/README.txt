@@ -17,7 +17,7 @@ http://appendto.com or contact@appendto.com.
   Amplify components. (http://amplifyjs.com/api/). For help in debugging or to use your own 
   compression utility, amplify.js is also provided.
 
-- To include individual Amplify components : Copy the appropriate /minified/amplify.<component>.min.js
+- To include individual Amplify components : Copy the appropriate /individual/amplify.<component>.min.js
   into your project and include it with a <script> tag. (Unminified versions are available in the 
   /src/<component> folder).
 
