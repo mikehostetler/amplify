@@ -557,6 +557,7 @@ test( "data merging", function() {
 		}, "default data passed through" );
 	};
 	amplify.request.define( "test", "ajax", {
+		url: "",
 		data: {
 			foo: "bar",
 			bar: "baz",
@@ -577,6 +578,7 @@ test( "data merging", function() {
 		}, "data merged" );
 	};
 	amplify.request.define( "test", "ajax", {
+		url: "",
 		data: {
 			foo: "bar",
 			bar: "baz",
