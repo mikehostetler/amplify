@@ -46,25 +46,32 @@ var amplify = global.amplify = {
 		}
 		priority = priority || 10;
 
-		if ( !subscriptions[ topic ] ) {
-			subscriptions[ topic ] = [];
-		}
-
-		var i = subscriptions[ topic ].length - 1,
-			subscriptionInfo = {
-				callback: callback,
-				context: context,
-				priority: priority
-			};
-
-		for ( ; i >= 0; i-- ) {
-			if ( subscriptions[ topic ][ i ].priority <= priority ) {
-				subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
-				return callback;
+		var topicIndex = 0,
+			topics = topic.split( /\s/ ),
+			topicLength = topics.length;
+		for ( ; topicIndex < topicLength; topicIndex++ ) {
+			topic = topics[ topicIndex ];
+			if ( !subscriptions[ topic ] ) {
+				subscriptions[ topic ] = [];
 			}
+	
+			var i = subscriptions[ topic ].length - 1,
+				subscriptionInfo = {
+					callback: callback,
+					context: context,
+					priority: priority
+				};
+	
+			for ( ; i >= 0; i-- ) {
+				if ( subscriptions[ topic ][ i ].priority <= priority ) {
+					subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
+					return callback;
+				}
+			}
+	
+			subscriptions[ topic ].unshift( subscriptionInfo );
 		}
 
-		subscriptions[ topic ].unshift( subscriptionInfo );
 		return callback;
 	},
 
