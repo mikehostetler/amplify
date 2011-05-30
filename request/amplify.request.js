@@ -90,7 +90,7 @@ amplify.request.define = function( resourceId, type, settings ) {
 (function( amplify, $, undefined ) {
 
 var xhrProps = [ "status", "statusText", "responseText", "responseXML", "readyState" ],
-    simple_template = /\{([-a-zA-Z0-9_]+)\}/g;
+    rurlData = /\{([^\}]+)\}/g;
 
 amplify.request.types.ajax = function( defnSettings ) {
 	defnSettings = $.extend({
@@ -98,12 +98,12 @@ amplify.request.types.ajax = function( defnSettings ) {
 	}, defnSettings );
 
 	return function( settings, request ) {
-		var regex, xhr,
+		var xhr,
 			url = defnSettings.url,
 			data = settings.data,
 			abort = request.abort,
 			ajaxSettings = {},
-			mapped_keys = [],
+			mappedKeys = [],
 			aborted = false,
 			ampXHR = {
 				readyState: 0,
@@ -138,13 +138,15 @@ amplify.request.types.ajax = function( defnSettings ) {
 		if ( typeof data !== "string" ) {
 			data = $.extend( true, {}, defnSettings.data, data );
 			
-			url = (url || "").replace( simple_template, function ( m, key ) {
-				if ( typeof data[ key ] !== "undefined" ) {
-					return mapped_keys.push( key ) && data[ key ];
-				} 
+			url = url.replace( rurlData, function ( m, key ) {
+				if ( key in data ) {
+				    mappedKeys.push( key );
+				    return data[ key ];
+				}
 			});
+			
 			// We delete the keys later so duplicates are still replaced
-			$.each( mapped_keys, function ( i, key ) {
+			$.each( mappedKeys, function ( i, key ) {
 				delete data[ key ];
 			});
 		}
