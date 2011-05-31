@@ -110,11 +110,11 @@ An in-memory store is provided as a fallback if none of the other storage types 
 <iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/hZgDw/embedded/js,html,result/"> </iframe>
 [Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/store/demo/implicit/)
 
-### Store data explicitly with local storage
+### Store data explicitly with session storage
 
-	amplify.store.localStorage( "explicitExample", { foo2: "baz" } );
+	amplify.store.sessionStorage( "explicitExample", { foo2: "baz" } );
 	// retrieve the data later via the key
-	var myStoredValue2 = amplify.store.localStorage( "explicitExample" );
+	var myStoredValue2 = amplify.store.sessionStorage( "explicitExample" );
 	myStoredValue2.foo2; // baz
 
 <iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/qM5Db/embedded/js,html,result/"> </iframe>

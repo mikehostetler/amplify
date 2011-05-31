@@ -1,12 +1,11 @@
 /*
 ---
-name: amplify.store localStorage.
-description: amplify.store with localStorage.
+name: amplify.store sessionStorage.
+description: amplify.store with sessionStorage.
 authors:
   - The appendTo Team
 resources:
   - http://github.com/appendto/amplify/raw/master/core/amplify.core.js
   - http://github.com/appendto/amplify/raw/master/store/amplify.store.js
-  - http://github.com/Modernizr/Modernizr/raw/master/modernizr.js
 ...
 */
