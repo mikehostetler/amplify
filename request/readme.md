@@ -149,6 +149,8 @@ or you can specify any of the specific stores available, e.g., `cache: "localSto
 You can also use the hash form listed above to store in a persistent cache with
 an expiration.
 
+_Note: You must include `amplify.store.js` before `amplify.request.js` to use persistent caches._
+
 ### Custom Cache
 
 You can also create additional cache types by adding to the `amplify.request.cache` hash.
