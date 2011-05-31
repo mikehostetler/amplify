@@ -688,6 +688,8 @@ asyncTest( "ampXHR", function() {
 
 	var ampXHR;
 	amplify.request.define( "ampXHR", "ajax", {
+		// prevent caching to ensure we get proper headers
+		cache: false,
 		url: "data/headers.php",
 		dataType: "json"
 	});
