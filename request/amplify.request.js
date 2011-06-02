@@ -179,7 +179,9 @@ amplify.request.types.ajax = function( defnSettings ) {
 					ampXHR[ key ] = xhr[ key ];
 				} catch( e ) {}
 			});
-			if ( ampXHR.statusText === "OK" ) {
+			// Playbook returns "HTTP/1.1 200 OK"
+			// TODO: something also returns "OK", what?
+			if ( /OK$/.test( ampXHR.statusText ) ) {
 				ampXHR.statusText = "success";
 			}
 			if ( data === undefined ) {
