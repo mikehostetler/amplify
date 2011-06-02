@@ -35,16 +35,15 @@ store.error = function() {
 	return "amplify.store quota exceeded"; 
 };
 
-function createSimpleStorage( storageType, storage ) {
-	var values = storage.__amplify__ ? JSON.parse( storage.__amplify__ ) : {};
+function createFromStorageInterface( storageType, storage ) {
+	var values = storage.getItem( "__amplify__" );
+	values = values ? JSON.parse( values ) : {};
+
 	function remove( key ) {
-		if ( storage.removeItem ) {
-			storage.removeItem( key );
-		} else {
-			delete storage[ key ];
-		}
+		storage.removeItem( key );
 		delete values[ key ];
 	}
+
 	store.addType( storageType, function( key, value, options ) {
 		var ret = value,
 			now = (new Date()).getTime(),
@@ -54,7 +53,7 @@ function createSimpleStorage( storageType, storage ) {
 		if ( !key ) {
 			ret = {};
 			for ( key in values ) {
-				storedValue = storage[ key ];
+				storedValue = storage.getItem( key );
 				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
 				if ( parsed.expires && parsed.expires <= now ) {
 					remove( key );
@@ -62,16 +61,16 @@ function createSimpleStorage( storageType, storage ) {
 					ret[ key.replace( /^__amplify__/, "" ) ] = parsed.data;
 				}
 			}
-			storage.__amplify__ = JSON.stringify( values );
+			storage.setItem( "__amplify__", JSON.stringify( values ) );
 			return ret;
 		}
 
-		// protect against overwriting built-in properties
+		// protect against name collisions with direct storage
 		key = "__amplify__" + key;
 
 		if ( value === undefined ) {
 			if ( values[ key ] ) {
-				storedValue = storage[ key ];
+				storedValue = storage.getItem( key );
 				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
 				if ( parsed.expires && parsed.expires <= now ) {
 					remove( key );
@@ -88,14 +87,14 @@ function createSimpleStorage( storageType, storage ) {
 					expires: options.expires ? now + options.expires : null
 				});
 				try {
-					storage[ key ] = parsed;
+					storage.setItem( key, parsed );
 					values[ key ] = true;
 				// quota exceeded
 				} catch( error ) {
 					// expire old data and try again
 					store[ storageType ]();
 					try {
-						storage[ key ] = parsed;
+						storage.setItem( key, parsed );
 						values[ key ] = true;
 					} catch( error ) {
 						throw store.error();
@@ -104,7 +103,7 @@ function createSimpleStorage( storageType, storage ) {
 			}
 		}
 
-		storage.__amplify__ = JSON.stringify( values );
+		storage.setItem( "__amplify__", JSON.stringify( values ) );
 		return ret;
 	});
 }
@@ -115,7 +114,7 @@ for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
 	// try/catch for file protocol in Firefox
 	try {
 		if ( window[ webStorageType ].getItem ) {
-			createSimpleStorage( webStorageType, window[ webStorageType ] );
+			createFromStorageInterface( webStorageType, window[ webStorageType ] );
 		}
 	} catch( e ) {}
 }
@@ -126,7 +125,7 @@ for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
 if ( window.globalStorage ) {
 	// try/catch for file protocol in Firefox
 	try {
-		createSimpleStorage( "globalStorage",
+		createFromStorageInterface( "globalStorage",
 			window.globalStorage[ window.location.hostname ] );
 		// Firefox 2.0 and 3.0 have sessionStorage and globalStorage
 		// make sure we defualt to globalStorage
@@ -246,6 +245,19 @@ if ( window.globalStorage ) {
 
 // in-memory storage
 // fallback for all browsers to enable the API even if we can't persist data
-createSimpleStorage( "memory", {} );
+(function() {
+	var memory = {};	
+	createFromStorageInterface( "memory", {
+		getItem: function( key ) {
+			return memory[ key ];
+		},
+		setItem: function( key, value ) {
+			memory[ key ] = value;
+		},
+		removeItem: function( key ) {
+			delete memory[ key ];
+		}
+	});
+}() );
 
 }( this.amplify = this.amplify || {} ) );

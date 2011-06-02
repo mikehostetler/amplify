@@ -11,4 +11,3 @@ Documentation is available online in the [Amplify API site](http://amplifyjs.com
 ## TestSwarm
 
 Testswarm is available at [http://swarm.amplifyjs.com](http://swarm.amplifyjs.com)
-

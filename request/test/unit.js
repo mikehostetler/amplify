@@ -557,6 +557,7 @@ test( "data merging", function() {
 		}, "default data passed through" );
 	};
 	amplify.request.define( "test", "ajax", {
+		url: "",
 		data: {
 			foo: "bar",
 			bar: "baz",
@@ -577,6 +578,7 @@ test( "data merging", function() {
 		}, "data merged" );
 	};
 	amplify.request.define( "test", "ajax", {
+		url: "",
 		data: {
 			foo: "bar",
 			bar: "baz",
@@ -686,6 +688,8 @@ asyncTest( "ampXHR", function() {
 
 	var ampXHR;
 	amplify.request.define( "ampXHR", "ajax", {
+		// prevent caching to ensure we get proper headers
+		cache: false,
 		url: "data/headers.php",
 		dataType: "json"
 	});

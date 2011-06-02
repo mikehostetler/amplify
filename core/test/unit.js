@@ -135,3 +135,19 @@ test( "unsubscribe", function() {
 	}
 	amplify.publish( "unsubscribe" );
 });
+
+test( "multiple subscriptions", function() {
+	expect( 4 );
+
+	amplify.subscribe( "sub-a-1 sub-a-2 sub-a-3", function() {
+		ok( true );
+	});
+	amplify.publish( "sub-a-1" );
+
+	amplify.subscribe( "sub-b-1 sub-b-2 sub-b-3", function() {
+		ok( true );
+	});
+	amplify.publish( "sub-b-2" );
+	amplify.publish( "sub-b-2" );
+	amplify.publish( "sub-b-3" );
+});
