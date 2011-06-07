@@ -38,12 +38,13 @@ store.error = function() {
 var rprefix = /^__amplify__/;
 function createFromStorageInterface( storageType, storage ) {
 	store.addType( storageType, function( key, value, options ) {
-		var storedValue, parsed, i,
+		var storedValue, parsed, i, remove,
 			ret = value,
 			now = (new Date()).getTime();
 
 		if ( !key ) {
 			ret = {};
+			remove = [];
 			i = 0;
 			try {
 				// accessing the length property works around a localStorage bug
@@ -55,11 +56,14 @@ function createFromStorageInterface( storageType, storage ) {
 					if ( rprefix.test( key ) ) {
 						parsed = JSON.parse( storage.getItem( key ) );
 						if ( parsed.expires && parsed.expires <= now ) {
-							storage.removeItem( key );
+							remove.push( key );
 						} else {
 							ret[ key.replace( rprefix, "" ) ] = parsed.data;
 						}
 					}
+				}
+				while ( key = remove.pop() ) {
+					storage.removeItem( key );
 				}
 			} catch ( error ) {}
 			return ret;
@@ -145,20 +149,24 @@ if ( window.globalStorage ) {
 
 		store.addType( "userData", function( key, value, options ) {
 			div.load( attrKey );
-			var attr, parsed, prevValue, i,
+			var attr, parsed, prevValue, i, remove,
 				ret = value,
 				now = (new Date()).getTime();
 
 			if ( !key ) {
 				ret = {};
+				remove = [];
 				i = 0;
 				while ( attr = div.XMLDocument.documentElement.attributes[ i++ ] ) {
 					parsed = JSON.parse( attr.value );
 					if ( parsed.expires && parsed.expires <= now ) {
-						div.removeAttribute( attr.name );
+						remove.push( attr.name )
 					} else {
 						ret[ attr.name ] = parsed.data;
 					}
+				}
+				while ( key = remove.pop() ) {
+					div.removeAttribute( key );
 				}
 				div.save( attrKey );
 				return ret;
