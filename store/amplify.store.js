@@ -137,35 +137,29 @@ if ( window.globalStorage ) {
 (function() {
 	// append to html instead of body so we can do this from the head
 	var div = document.createElement( "div" ),
-		attrKey = "amplify",
-		attrs;
+		attrKey = "amplify";
 	div.style.display = "none";
 	document.getElementsByTagName( "head" )[ 0 ].appendChild( div );
 	if ( div.addBehavior ) {
 		div.addBehavior( "#default#userdata" );
-		div.load( attrKey );
-		attrs = div.getAttribute( attrKey ) ? JSON.parse( div.getAttribute( attrKey ) ) : {};
 
 		store.addType( "userData", function( key, value, options ) {
-			var ret = value,
-				now = (new Date()).getTime(),
-				attr,
-				parsed,
-				prevValue;
+			div.load( attrKey );
+			var attr, parsed, prevValue, i,
+				ret = value,
+				now = (new Date()).getTime();
 
 			if ( !key ) {
 				ret = {};
-				for ( key in attrs ) {
-					attr = div.getAttribute( key );
-					parsed = attr ? JSON.parse( attr ) : { expires: -1 };
+				i = 0;
+				while ( attr = div.XMLDocument.documentElement.attributes[ i++ ] ) {
+					parsed = JSON.parse( attr.value );
 					if ( parsed.expires && parsed.expires <= now ) {
-						div.removeAttribute( key );
-						delete attrs[ key ];
+						div.removeAttribute( attr.name );
 					} else {
-						ret[ key ] = parsed.data;
+						ret[ attr.name ] = parsed.data;
 					}
 				}
-				div.setAttribute( attrKey, JSON.stringify( attrs ) );
 				div.save( attrKey );
 				return ret;
 			}
@@ -177,20 +171,16 @@ if ( window.globalStorage ) {
 			key = key.replace( /[^-._0-9A-Za-z\xb7\xc0-\xd6\xd8-\xf6\xf8-\u037d\u37f-\u1fff\u200c-\u200d\u203f\u2040\u2070-\u218f]/g, "-" );
 
 			if ( value === undefined ) {
-				if ( key in attrs ) {
-					attr = div.getAttribute( key );
-					parsed = attr ? JSON.parse( attr ) : { expires: -1 };
-					if ( parsed.expires && parsed.expires <= now ) {
-						div.removeAttribute( key );
-						delete attrs[ key ];
-					} else {
-						return parsed.data;
-					}
+				attr = div.getAttribute( key );
+				parsed = attr ? JSON.parse( attr ) : { expires: -1 };
+				if ( parsed.expires && parsed.expires <= now ) {
+					div.removeAttribute( key );
+				} else {
+					return parsed.data;
 				}
 			} else {
 				if ( value === null ) {
 					div.removeAttribute( key );
-					delete attrs[ key ];
 				} else {
 					// we need to get the previous value in case we need to rollback
 					prevValue = div.getAttribute( key );
@@ -199,11 +189,9 @@ if ( window.globalStorage ) {
 						expires: (options.expires ? (now + options.expires) : null)
 					});
 					div.setAttribute( key, parsed );
-					attrs[ key ] = true;
 				}
 			}
 
-			div.setAttribute( attrKey, JSON.stringify( attrs ) );
 			try {
 				div.save( attrKey );
 			// quota exceeded
@@ -211,7 +199,6 @@ if ( window.globalStorage ) {
 				// roll the value back to the previous value
 				if ( prevValue === null ) {
 					div.removeAttribute( key );
-					delete attrs[ key ];
 				} else {
 					div.setAttribute( key, prevValue );
 				}
@@ -220,13 +207,11 @@ if ( window.globalStorage ) {
 				store.userData();
 				try {
 					div.setAttribute( key, parsed );
-					attrs[ key ] = true;
 					div.save( attrKey );
 				} catch ( error ) {
 					// roll the value back to the previous value
 					if ( prevValue === null ) {
 						div.removeAttribute( key );
-						delete attrs[ key ];
 					} else {
 						div.setAttribute( key, prevValue );
 					}

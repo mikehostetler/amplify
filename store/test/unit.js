@@ -71,8 +71,8 @@ if ( "localStorage" in amplify.store.types ) {
 
 	test( "localStorage multi-page", function() {
 		expect( 1 );
-		var otherAmplify = document.getElementById( "other-page" )
-			.contentDocument.defaultView.amplify;
+		var iframe = document.getElementById( "other-page" ),
+			otherAmplify = (iframe.contentWindow || iframe.contentDocument.defaultView).amplify;
 		amplify.store.localStorage( "foo", "bar" );
 		otherAmplify.store.localStorage( "baz", "qux" );
 		deepEqual( amplify.store.localStorage(), {
@@ -137,8 +137,8 @@ if ( "sessionStorage" in amplify.store.types ) {
 
 	test( "sessionStorage multi-page", function() {
 		expect( 1 );
-		var otherAmplify = document.getElementById( "other-page" )
-			.contentDocument.defaultView.amplify;
+		var iframe = document.getElementById( "other-page" ),
+			otherAmplify = (iframe.contentWindow || iframe.contentDocument.defaultView).amplify;
 		amplify.store.sessionStorage( "foo", "bar" );
 		otherAmplify.store.sessionStorage( "baz", "qux" );
 		deepEqual( amplify.store.sessionStorage(), {
@@ -200,8 +200,8 @@ if ( "globalStorage" in amplify.store.types ) {
 
 	test( "globalStorage multi-page", function() {
 		expect( 1 );
-		var otherAmplify = document.getElementById( "other-page" )
-			.contentDocument.defaultView.amplify;
+		var iframe = document.getElementById( "other-page" ),
+			otherAmplify = (iframe.contentWindow || iframe.contentDocument.defaultView).amplify;
 		amplify.store.globalStorage( "foo", "bar" );
 		otherAmplify.store.globalStorage( "baz", "qux" );
 		deepEqual( amplify.store.globalStorage(), {
@@ -214,9 +214,15 @@ if ( "globalStorage" in amplify.store.types ) {
 if ( "userData" in amplify.store.types ) {
 	module( "amplify.store.userData", {
 		setup: function() {
-			for( var key in amplify.store.userData() ) {
-				amplify.store.userData( key, null );
+			var attr,
+				div = document.createElement( "div" );
+			document.body.appendChild( div );
+			div.addBehavior( "#default#userdata" );
+			div.load( "amplify" );
+			while ( attr = div.XMLDocument.documentElement.attributes[ 0 ] ) {
+				div.removeAttribute( attr.name );
 			}
+			div.save( "amplify" );
 		}
 	});
 
@@ -255,6 +261,18 @@ if ( "userData" in amplify.store.types ) {
 			deepEqual( amplify.store.userData(), {}, "both expired" );
 			start();
 		}, 1250 );
+	});
+
+	test( "userData multi-page", function() {
+		expect( 1 );
+		var iframe = document.getElementById( "other-page" ),
+			otherAmplify = (iframe.contentWindow || iframe.contentDocument.defaultView).amplify;
+		amplify.store.userData( "foo", "bar" );
+		otherAmplify.store.userData( "baz", "qux" );
+		deepEqual( amplify.store.userData(), {
+			foo: "bar",
+			baz: "qux"
+		}, "both exist in current page" );
 	});
 }
 
