@@ -28,9 +28,7 @@ test( "amplify.store.addType", function() {
 if ( "localStorage" in amplify.store.types ) {
 	module( "amplify.store.localStorage", {
 		setup: function() {
-			for ( var key in amplify.store.localStorage() ) {
-				amplify.store.localStorage( key, null );
-			}
+			localStorage.clear();
 		}
 	});
 
@@ -70,13 +68,32 @@ if ( "localStorage" in amplify.store.types ) {
 			start();
 		}, 1250 );
 	});
+
+	test( "localStorage multi-page", function() {
+		expect( 1 );
+		var otherAmplify = document.getElementById( "other-page" )
+			.contentDocument.defaultView.amplify;
+		amplify.store.localStorage( "foo", "bar" );
+		otherAmplify.store.localStorage( "baz", "qux" );
+		deepEqual( amplify.store.localStorage(), {
+			foo: "bar",
+			baz: "qux"
+		}, "both exist in current page" );
+	});
 }
 
 if ( "sessionStorage" in amplify.store.types ) {
 	module( "amplify.store.sessionStorage", {
 		setup: function() {
-			for( var key in amplify.store.sessionStorage() ) {
-				amplify.store.sessionStorage( key, null );
+			try {
+				sessionStorage.clear();
+			} catch ( error ) {
+				var key;
+				try {
+					while ( key = sessionStorage.key( 0 ) ) {
+						sessionStorage.removeItem( key );
+					}
+				} catch( error ) {}
 			}
 		}
 	});
@@ -117,14 +134,30 @@ if ( "sessionStorage" in amplify.store.types ) {
 			start();
 		}, 1250 );
 	});
+
+	test( "sessionStorage multi-page", function() {
+		expect( 1 );
+		var otherAmplify = document.getElementById( "other-page" )
+			.contentDocument.defaultView.amplify;
+		amplify.store.sessionStorage( "foo", "bar" );
+		otherAmplify.store.sessionStorage( "baz", "qux" );
+		deepEqual( amplify.store.sessionStorage(), {
+			foo: "bar",
+			baz: "qux"
+		}, "both exist in current page" );
+	});
 }
 
 if ( "globalStorage" in amplify.store.types ) {
 	module( "amplify.store.globalStorage", {
 		setup: function() {
-			for( var key in amplify.store.globalStorage() ) {
-				amplify.store.globalStorage( key, null );
-			}
+			var key,
+				store = globalStorage[ location.hostname ];
+			try {
+				while ( key = store.key( 0 ) ) {
+					store.removeItem( key );
+				}
+			} catch( error ) {}
 		}
 	});
 
@@ -163,6 +196,18 @@ if ( "globalStorage" in amplify.store.types ) {
 			deepEqual( amplify.store.globalStorage(), {}, "both expired" );
 			start();
 		}, 1250 );
+	});
+
+	test( "globalStorage multi-page", function() {
+		expect( 1 );
+		var otherAmplify = document.getElementById( "other-page" )
+			.contentDocument.defaultView.amplify;
+		amplify.store.globalStorage( "foo", "bar" );
+		otherAmplify.store.globalStorage( "baz", "qux" );
+		deepEqual( amplify.store.globalStorage(), {
+			foo: "bar",
+			baz: "qux"
+		}, "both exist in current page" );
 	});
 }
 

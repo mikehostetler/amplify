@@ -35,33 +35,28 @@ store.error = function() {
 	return "amplify.store quota exceeded"; 
 };
 
+var rprefix = /^__amplify__/;
 function createFromStorageInterface( storageType, storage ) {
-	var values = storage.getItem( "__amplify__" );
-	values = values ? JSON.parse( values ) : {};
-
-	function remove( key ) {
-		storage.removeItem( key );
-		delete values[ key ];
-	}
-
 	store.addType( storageType, function( key, value, options ) {
-		var ret = value,
-			now = (new Date()).getTime(),
-			storedValue,
-			parsed;
+		var storedValue, parsed, i,
+			ret = value,
+			now = (new Date()).getTime();
 
 		if ( !key ) {
 			ret = {};
-			for ( key in values ) {
-				storedValue = storage.getItem( key );
-				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
-				if ( parsed.expires && parsed.expires <= now ) {
-					remove( key );
-				} else {
-					ret[ key.replace( /^__amplify__/, "" ) ] = parsed.data;
+			i = 0;
+			try {
+				while ( key = storage.key( i++ ) ) {
+					if ( rprefix.test( key ) ) {
+						parsed = JSON.parse( storage.getItem( key ) );
+						if ( parsed.expires && parsed.expires <= now ) {
+							storage.removeItem( key );
+						} else {
+							ret[ key.replace( rprefix, "" ) ] = parsed.data;
+						}
+					}
 				}
-			}
-			storage.setItem( "__amplify__", JSON.stringify( values ) );
+			} catch ( error ) {}
 			return ret;
 		}
 
@@ -69,18 +64,16 @@ function createFromStorageInterface( storageType, storage ) {
 		key = "__amplify__" + key;
 
 		if ( value === undefined ) {
-			if ( values[ key ] ) {
-				storedValue = storage.getItem( key );
-				parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
-				if ( parsed.expires && parsed.expires <= now ) {
-					remove( key );
-				} else {
-					return parsed.data;
-				}
+			storedValue = storage.getItem( key );
+			parsed = storedValue ? JSON.parse( storedValue ) : { expires: -1 };
+			if ( parsed.expires && parsed.expires <= now ) {
+				storage.removeItem( key );
+			} else {
+				return parsed.data;
 			}
 		} else {
 			if ( value === null ) {
-				remove( key );
+				storage.removeItem( key );
 			} else {
 				parsed = JSON.stringify({
 					data: value,
@@ -88,14 +81,12 @@ function createFromStorageInterface( storageType, storage ) {
 				});
 				try {
 					storage.setItem( key, parsed );
-					values[ key ] = true;
 				// quota exceeded
 				} catch( error ) {
 					// expire old data and try again
 					store[ storageType ]();
 					try {
 						storage.setItem( key, parsed );
-						values[ key ] = true;
 					} catch( error ) {
 						throw store.error();
 					}
@@ -103,7 +94,6 @@ function createFromStorageInterface( storageType, storage ) {
 			}
 		}
 
-		storage.setItem( "__amplify__", JSON.stringify( values ) );
 		return ret;
 	});
 }
@@ -128,7 +118,7 @@ if ( window.globalStorage ) {
 		createFromStorageInterface( "globalStorage",
 			window.globalStorage[ window.location.hostname ] );
 		// Firefox 2.0 and 3.0 have sessionStorage and globalStorage
-		// make sure we defualt to globalStorage
+		// make sure we default to globalStorage
 		// but don't default to globalStorage in 3.5+ which also has localStorage
 		if ( store.type === "sessionStorage" ) {
 			store.type = "globalStorage";
@@ -246,17 +236,34 @@ if ( window.globalStorage ) {
 // in-memory storage
 // fallback for all browsers to enable the API even if we can't persist data
 (function() {
-	var memory = {};	
-	createFromStorageInterface( "memory", {
-		getItem: function( key ) {
-			return memory[ key ];
-		},
-		setItem: function( key, value ) {
-			memory[ key ] = value;
-		},
-		removeItem: function( key ) {
-			delete memory[ key ];
+	var memory = {};
+
+	function copy( obj ) {
+		return obj === undefined ? undefined : JSON.parse( JSON.stringify( obj ) );
+	}
+
+	store.addType( "memory", function( key, value, options ) {
+		if ( !key ) {
+			return copy( memory );
 		}
+
+		if ( value === undefined ) {
+			return copy( memory[ key ] );
+		}
+
+		if ( value === null ) {
+			delete memory[ key ];
+			return null;
+		}
+
+		memory[ key ] = value;
+		if ( options.expires ) {
+			setTimeout(function() {
+				delete memory[ key ];
+			}, options.expires );
+		}
+
+		return value;
 	});
 }() );
 
