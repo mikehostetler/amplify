@@ -49,8 +49,10 @@ function createFromStorageInterface( storageType, storage ) {
 			try {
 				// accessing the length property works around a localStorage bug
 				// in Firefox 4.0 where the keys don't update cross-page
+				// we assign to key just to avoid Closure Compiler from removing
+				// the access as "useless code"
 				// https://bugzilla.mozilla.org/show_bug.cgi?id=662511
-				storage.length;
+				key = storage.length;
 
 				while ( key = storage.key( i++ ) ) {
 					if ( rprefix.test( key ) ) {
