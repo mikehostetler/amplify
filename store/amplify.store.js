@@ -141,6 +141,13 @@ if ( window.globalStorage ) {
 // non-standard: IE 5+
 // http://msdn.microsoft.com/en-us/library/ms531424(v=vs.85).aspx
 (function() {
+	// IE 9 has quirks in userData that are a huge pain
+	// rather than finding a way to detect these quirks
+	// we just don't register userData if we have localStorage
+	if ( store.types.localStorage ) {
+		return;
+	}
+
 	// append to html instead of body so we can do this from the head
 	var div = document.createElement( "div" ),
 		attrKey = "amplify";
@@ -162,7 +169,7 @@ if ( window.globalStorage ) {
 				while ( attr = div.XMLDocument.documentElement.attributes[ i++ ] ) {
 					parsed = JSON.parse( attr.value );
 					if ( parsed.expires && parsed.expires <= now ) {
-						remove.push( attr.name )
+						remove.push( attr.name );
 					} else {
 						ret[ attr.name ] = parsed.data;
 					}
