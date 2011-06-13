@@ -1,4 +1,4 @@
-# AmplifyJS, A jQuery Component Library
+# AmplifyJS, A JavaScript Component Library
 
 AmplifyJS is a set of components for data management and application communication.
 
