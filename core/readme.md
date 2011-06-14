@@ -1,6 +1,8 @@
 # amplify core
 
-The core of `amplify` provides a pub/sub system.
+The AmplifyJS core library provides two methods (`amplify.publish` and `amplify.subscribe`). AmplifyJS provides methods to facilitate the Publish and Subscribe messaging pattern in your front-end application. The idea is that someone is broadcasting one or more messages (publishing) and someone else is listening to one or more messages (subscribing). By separating your logic out like this it allows for loose coupling of your components, which results in less brittle and more reusable code.
+
+It is possible to implement the publish and subscribe model by using jQuery custom events, however, the AmplifyJS pub/sub component provides a slightly cleaner interface, prevents collisions between custom events and method names, and allows a priority to your messages.
 
 ## Usage
 
