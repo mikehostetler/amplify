@@ -1,6 +1,6 @@
 {
 	"testswarm": {
-		"name": "Amplify Commit <a href=\"http://github.com/appendto/amplify/commit/{$REV_FULL$}\">#{$REV$}</a>",
+		"name": "AmplifyJS Commit <a href=\"http://github.com/appendto/amplify/commit/{$REV_FULL$}\">#{$REV$}</a>",
 		"jobs": [
 			{
 				"browsers": "popularbetamobile",
