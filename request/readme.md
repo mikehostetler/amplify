@@ -13,6 +13,8 @@ client/server interaction.
 Just getting started? Take a look at the [examples][examples] section
 below for a few of the popular use cases with `amplify.request`.
 
+**NOTE:** `amplify.request` depends on the use of jQuery 1.4 or higher when the `ajax` request type is used. 
+
 ## Usage
 
 	amplify.request( string resourceId [, hash data [, function callback ]] )
@@ -67,6 +69,8 @@ Define a custom request.
 
 You can choose to create additional types by adding to the `amplify.request.types` hash.
 There is also an option to define custom one-off types for single requests.
+
+**NOTE:** `amplify.request` depends on the use of jQuery 1.4 or higher when the `ajax` request type is used. 
 
 ## Data Handling
 
