@@ -13,7 +13,7 @@ technologies and pick an appropriate storage technology through feature
 detection. `amplify.store` also handles serializing to and from a JavaScript object
 using JSON serialization where necessary.
 
-Note: Because of the JSON dependency, you need to add [json2.js](https://github.com/douglascrockford/JSON-js) for support in IE 5. IE 6, and IE 7.
+Note: Because of the JSON dependency, you need to add [json2.js](https://github.com/douglascrockford/JSON-js) for support in browsers without native JSON support, including IE 5, IE 6, IE 7, Firefox 2.0 and Firefox 3.0.
 
 ## Usage
 
