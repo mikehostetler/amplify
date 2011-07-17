@@ -144,9 +144,15 @@ test( "multiple subscriptions", function() {
 	});
 	amplify.publish( "sub-a-1" );
 
-	amplify.subscribe( "sub-b-1 sub-b-2 sub-b-3", function() {
+	amplify.subscribe( "sub-b-1 sub-b-2", function() {
 		ok( true );
 	});
+	
+	// Test for Ticket #18
+	amplify.subscribe( "sub-b-1 sub-b-3", function() {
+		ok( true );
+	});
+	
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-3" );
