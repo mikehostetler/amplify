@@ -48,9 +48,11 @@ var amplify = global.amplify = {
 
 		var topicIndex = 0,
 			topics = topic.split( /\s/ ),
-			topicLength = topics.length;
+			topicLength = topics.length,
+			added;
 		for ( ; topicIndex < topicLength; topicIndex++ ) {
 			topic = topics[ topicIndex ];
+			added = false;
 			if ( !subscriptions[ topic ] ) {
 				subscriptions[ topic ] = [];
 			}
@@ -65,11 +67,14 @@ var amplify = global.amplify = {
 			for ( ; i >= 0; i-- ) {
 				if ( subscriptions[ topic ][ i ].priority <= priority ) {
 					subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
-					return callback;
+					added = true;
+					break;
 				}
 			}
-	
-			subscriptions[ topic ].unshift( subscriptionInfo );
+
+			if ( !added ) {
+				subscriptions[ topic ].unshift( subscriptionInfo );
+			}
 		}
 
 		return callback;
