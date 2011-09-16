@@ -49,6 +49,7 @@ if ( "localStorage" in amplify.store.types ) {
 
 	asyncTest( "localStorage expiration", function() {
 		expect( 5 );
+		amplify.store.localStorage( "forever", "not really", { expires: 100 } );
 		amplify.store.localStorage( "forever", "and ever" );
 		amplify.store.localStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -121,6 +122,7 @@ if ( "sessionStorage" in amplify.store.types ) {
 
 	asyncTest( "sessionStorage expiration", function() {
 		expect( 5 );
+		amplify.store.sessionStorage( "forever", "not really", { expires: 100 } );
 		amplify.store.sessionStorage( "forever", "and ever" );
 		amplify.store.sessionStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -190,6 +192,7 @@ if ( "globalStorage" in amplify.store.types ) {
 
 	asyncTest( "globalStorage expiration", function() {
 		expect( 5 );
+		amplify.store.globalStorage( "forever", "not really", { expires: 100 } );
 		amplify.store.globalStorage( "forever", "and ever" );
 		amplify.store.globalStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -261,6 +264,7 @@ if ( "userData" in amplify.store.types ) {
 
 	asyncTest( "userData expiration", function() {
 		expect( 5 );
+		amplify.store.userData( "forever", "not really", { expires: 100 } );
 		amplify.store.userData( "forever", "and ever" );
 		amplify.store.userData( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -325,6 +329,7 @@ test( "memory", function() {
 
 asyncTest( "memory expiration", function() {
 	expect( 5 );
+	amplify.store.memory( "forever", "not really", { expires: 100 } );
 	amplify.store.memory( "forever", "and ever" );
 	amplify.store.memory( "expiring1", "i disappear",
 		{ expires: 500 } );
