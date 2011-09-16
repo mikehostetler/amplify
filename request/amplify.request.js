@@ -263,7 +263,8 @@ if ( amplify.store ) {
 		cache[ type ] = function( resource, settings, ajaxSettings, ampXHR ) {
 			var cacheKey = cache._key( settings.resourceId,
 					ajaxSettings.url, ajaxSettings.data ),
-				cached = amplify.store[ type ]( cacheKey );
+				cached = amplify.store[ type ]( cacheKey,
+					resource.cache.override ? null : undefined );
 
 			if ( cached ) {
 				ajaxSettings.success( cached );

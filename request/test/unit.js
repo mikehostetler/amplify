@@ -890,12 +890,12 @@ if ( amplify.store ) {
 		}
 	};
 	asyncTest( "cache: persist - no expires", storeExpiresLifecycle, function() {
-		expect( 15 );
+		expect( 24 );
 
 		var ajaxCalls = 0;
 		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
 			if ( xhr.statusText !== "abort" ) {
-				ok( !ajaxCalls++, "ajax call completed" );
+				ok( ajaxCalls++ < 2, "ajax call completed" );
 			}
 		});
 		amplify.request.define( "persist-cache", "ajax", {
@@ -903,21 +903,21 @@ if ( amplify.store ) {
 			dataType: "json",
 			cache: "persist"
 		});
-		// should execute for both requests
+		// should execute for 3 requests
 		subscribe( "request.before", function( settings ) {
 			equal( settings.resourceId, "persist-cache", "before message: settings.resourceId" );
 		});
-		// should execute for first request only
+		// should execute for 2 requests
 		subscribe( "request.before.ajax", function( resource ) {
 			equal( resource.resourceId, "persist-cache", "before.ajax message: resource.resourceId" );
 			equal( resource.cache.expires, undefined, "before.ajax message: resource.expires");
 		});
-		// should execute for both requests
+		// should execute for 3 requests
 		subscribe( "request.success", function( settings, data ) {
 			equal( settings.resourceId, "persist-cache", "success message: settings.resourceId" );
 			deepEqual( data, { foo: "bar" }, "success message: data" );
 		});
-		// should execute for both requests
+		// should execute for 3 requests
 		subscribe( "request.complete", function( settings, data ) {
 			equal( settings.resourceId, "persist-cache", "complete message: settings.resourceId" );
 			deepEqual( data, { foo: "bar" }, "complete message: data" );
@@ -927,15 +927,20 @@ if ( amplify.store ) {
 		});
 		amplify.request( "persist-cache", function( data ) {
 			deepEqual( data, { foo: "bar" }, "first request callback" );
-			amplify.request( "persist-cache", function( data ) {
-				deepEqual( data, { foo: "bar" }, "second request callback" );
-				start();
-			});
+			amplify.request( "persist-cache",
+				{ cache: { type: "persist", override: true } },
+				function( data ) {
+					deepEqual( data, { foo: "bar" }, "second request callback" );
+					amplify.request( "persist-cache", function( data ) {
+						deepEqual( data, { foo: "bar" }, "third request callback" );
+						start();
+					});
+				});
 		});
 	});
 
 	asyncTest( "cache: persist - expires", storeExpiresLifecycle, function() {
-		expect( 24 );
+		expect( 33 );
 
 		var shouldCache = false;
 		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
@@ -950,21 +955,21 @@ if ( amplify.store ) {
 			cache: { type: "persist", expires: 450 }
 		});
 
-		// should execute for 3 requests
+		// should execute for 4 requests
 		subscribe( "request.before", function( settings ) {
 			equal( settings.resourceId, "persist-cache", "before message: settings.resourceId" );
 		});
-		// should execute for 2 requests
+		// should execute for 3 requests
 		subscribe( "request.before.ajax", function( resource ) {
 			equal( resource.resourceId, "persist-cache", "before.ajax message: resource.resourceId" );
 			equal( resource.cache.expires, 450, "before.ajax message: resource.expires");
 		});
-		// should execute 3 requests
+		// should execute 4 requests
 		subscribe( "request.success", function( settings, data ) {
 			equal( settings.resourceId, "persist-cache", "success message: settings.resourceId" );
 			deepEqual( data, { foo: "bar" }, "success message: data" );
 		});
-		// should execute for 3 requests
+		// should execute for 4 requests
 		subscribe( "request.complete", function( settings, data ) {
 			equal( settings.resourceId, "persist-cache", "complete message: settings.resourceId" );
 			deepEqual( data, { foo: "bar" }, "complete message: data" );
@@ -974,22 +979,27 @@ if ( amplify.store ) {
 		});
 
 		amplify.request( "persist-cache", function( data ) {
-			// delay setting the flag because the success callback will be invoked
-			// before the ajaxComplete event is triggered
-			setTimeout(function() {
-				shouldCache = true;
-			}, 1 );
 			deepEqual( data, { foo: "bar" }, "first request callback" );
-			amplify.request( "persist-cache", function( data ) {
-				deepEqual( data, { foo: "bar" }, "second request callback" );
-			});
-			setTimeout(function() {
-				shouldCache = false;
-				amplify.request( "persist-cache", function( data ) {
-					deepEqual( data, { foo: "bar" }, "third request callback" );
-					start();
+			amplify.request( "persist-cache",
+				{ cache: { type: 'persist', expires: 450, override: true } },
+				function( data ) {
+					// delay setting the flag because the success callback will be invoked
+					// before the ajaxComplete event is triggered
+					setTimeout(function() {
+						shouldCache = true;
+					}, 1 );
+					deepEqual( data, { foo: "bar" }, "second request callback" );
+					amplify.request( "persist-cache", function( data ) {
+						deepEqual( data, { foo: "bar" }, "third request callback" );
+					});
+					setTimeout(function() {
+						shouldCache = false;
+						amplify.request( "persist-cache", function( data ) {
+							deepEqual( data, { foo: "bar" }, "fourth request callback" );
+							start();
+						});
+					}, 500 );
 				});
-			}, 500 );
 		});
 	});
 
