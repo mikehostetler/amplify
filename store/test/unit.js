@@ -48,7 +48,7 @@ if ( "localStorage" in amplify.store.types ) {
 	});
 
 	asyncTest( "localStorage expiration", function() {
-		expect( 5 );
+		expect( 7 );
 		amplify.store.localStorage( "forever", "and ever" );
 		amplify.store.localStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -71,10 +71,22 @@ if ( "localStorage" in amplify.store.types ) {
 		}, 750 );
 		setTimeout(function() {
 			deepEqual( amplify.store.localStorage(), { forever: "and ever" }, "both expired" );
-			start();
+			// had to separate this test because rewriting the value causes order inconsistency
+			// and makes the deepEqual tests tricky
+			amplify.store.localStorage( "forever", null );
+			amplify.store.localStorage( "finallyStaying", "i finally stay",
+				{ expires: 500 } );
+			amplify.store.localStorage( "finallyStaying", "i finally stay" );
+			deepEqual( amplify.store.localStorage(), { finallyStaying: "i finally stay" },
+				"value exists" );
 		}, 1250 );
+		setTimeout(function() {
+			deepEqual( amplify.store.localStorage(), { finallyStaying: "i finally stay" },
+				"expiration cancelled" );
+			start();
+		}, 2000 );
 	});
-
+	
 	test( "localStorage multi-page", function() {
 		expect( 1 );
 		var iframe = document.getElementById( "other-page" ),
@@ -120,7 +132,7 @@ if ( "sessionStorage" in amplify.store.types ) {
 	});
 
 	asyncTest( "sessionStorage expiration", function() {
-		expect( 5 );
+		expect( 7 );
 		amplify.store.sessionStorage( "forever", "and ever" );
 		amplify.store.sessionStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -143,8 +155,18 @@ if ( "sessionStorage" in amplify.store.types ) {
 		}, 750 );
 		setTimeout(function() {
 			deepEqual( amplify.store.sessionStorage(), { forever: "and ever" }, "both expired" );
-			start();
+			amplify.store.sessionStorage( "forever", null );
+			amplify.store.sessionStorage( "finallyStaying", "i finally stay",
+				{ expires: 500 } );
+			amplify.store.sessionStorage( "finallyStaying", "i finally stay" );
+			deepEqual( amplify.store.sessionStorage(), { finallyStaying: "i finally stay" },
+				"value exists" );
 		}, 1250 );
+		setTimeout(function() {
+			deepEqual( amplify.store.sessionStorage(), { finallyStaying: "i finally stay" },
+				"expiration cancelled" );
+			start();
+		}, 2000 );
 	});
 
 	test( "sessionStorage multi-page", function() {
@@ -189,7 +211,7 @@ if ( "globalStorage" in amplify.store.types ) {
 	});
 
 	asyncTest( "globalStorage expiration", function() {
-		expect( 5 );
+		expect( 7 );
 		amplify.store.globalStorage( "forever", "and ever" );
 		amplify.store.globalStorage( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -212,8 +234,18 @@ if ( "globalStorage" in amplify.store.types ) {
 		}, 750 );
 		setTimeout(function() {
 			deepEqual( amplify.store.globalStorage(), { forever: "and ever" }, "both expired" );
-			start();
+			amplify.store.globalStorage( "forever", null );
+			amplify.store.globalStorage( "finallyStaying", "i finally stay",
+				{ expires: 500 } );
+			amplify.store.globalStorage( "finallyStaying", "i finally stay" );
+			deepEqual( amplify.store.globalStorage(), { finallyStaying: "i finally stay" },
+				"value exists" );
 		}, 1250 );
+		setTimeout(function() {
+			deepEqual( amplify.store.globalStorage(), { finallyStaying: "i finally stay" },
+				"expiration cancelled" );
+			start();
+		}, 2000 );
 	});
 
 	test( "globalStorage multi-page", function() {
@@ -260,7 +292,7 @@ if ( "userData" in amplify.store.types ) {
 	});
 
 	asyncTest( "userData expiration", function() {
-		expect( 5 );
+		expect( 7 );
 		amplify.store.userData( "forever", "and ever" );
 		amplify.store.userData( "expiring1", "i disappear",
 			{ expires: 500 } );
@@ -283,8 +315,18 @@ if ( "userData" in amplify.store.types ) {
 		}, 750 );
 		setTimeout(function() {
 			deepEqual( amplify.store.userData(), { forever: "and ever" }, "both expired" );
-			start();
+			amplify.store.userData( "forever", null );
+			amplify.store.userData( "finallyStaying", "i finally stay",
+				{ expires: 500 } );
+			amplify.store.userData( "finallyStaying", "i finally stay" );
+			deepEqual( amplify.store.userData(), { finallyStaying: "i finally stay" },
+				"value exists" );
 		}, 1250 );
+		setTimeout(function() {
+			deepEqual( amplify.store.userData(), { finallyStaying: "i finally stay" },
+				"expiration cancelled" );
+			start();
+		}, 2000 );
 	});
 
 	test( "userData multi-page", function() {
@@ -324,7 +366,7 @@ test( "memory", function() {
 });
 
 asyncTest( "memory expiration", function() {
-	expect( 5 );
+	expect( 7 );
 	amplify.store.memory( "forever", "and ever" );
 	amplify.store.memory( "expiring1", "i disappear",
 		{ expires: 500 } );
@@ -347,6 +389,16 @@ asyncTest( "memory expiration", function() {
 	}, 750 );
 	setTimeout(function() {
 		deepEqual( amplify.store.memory(), { forever: "and ever" }, "both expired" );
-		start();
+		amplify.store.memory( "forever", null );
+		amplify.store.memory( "finallyStaying", "i finally stay",
+			{ expires: 500 } );
+		amplify.store.memory( "finallyStaying", "i finally stay" );
+		deepEqual( amplify.store.memory(), { finallyStaying: "i finally stay" },
+			"value exists" );
 	}, 1250 );
+	setTimeout(function() {
+		deepEqual( amplify.store.memory(), { finallyStaying: "i finally stay" },
+			"expiration cancelled" );
+		start();
+	}, 2000 );
 });
