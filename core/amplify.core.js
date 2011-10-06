@@ -15,6 +15,7 @@ var slice = [].slice,
 var amplify = global.amplify = {
 	publish: function( topic ) {
 		var args = slice.call( arguments, 1 ),
+			topicSubscriptions,
 			subscription,
 			length,
 			i = 0,
@@ -24,8 +25,9 @@ var amplify = global.amplify = {
 			return true;
 		}
 
-		for ( length = subscriptions[ topic ].length; i < length; i++ ) {
-			subscription = subscriptions[ topic ][ i ];
+		topicSubscriptions = subscriptions[ topic ].slice();
+		for ( length = topicSubscriptions.length; i < length; i++ ) {
+			subscription = topicSubscriptions[ i ];
 			ret = subscription.callback.apply( subscription.context, args );
 			if ( ret === false ) {
 				break;

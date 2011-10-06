@@ -136,6 +136,24 @@ test( "unsubscribe", function() {
 	amplify.publish( "unsubscribe" );
 });
 
+test( "unsubscribe during publish", function() {
+	expect( 3 );
+
+	function racer() {
+		ok( true, "second" );
+		amplify.unsubscribe( "racy", racer );
+	}
+
+	amplify.subscribe( "racy", function() {
+		ok( true, "first" );
+	});
+	amplify.subscribe( "racy", racer );
+	amplify.subscribe( "racy", function() {
+		ok( true, "third" );
+	});
+	amplify.publish( "racy" );
+});
+
 test( "multiple subscriptions", function() {
 	expect( 4 );
 
