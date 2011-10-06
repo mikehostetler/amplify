@@ -14,6 +14,24 @@ function isFunction( obj ) {
 	return ({}).toString.call( obj ) === "[object Function]";
 }
 
+function async( fn ) {
+	var isAsync = false;
+	setTimeout(function() {
+		isAsync = true;
+	}, 1 );
+	return function() {
+		var that = this,
+			args = arguments;
+		if ( isAsync ) {
+			fn.apply( that, args );
+		} else {
+			setTimeout(function() {
+				fn.apply( that, args );
+			}, 1 );
+		}
+	};
+}
+
 amplify.request = function( resourceId, data, callback ) {
 	// default to an empty hash just so we can handle a missing resourceId
 	// in one place
@@ -35,18 +53,18 @@ amplify.request = function( resourceId, data, callback ) {
 		resource = amplify.request.resources[ settings.resourceId ],
 		success = settings.success || noop,
 		error = settings.error || noop;
-	settings.success = function( data, status ) {
+	settings.success = async( function( data, status ) {
 		status = status || "success";
 		amplify.publish( "request.success", settings, data, status );
 		amplify.publish( "request.complete", settings, data, status );
 		success( data, status );
-	};
-	settings.error = function( data, status ) {
+	});
+	settings.error = async( function( data, status ) {
 		status = status || "error";
 		amplify.publish( "request.error", settings, data, status );
 		amplify.publish( "request.complete", settings, data, status );
 		error( data, status );
-	};
+	});
 
 	if ( !resource ) {
 		if ( !settings.resourceId ) {

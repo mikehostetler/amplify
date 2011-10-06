@@ -62,7 +62,7 @@ test( "invalid resource id", function() {
 
 module( "amplify.request.define - fn", lifecycle );
 
-test( "request( id )", function() {
+asyncTest( "request( id )", function() {
 	expect( 11 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -86,6 +86,7 @@ test( "request( id )", function() {
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
+		start();
 	});
 	subscribe( "request.error", function() {
 		ok( false, "error message published" );
@@ -93,7 +94,7 @@ test( "request( id )", function() {
 	amplify.request( "test" );
 });
 
-test( "request( id, fn )", function() {
+asyncTest( "request( id, fn )", function() {
 	expect( 13 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -117,6 +118,7 @@ test( "request( id, fn )", function() {
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
+		start();
 	});
 	subscribe( "request.error", function() {
 		ok( false, "error message published" );
@@ -127,7 +129,7 @@ test( "request( id, fn )", function() {
 	});
 });
 
-test( "request( id, data, fn )", function() {
+asyncTest( "request( id, data, fn )", function() {
 	expect( 13 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -151,6 +153,7 @@ test( "request( id, data, fn )", function() {
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
+		start();
 	});
 	subscribe( "request.error", function() {
 		ok( false, "error message published" );
@@ -161,7 +164,7 @@ test( "request( id, data, fn )", function() {
 	});
 });
 
-test( "request( hash ) success", function() {
+asyncTest( "request( hash ) success", function() {
 	expect( 13 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -185,6 +188,7 @@ test( "request( hash ) success", function() {
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
+		start();
 	});
 	subscribe( "request.error", function() {
 		ok( false, "error message published" );
@@ -199,7 +203,7 @@ test( "request( hash ) success", function() {
 	});
 });
 
-test( "request( hash ) error", function() {
+asyncTest( "request( hash ) error", function() {
 	expect( 13 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -223,6 +227,7 @@ test( "request( hash ) error", function() {
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
 		equal( status, "error", "complete message: status" );
+		start();
 	});
 	subscribe( "request.success", function() {
 		ok( false, "success message published" );
@@ -240,7 +245,7 @@ test( "request( hash ) error", function() {
 	});
 });
 
-test( "custom status - success", function() {
+asyncTest( "custom status - success", function() {
 	expect( 6 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -253,6 +258,7 @@ test( "custom status - success", function() {
 	subscribe( "request.complete", function( settings, data, status ) {
 		deepEqual( data, { data: "is good" }, "complete message: data " );
 		equal( status, "custom status", "complete message: status" );
+		start();
 	});
 
 	amplify.request( "test", function( data, status ) {
@@ -261,7 +267,7 @@ test( "custom status - success", function() {
 	});
 });
 
-test( "custom status - error", function() {
+asyncTest( "custom status - error", function() {
 	expect( 6 );
 
 	amplify.request.define( "test", function( settings ) {
@@ -274,6 +280,7 @@ test( "custom status - error", function() {
 	subscribe( "request.complete", function( settings, data, status ) {
 		deepEqual( data, { data: "is bad" }, "complete message: data " );
 		equal( status, "custom error", "complete message: status" );
+		start();
 	});
 
 	amplify.request({
@@ -285,11 +292,12 @@ test( "custom status - error", function() {
 	});
 });
 
-test( "prevent request", function() {
+asyncTest( "prevent request", function() {
 	expect( 3 );
 
 	amplify.request.define( "test", function( settings ) {
 		deepEqual( settings.data, { pass: true }, "request occurred" );
+		start();
 	});
 	subscribe( "request.before", function( settings ) {
 		ok( true, "message published" );
@@ -645,7 +653,7 @@ asyncTest( "data as string", function() {
 	});
 });
 
-test( "abort", function() {
+asyncTest( "abort", function() {
 	expect( 9 );
 
 	amplify.request.define( "test", "ajax", {
@@ -672,6 +680,7 @@ test( "abort", function() {
 		equal( settings.resourceId, "test", "complete message: resourceId" );
 		deepEqual( data, null, "complete message: data" );
 		equal( status, "abort", "complete message: status" );
+		start();
 	});
 	subscribe( "request.success", function() {
 		ok( false, "success message published" );
