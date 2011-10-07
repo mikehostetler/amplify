@@ -653,6 +653,55 @@ asyncTest( "data as string", function() {
 	});
 });
 
+test( "dataMap: hash", function() {
+	expect( 1 );
+
+	$.ajax = function( settings ) {
+		deepEqual( settings.data, {
+			sillyNameForFoo: "foo val",
+			bar: "bar val"
+		}, "keys mapped" );
+	};
+	amplify.request.define( "test", "ajax", {
+		url: "",
+		dataMap: {
+			foo: "sillyNameForFoo",
+			baz: "sillyNameForBaz"
+		}
+	});
+	amplify.request( "test", {
+		foo: "foo val",
+		bar: "bar val"
+	});
+});
+
+test( "dataMap: function", function() {
+	expect( 2 );
+
+	$.ajax = function( settings ) {
+		deepEqual( settings.data, {
+			foo: "bar",
+			baz: "qux"
+		}, "keys mapped" );
+	};
+	amplify.request.define( "test", "ajax", {
+		url: "",
+		dataMap: function( data ) {
+			deepEqual( data, {
+				orig: "data"
+			}, "original data in dataMap" );
+
+			return {
+				foo: "bar",
+				baz: "qux"
+			};
+		}
+	});
+	amplify.request( "test", {
+		orig: "data"
+	});
+});
+
 asyncTest( "abort", function() {
 	expect( 9 );
 

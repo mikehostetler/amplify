@@ -118,10 +118,8 @@ amplify.request.types.ajax = function( defnSettings ) {
 	return function( settings, request ) {
 		var xhr,
 			url = defnSettings.url,
-			data = settings.data,
 			abort = request.abort,
-			ajaxSettings = {},
-			mappedKeys = [],
+			ajaxSettings = $.extend( true, {}, defnSettings, { data: settings.data } );
 			aborted = false,
 			ampXHR = {
 				readyState: 0,
@@ -153,27 +151,10 @@ amplify.request.types.ajax = function( defnSettings ) {
 				}
 			};
 
-		if ( typeof data !== "string" ) {
-			data = $.extend( true, {}, defnSettings.data, data );
-			
-			url = url.replace( rurlData, function ( m, key ) {
-				if ( key in data ) {
-				    mappedKeys.push( key );
-				    return data[ key ];
-				}
-			});
-			
-			// We delete the keys later so duplicates are still replaced
-			$.each( mappedKeys, function ( i, key ) {
-				delete data[ key ];
-			});
-		}
+		amplify.publish( "request.ajax.preprocess",
+			defnSettings, settings, ajaxSettings, ampXHR );
 
-		$.extend( ajaxSettings, defnSettings, {
-			url: url,
-			type: defnSettings.type,
-			data: data,
-			dataType: defnSettings.dataType,
+		$.extend( ajaxSettings, {
 			success: function( data, status ) {
 				handleResponse( data, status );
 			},
@@ -226,6 +207,56 @@ amplify.request.types.ajax = function( defnSettings ) {
 		};
 	};
 };
+
+
+
+amplify.subscribe( "request.ajax.preprocess", function( defnSettings, settings, ajaxSettings ) {
+	var mappedKeys = [],
+		data = ajaxSettings.data;
+
+	if ( typeof data === "string" ) {
+		return;
+	}
+
+	data = $.extend( true, {}, defnSettings.data, data );
+
+	ajaxSettings.url = ajaxSettings.url.replace( rurlData, function ( m, key ) {
+		if ( key in data ) {
+		    mappedKeys.push( key );
+		    return data[ key ];
+		}
+	});
+
+	// We delete the keys later so duplicates are still replaced
+	$.each( mappedKeys, function ( i, key ) {
+		delete data[ key ];
+	});
+
+	ajaxSettings.data = data;
+});
+
+
+
+amplify.subscribe( "request.ajax.preprocess", function( defnSettings, settings, ajaxSettings ) {
+	var data = ajaxSettings.data,
+		dataMap = defnSettings.dataMap;
+
+	if ( !dataMap || typeof data === "string" ) {
+		return;
+	}
+
+	if ( $.isFunction( dataMap ) ) {
+		ajaxSettings.data = dataMap( data );
+	} else {
+		$.each( defnSettings.dataMap, function( orig, replace ) {
+			if ( orig in data ) {
+				data[ replace ] = data[ orig ];
+				delete data[ orig ];
+			}
+		});
+		ajaxSettings.data = data;
+	}
+});
 
 
 
