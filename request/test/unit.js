@@ -488,7 +488,7 @@ asyncTest( "prevent request - beforeSend", function() {
 			ok( "abort" in xhr, "xhr object provided" );
 			equal( settings.url.substring( 0, 20 ), "data/data.json?pass=", "correct url" );
 			equal( settings.dataType, "json", "correct dataType" );
-			return settings.data.substring( settings.data.length - 4 ) === "true";
+			return settings.url.substring( settings.url.length - 4 ) === "true";
 		}
 	});
 	// should execute 2 times
