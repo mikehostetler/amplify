@@ -86,6 +86,11 @@ var amplify = global.amplify = {
 		if ( !subscriptions[ topic ] ) {
 			return;
 		}
+		
+		if ( !callback ) {
+			subscriptions[ topic ] == null;
+			return;
+		}
 
 		var length = subscriptions[ topic ].length,
 			i = 0;
