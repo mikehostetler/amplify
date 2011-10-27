@@ -6,14 +6,14 @@ Using the `amplify.request.define` function you can create and maintain
 your entire server interface and caching policy in a single place,
 reducing the impact of any server interface changes. Components that
 need data can retrieve the data through `amplify.request` without
-concern for data caching, server interface,
-location, data types, wrappers, and all the other specificities of the
+concern for data caching, server interface, resource location,
+data types, wrappers, and all the other specificities of the
 client/server interaction.
 
 Just getting started? Take a look at the [examples][examples] section
 below for a few of the popular use cases with `amplify.request`.
 
-**NOTE:** `amplify.request` depends on the use of jQuery 1.4 or higher when the `ajax` request type is used. 
+**NOTE:** `amplify.request` depends on the use of jQuery 1.4 or higher when the `ajax` request type is used.
 
 ## Usage
 
@@ -22,33 +22,34 @@ below for a few of the popular use cases with `amplify.request`.
 Request a resource.
 
 * `resourceId`: Identifier string for the resource.
-* `data`: an object literal of data to be sent to the resource.
-* `callback`: a function to call once the resource has been retrieved.
+* `data`: A set of key/value pairs of data to be sent to the resource.
+* `callback`: A function to invoke if the resource is retrieved successfully.
 
 <pre><code>amplify.request( hash settings )</code></pre>
 
 Request a resource.
 
-* `settings`: a set of key/value pairs of settings for the request.
+* `settings`: A set of key/value pairs of settings for the request.
   * `resourceId`: Identifier string for the resource.
   * `data` (optional): Data associated with the request.
   * `success` (optional): Function to invoke on success.
   * `error` (optional): Function to invoke on error.
 
 <pre><code>amplify.request.define(
-	string resourceId , string requestType [, hash settings ] )</code></pre>
+	string resourceId, string requestType [, hash settings ] )</code></pre>
 
 Define a resource.
 
 * `resourceId`: Identifier string for the resource.
-* `requestType`: The type of data retrieval method from the server. See the [request types][requestTypes] sections for more information.
-* `settings`: a set of key/value pairs that relate to the server
+* `requestType`: The type of data retrieval method from the server.
+See the [request types][requestTypes] sections for more information.
+* `settings`: A set of key/value pairs that relate to the server
   communication technology. The following settings are available:
-  * any settings found in jQuery.ajax()
-  * cache: see the [cache][cache] section for more details.
-  * decoder: see the [decoder][decoder] section for more details.
+  * Any settings found in jQuery.ajax().
+  * `cache`: See the [cache][cache] section for more details.
+  * `decoder`: See the [decoder][decoder] section for more details.
 
-<pre><code>amplify.request.define(string resourceId , function resource )</code></pre>
+<pre><code>amplify.request.define( string resourceId, function resource )</code></pre>
 
 Define a custom request.
 
@@ -63,14 +64,14 @@ Define a custom request.
 
 ### Built-in Types
 
-`amplify.request` comes with built-in type of `ajax`
+`amplify.request` comes with a built-in `ajax` type.
+
+**NOTE:** The `ajax` request type depends on the use of jQuery 1.4 or higher.
 
 ### Custom Types
 
 You can choose to create additional types by adding to the `amplify.request.types` hash.
 There is also an option to define custom one-off types for single requests.
-
-**NOTE:** `amplify.request` depends on the use of jQuery 1.4 or higher when the `ajax` request type is used. 
 
 ## Data Handling
 
@@ -80,6 +81,11 @@ When defining an ajax request, you can provide data in the definition.
 This data will be merged (via a deep extend) with any data provided with the request.
 Data provided with the request will override data provided in the definition.
 
+### Data Mapping
+
+Data maps allow you to modify the data for an ajax request before the data is sent.
+You can use a hash to map keys or you can use a function for complete flexibility.
+ 
 ### URL substitution/routing
 
 You can define variables in the URL of an ajax request by wrapping the variable in curly braces, e.g., `"/user/{id}"`.
@@ -117,7 +123,7 @@ of your choosing.
 
 * `data`: Data returned from the ajax request.
 * `status`: Status of the ajax request. See the [handling status][handlingstatus] section below.
-* `xhr`: xhr object used to make the request.
+* `xhr`: A wrapped xhr object used to make the request.
 * `success`: Callback to invoke on success.
 * `error`: Callback to invoke on error.
 
