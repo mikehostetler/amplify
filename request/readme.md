@@ -1,6 +1,7 @@
 # amplify.request
 
-`amplify.request` is an abstraction layer that can be used for any kind of request for data. `amplify.request` sets out to separate the data retrieval and caching mechanisms from data requestors.
+`amplify.request` is an abstraction layer that can be used for any kind of request for data.
+`amplify.request` sets out to separate the data retrieval and caching mechanisms from data requestors.
 
 Using the `amplify.request.define` function you can create and maintain
 your entire server interface and caching policy in a single place,
@@ -253,6 +254,35 @@ json unless specified otherwise:
 			data.foo; // bar
 		}
 	);
+
+### Using data maps
+
+When searching Twitter, the key for the search phrase is `q`.
+If we want a more descriptive name, such as `term`, we can use a data map:
+
+	amplify.request.define( "twitter-search", "ajax", {
+		url: "http://search.twitter.com/search.json",
+		dataType: "jsonp",
+		dataMap: {
+			term: "q"
+		}
+	});
+
+	amplify.request( "twitter-search", { term: "amplifyjs" }, ... );
+
+Similarly, we can create a request that searches for mentions, by accepting a username:
+
+	amplify.request.define( "twitter-mentions", "ajax", {
+		url: "http://search.twitter.com/search.json",
+		dataType: "jsonp",
+		dataMap: function( data ) {
+			return {
+				q: "@" + data.user
+			};
+		}
+	});
+
+	amplify.request( "twitter-mentions", { user: "amplifyjs" }, ... );
 
 ### Setting up and using decoders
 
