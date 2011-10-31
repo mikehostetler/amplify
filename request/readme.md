@@ -11,6 +11,10 @@ concern for data caching, server interface, resource location,
 data types, wrappers, and all the other specificities of the
 client/server interaction.
 
+Requests made through `amplify.request` will always be resolved asynchronously,
+even if the resource invokes the callbacks immediately.
+This ensures that you will never having timing problems if the request definition is changed in the future.
+
 Just getting started? Take a look at the [examples][examples] section
 below for a few of the popular use cases with `amplify.request`.
 
