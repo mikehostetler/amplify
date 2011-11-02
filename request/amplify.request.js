@@ -119,7 +119,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 		var xhr,
 			url = defnSettings.url,
 			abort = request.abort,
-			ajaxSettings = $.extend( true, {}, defnSettings, { data: settings.data } );
+			ajaxSettings = $.extend( true, {}, defnSettings, { data: settings.data } ),
 			aborted = false,
 			ampXHR = {
 				readyState: 0,
