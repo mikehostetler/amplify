@@ -8,12 +8,15 @@ var amplify = {
 		/// 	Request a resource.
 		/// 	&#10;Additional Signatures:
 		/// 	&#10;&#09;1. amplify.request( resourceId [, data [, callback ]] )
-		/// 	&#10;&#09;2. amplify.request( settings* )
+		/// 	&#10;&#09;2. amplify.request( resourceId [, data [, success [, error ]]] )
+		/// 	&#10;&#09;3. amplify.request( settings* )
 		/// 	&#10;&#10;API Reference: http://amplifyjs.com/api/request
 		/// </summary>
 		///	<param name="resourceId" type="String">Identifier string for the resource.</param>
 		///	<param name="data" type="Object" optional="true">An object literal of data to be sent to the resource.</param>
 		///	<param name="callback" type="Function" optional="true">A function to call once the resource has been retrieved.</param>
+		///	<param name="success" type="Function" optional="true">A Function to invoke on success.</param>
+		///	<param name="error" type="Function" optional="true">A Function to invoke on error.</param>
 		/// <param name="settings*" type="Hash">
 		///	* This parameter is only used with the #2 signature. A set of key/value pairs of settings for the request.
 		/// &#10;&#09;{
