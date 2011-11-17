@@ -123,7 +123,7 @@ for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
 // globalStorage
 // non-standard: Firefox 2+
 // https://developer.mozilla.org/en/dom/storage#globalStorage
-if ( window.globalStorage ) {
+if ( !store.types.localStorage && window.globalStorage ) {
 	// try/catch for file protocol in Firefox
 	try {
 		createFromStorageInterface( "globalStorage",
