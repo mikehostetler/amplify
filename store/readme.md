@@ -122,3 +122,8 @@ An in-memory store is provided as a fallback if none of the other storage types 
 
 <iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/qM5Db/embedded/js,html,result/"> </iframe>
 [Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/store/demo/localstorage/)
+
+## Known Issues
+
+* IE 6 - 7
+       * You cannot use keys beginning with a hyphen (`-`) with `amplify.store` on IE 6 and 7 ([See issue #40](https://github.com/appendto/amplify/issues/40)). This is a limitation of Internet Explorer, which will give the following exception: _This name may not begin with the '\-' character:_.
