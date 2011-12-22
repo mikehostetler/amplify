@@ -126,7 +126,8 @@ An in-memory store is provided as a fallback if none of the other storage types 
 ## Known Issues
 
 * userData (commmonly used with IE 5 - 7, see [Issue #40](https://github.com/appendto/amplify/issues/40))
-	* Since userData is an XML storage mechanism, using` amplify.store` with userData is bound to XML naming constraints. For example:
+
+	Since userData is an XML storage mechanism, using `amplify.store` with userData is bound to XML naming constraints. For example:
 
 		amplify.store( "storeExample1", { foo: "bar" } );
 
@@ -134,12 +135,13 @@ An in-memory store is provided as a fallback if none of the other storage types 
 
 		amplify.store( "-storeExample1", { foo: "bar" } );
 
-	This example would not work correctly because the key `-storeExample1` is non-conformant because it contains a leading hyphen. Choosing valid XML names is then important when using `amplify.store` with userData. A good rule for choosing a valid key is if the key could itself be a valid JavaScript variable (e.g. `var storeExample1` would be valid as opposed to `var -storeExample1`) then it generally would be a valid key for userData. Here is a general guide for choosing key names for `amplify.store` with userData:
-		* The name cannot start with the following characters:
-			* A digit (`0-9`)
-			* Diacritics/Letters with glyphs (`á`)
-			* Period/Full Stop (`.`)
-			* Hyphen (`-`)
-			* Any case-insensitive combination of the word XML (`xml`, `XML`, `xMl`)
-		* The ASCII symbols and punctuation marks, along with a fairly large group of Unicode symbol characters, are excluded from names because they are more useful as delimiters in contexts where XML names are used outside XML documents (Source: W3C)
-		* For a more conclusive guide to choosing valid names, please see [Names and Tokens, W3C XML Naming](http://www.w3.org/TR/REC-xml/#NT-Name). `NameStartChar` lists valid starting characters and `NameChar` outlines which characters the name may contain.
+	This example would not work correctly because the key `-storeExample1` is non-conformant because it contains a leading hyphen. Choosing valid XML names is then important when using `amplify.store` with userData. Here is a general guide for choosing key names for `amplify.store` with userData:
+		
+	* The name cannot start with the following characters:
+		* A digit `0-9`
+		* Diacritics/Letters with glyphs `á`
+		* Period/Full Stop `.`
+		* Hyphen `-`
+		* Any case-insensitive combination of the word XML `xml`, `XML`, `xMl`
+	* The ASCII symbols and punctuation marks, along with a fairly large group of Unicode symbol characters, are excluded from names because they are more useful as delimiters in contexts where XML names are used outside XML documents (Source: W3C)
+	* For a more conclusive guide to choosing valid names, please see [Names and Tokens, W3C XML Naming](http://www.w3.org/TR/REC-xml/#NT-Name). `NameStartChar` lists valid starting characters and `NameChar` outlines which characters the name may contain.
