@@ -124,7 +124,7 @@ Subscribe to "foo", "bar" and "baz", using the same callback.
         console.log( "data: " + data );
     } );
 
-Amplify does not pass the topic into the subscription callback's parameters.  If you run into a situation where you have subscribed to *multiple* topics in one amplify.subscribe call, but you want to know *which* topic was used when publish was called, you can include the topic as part of the message data:
+Amplify does not pass the topic into the subscription callback's parameters.  If you run into a situation where you have subscribed to *multiple* topics in one `amplify.subscribe` call, but you want to know *which* topic was used when publish was called, you can include the topic as part of the message data:
 
     amplify.subscribe( "foo bar baz", function( msg ) {
         console.log( "According to " + msg.topic + ", it is " + msg.data.temp + " degrees in " + msg.data.city + "." );
