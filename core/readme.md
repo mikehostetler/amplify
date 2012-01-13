@@ -149,7 +149,7 @@ Amplify does not pass the topic into the subscription callback's parameters.  If
     } );
     // According to baz, it is 36 degrees in Nashville.
 
-If you are not subscribing to multiple topics, but still need the topic to be passed to the subscription callback, you can take a cleaner approach that does not require you to pollute the message data:
+If you are not subscribing to multiple topics, but still need the topic to be passed to the subscription callback, an alternate approach is to wrap the `amplify.subscribe` call with a proxy function:
 
     var subscribe = function( topic, fn ) {
         return amplify.subscribe( topic, function() {
