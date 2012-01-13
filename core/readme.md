@@ -124,42 +124,39 @@ Subscribe to "foo", "bar" and "baz", using the same callback.
         console.log( "data: " + data );
     } );
 
-Amplify does not pass the topic into the subscription callback's parameters.  If you run into a situation where you have subscribed to *multiple* topics in one `amplify.subscribe` call, but you want to know *which* topic was used when publish was called, you can include the topic as part of the message data:
-
-    amplify.subscribe( "foo bar baz", function( msg ) {
-        console.log( "According to " + msg.topic + ", it is " + msg.data.temp + " degrees in " + msg.data.city + "." );
-    } );
-
-    // if you're going to use this approach, we highly recommend that you use a consistent envelope pattern on your messages
-    amplify.publish( "foo", {
-        topic: "foo",
-        data: {
-            city: "Chattanooga",
-            temp: "24"
-        }
-    } );
-    // According to foo, it is 24 degrees in Chattanooga.
-
-    amplify.publish( "baz", {
-        topic: "baz",
-        data: {
-            city: "Nashville",
-            temp: "36"
-        }
-    } );
-    // According to baz, it is 36 degrees in Nashville.
-
-If you are not subscribing to multiple topics, but still need the topic to be passed to the subscription callback, an alternate approach is to wrap the `amplify.subscribe` call with a proxy function:
+Amplify does not pass the topic into the subscription callback's parameters.  If you need the topic to be passed to the subscription callback, you can wrap the `amplify.subscribe` call with a proxy function:
 
     var subscribe = function( topic, fn ) {
-        return amplify.subscribe( topic, function() {
-            return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) ); // including the topic
-        } );
-    }
+        var idx = 0,
+        topics = topic.split( /\s/ ),
+        len = topics.length,
+        res = {};
+        for( ; idx < len; idx++) {
+            (function( topic ) {
+                res[topic] = amplify.subscribe( topic, function() {
+                    return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) );
+                } );
+            })( topics[idx] );
+        }
+        return len === 1 ? res[topic] : res; // if multiple topics, return a hash of topic & subscription callback
+    };
 
-    var actualCallback = subscribe( "bacon", function( topic, data ) { console.log( "The " + topic + " says '" + data.bar + "'." ); } );
+    var fn = function( topic, data ) {
+            console.log( "The " + topic + " says '" + data.bar + "'." );
+        },
+        multipleCallbacks = subscribe( "lion kitty dog", fn ),
+        singleCallback = subscribe( "librarian", fn );
 
-    amplify.publish( "bacon", { bar: "sizzle" } ); // The bacon says 'sizzle'.
+    amplify.publish( "lion", { bar: "RAWR!" } );         // The lion says 'RAWR!'.
+    amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
+    amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
+    amplify.publish( "librarian", { bar: "Shhhhhh!" } ); // The librarian says 'Shhhhhh!'.
 
-    amplify.unsubscribe( "bacon", actualCallback );
+    amplify.unsubscribe( "lion", multipleCallbacks["lion"] );
+    amplify.unsubscribe( "librarian", singleCallback );
+
+    amplify.publish( "lion", { bar: "RAWR!" } );         // Nothing happens - we unsubscribed above
+    amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
+    amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
+    amplify.publish( "librarian", { bar: "Shhhhhh!" } ); // Nothing happens - we unsubscribed above.
 
