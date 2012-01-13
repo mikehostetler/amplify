@@ -14,7 +14,7 @@ It is possible to implement the publish and subscribe model by using jQuery cust
 
 Subscribe to a message.
 
-* `topic`: Name of the message to subscribe to. Can be either a single topic (e.g. - "bacon") or a space-delimited list of topics (e.g. - "bacon" "sizzle" "foo" "bar").  Providing a space-delimited list of topics will create separate subscriptions for each topic, using the same callback.
+* `topic`: Name of the message to subscribe to. Can be either a single topic (e.g. - "bacon") or a space-delimited list of topics (e.g. - "bacon sizzle foo bar").  Providing a space-delimited list of topics will create separate subscriptions for each topic, using the same callback.
 * [`context`]: What `this` will be when the callback is invoked.
 * `callback`: Function to invoke when the message is published.
 * [`priority`]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.
@@ -120,46 +120,46 @@ proceeding.
 
 Subscribe to "foo", "bar" and "baz", using the same callback.
 
-    amplify.subscribe("foo bar baz", function( data ) {
-        console.log("data: " + data);
-    });
+    amplify.subscribe( "foo bar baz", function( data ) {
+        console.log( "data: " + data );
+    } );
 
-Amplify does not currently pass the topic into the subscription callback's parameters.  If you run into a situation where you have subscribed to *multiple* topics in one amplify.subscribe call, but you want to know *which* topic was used when publish was called, you can include the topic as part of the message data:
+Amplify does not pass the topic into the subscription callback's parameters.  If you run into a situation where you have subscribed to *multiple* topics in one amplify.subscribe call, but you want to know *which* topic was used when publish was called, you can include the topic as part of the message data:
 
-    amplify.subscribe("foo bar baz", function( msg ) {
-        console.log("According to " + msg.topic + ", it is " + msg.data.temp + " degrees in " + msg.data.city + ".");
-    });
+    amplify.subscribe( "foo bar baz", function( msg ) {
+        console.log( "According to " + msg.topic + ", it is " + msg.data.temp + " degrees in " + msg.data.city + "." );
+    } );
 
     // if you're going to use this approach, we highly recommend that you use a consistent envelope pattern on your messages
-    amplify.publish("foo", {
+    amplify.publish( "foo", {
         topic: "foo",
         data: {
             city: "Chattanooga",
             temp: "24"
         }
-    });
+    } );
     // According to foo, it is 24 degrees in Chattanooga.
 
-    amplify.publish("baz", {
+    amplify.publish( "baz", {
         topic: "baz",
         data: {
             city: "Nashville",
             temp: "36"
         }
-    });
+    } );
     // According to baz, it is 36 degrees in Nashville.
 
 If you are not subscribing to multiple topics, but still need the topic to be passed to the subscription callback, you can take a cleaner approach that does not require you to pollute the message data:
 
     var subscribe = function( topic, fn ) {
-        return amplify.subscribe(topic, function() {
-            return fn.apply(this, [ topic ].concat( [].slice.call(arguments,0))); // including the topic
-        });
+        return amplify.subscribe( topic, function() {
+            return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) ); // including the topic
+        } );
     }
 
-    var actualCallback = subscribe("bacon", function(topic, data) { console.log("The " + topic + " says '" + data.bar + "'."); } );
+    var actualCallback = subscribe( "bacon", function( topic, data ) { console.log( "The " + topic + " says '" + data.bar + "'." ); } );
 
-    amplify.publish("bacon", { bar: "sizzle" }); // The bacon says 'sizzle'.
+    amplify.publish( "bacon", { bar: "sizzle" } ); // The bacon says 'sizzle'.
 
-    amplify.unsubscribe("bacon", actualCallback);
+    amplify.unsubscribe( "bacon", actualCallback );
 
