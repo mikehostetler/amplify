@@ -138,25 +138,21 @@ Amplify does not pass the topic into the subscription callback's parameters.  If
                 } );
             })( topics[idx] );
         }
-        return len === 1 ? res[topic] : res; // if multiple topics, return a hash of topic & subscription callback
+        return res; // returns a topic/subscription hash in order to support 1-n topics
     };
 
     var fn = function( topic, data ) {
             console.log( "The " + topic + " says '" + data.bar + "'." );
         },
-        multipleCallbacks = subscribe( "lion kitty dog", fn ),
-        singleCallback = subscribe( "librarian", fn );
+        callbacks = subscribe( "lion kitty dog", fn );
 
     amplify.publish( "lion", { bar: "RAWR!" } );         // The lion says 'RAWR!'.
     amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
     amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
-    amplify.publish( "librarian", { bar: "Shhhhhh!" } ); // The librarian says 'Shhhhhh!'.
 
-    amplify.unsubscribe( "lion", multipleCallbacks["lion"] );
-    amplify.unsubscribe( "librarian", singleCallback );
+    amplify.unsubscribe( "lion", callbacks["lion"] );
 
     amplify.publish( "lion", { bar: "RAWR!" } );         // Nothing happens - we unsubscribed above
     amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
     amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
-    amplify.publish( "librarian", { bar: "Shhhhhh!" } ); // Nothing happens - we unsubscribed above.
 
