@@ -130,13 +130,13 @@ Amplify does not pass the topic into the subscription callback's parameters.  If
         var idx = 0,
         topics = topic.split( /\s/ ),
         len = topics.length,
-        res = {};
+        res = {},
+        wrapper = function( topic ) {
+            res[topic] = amplify.subscribe( topic, function() {
+                return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) );
+            } );
         for( ; idx < len; idx++) {
-            (function( topic ) {
-                res[topic] = amplify.subscribe( topic, function() {
-                    return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) );
-                } );
-            })( topics[idx] );
+            wrapper( topics[idx] );
         }
         return res; // returns a topic/subscription hash in order to support 1-n topics
     };
