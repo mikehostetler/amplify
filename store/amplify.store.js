@@ -196,6 +196,8 @@ if ( !store.types.localStorage && window.globalStorage ) {
 		// simplified to assume the starting character is valid
 		// also removed colon as it is invalid in HTML attribute names
 		key = key.replace( /[^-._0-9A-Za-z\xb7\xc0-\xd6\xd8-\xf6\xf8-\u037d\u37f-\u1fff\u200c-\u200d\u203f\u2040\u2070-\u218f]/g, "-" );
+		// adjust invalid starting character to deal with our simplified sanitization
+		key = key.replace( /^-/, "_-" );
 
 		if ( value === undefined ) {
 			attr = div.getAttribute( key );

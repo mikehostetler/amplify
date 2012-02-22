@@ -126,5 +126,12 @@ An in-memory store is provided as a fallback if none of the other storage types 
 
 ## Known Issues
 
-* IE 6 - 7
-       * You cannot use keys beginning with a hyphen (`-`) with `amplify.store` on IE 6 and 7 ([See issue #40](https://github.com/appendto/amplify/issues/40)). This is a limitation of Internet Explorer, which will give the following exception: _This name may not begin with the '\-' character:_.
+### userData (IE 5 - 7) key names are not preserved ###
+
+Keys for userData stores are restricted to valid XML names.
+As a result, invalid keys are sanitized prior to setting or getting a value.
+This generally works as expected, but if you store a value using an invalid key
+then getting the full store via `amplify.store()` will return the sanitized keys
+instead of the original keys.
+See [Names and Tokens, W3C XML Naming](http://www.w3.org/TR/REC-xml/#NT-Name)
+for full details on valid XML names.
