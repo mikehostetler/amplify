@@ -89,6 +89,7 @@ default storage type when using `amplify.store()`.
 ### userData
 
 * IE 5 - 7
+	* __userData stores are available only in the same directory used to store the data.__
 	* _userData exists in newer versions of IE as well, but due to quirks in IE 9's implementation, we don't register userData if localStorage is supported._
 
 ### memory
