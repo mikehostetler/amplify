@@ -126,20 +126,35 @@ Subscribe to "foo", "bar" and "baz", using the same callback.
 
 Amplify does not pass the topic into the subscription callback's parameters.  If you need the topic to be passed to the subscription callback, you can wrap the `amplify.subscribe` call with a proxy function:
 
-    var subscribe = function( topic, fn ) {
-        var idx = 0,
-        topics = topic.split( /\s/ ),
-        len = topics.length,
-        res = {},
-        wrapper = function( topic ) {
-            res[topic] = amplify.subscribe( topic, function() {
-                return fn.apply( this, [ topic ].concat( [].slice.call( arguments,0 ) ) );
-            } );
-        for( ; idx < len; idx++) {
-            wrapper( topics[idx] );
-        }
-        return res; // returns a topic/subscription hash in order to support 1-n topics
-    };
+    var slice = [].slice,
+        wrapper = function( topic, context, callback, priority ) {
+            if ( arguments.length === 3 && typeof callback === "number" ) {
+                priority = callback;
+                callback = context;
+                context = null;
+            }
+            if ( arguments.length === 2 ) {
+                callback = context;
+                context = null;
+            }
+            priority = priority || 10;
+            var fn = function() {
+                return callback.apply( this, [ topic ].concat( slice.call( arguments,0 ) ) );
+            };
+            return amplify.subscribe( topic, context, fn, priority );
+        },
+        subscribe = function() {
+            var index = 0,
+                args = slice.call( arguments, 0 ),
+                topics = args[ 0 ].split( /\s/ ),
+                length = topics.length,
+                res = {};
+            for ( ; index < length; index++ ) {
+                res[ topics[ index ] ] = wrapper.apply( this, [ topics[ index ] ].concat( slice.call( args, 1 ) ) );
+            }
+            // returns a topic/subscription hash in order to support 1-n topics
+            return res;
+        };
 
     var fn = function( topic, data ) {
             console.log( "The " + topic + " says '" + data.bar + "'." );
