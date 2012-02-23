@@ -128,6 +128,16 @@ Amplify does not pass the topic into the subscription callback's parameters.  If
 
     var slice = [].slice,
         wrapper = function( topic, context, callback, priority ) {
+            var fn = function() {
+                return callback.apply( this, [ topic ].concat( slice.call( arguments, 0 ) ) );
+            };
+            return amplify.subscribe( topic, context, fn, priority );
+        },
+        subscribe = function( topic, context, callback, priority ) {
+            var index = 0,
+                topics = topic.split( /\s/ ),
+                length = topics.length,
+                res = {};
             if ( arguments.length === 3 && typeof callback === "number" ) {
                 priority = callback;
                 callback = context;
@@ -138,19 +148,8 @@ Amplify does not pass the topic into the subscription callback's parameters.  If
                 context = null;
             }
             priority = priority || 10;
-            var fn = function() {
-                return callback.apply( this, [ topic ].concat( slice.call( arguments,0 ) ) );
-            };
-            return amplify.subscribe( topic, context, fn, priority );
-        },
-        subscribe = function() {
-            var index = 0,
-                args = slice.call( arguments, 0 ),
-                topics = args[ 0 ].split( /\s/ ),
-                length = topics.length,
-                res = {};
             for ( ; index < length; index++ ) {
-                res[ topics[ index ] ] = wrapper.apply( this, [ topics[ index ] ].concat( slice.call( args, 1 ) ) );
+                res[ topics[ index ] ] = wrapper.call( this, topics[ index ], context, callback, priority );
             }
             // returns a topic/subscription hash in order to support 1-n topics
             return res;
