@@ -7,8 +7,8 @@
 				"suites": {
 					"core": "core/test/test.html",
 					"request": "request/test/test.html?jquery=1.7.2",
-					"request 1.6.4": "request/test/test.html?jquery=1.7.1",
-					"request 1.6.4": "request/test/test.html?jquery=1.7",
+					"request 1.7.1": "request/test/test.html?jquery=1.7.1",
+					"request 1.7": "request/test/test.html?jquery=1.7",
 					"request 1.6.4": "request/test/test.html?jquery=1.6.4",
 					"request 1.6.3": "request/test/test.html?jquery=1.6.3",
 					"request 1.6.2": "request/test/test.html?jquery=1.6.2",
