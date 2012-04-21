@@ -14,7 +14,7 @@ It is possible to implement the publish and subscribe model by using jQuery cust
 
 Subscribe to a message.
 
-* `topic`: Name of the message to subscribe to.
+* `topic`: Name of the message to subscribe to. Can be either a single topic (e.g. - "bacon") or a space-delimited list of topics (e.g. - "bacon sizzle foo bar").  Providing a space-delimited list of topics will create separate subscriptions for each topic, using the same callback.
 * [`context`]: What `this` will be when the callback is invoked.
 * `callback`: Function to invoke when the message is published.
 * [`priority`]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.
@@ -115,3 +115,58 @@ proceeding.
 	
 	amplify.publish( "priorityexample", { foo: "bar" } );
 	amplify.publish( "priorityexample", { foo: "oops" } );
+
+### Subscribing to multiple topics
+
+Subscribe to "foo", "bar" and "baz", using the same callback.
+
+    amplify.subscribe( "foo bar baz", function( data ) {
+        console.log( "data: " + data );
+    } );
+
+Amplify does not pass the topic into the subscription callback's parameters.  If you need the topic to be passed to the subscription callback, you can wrap the `amplify.subscribe` call with a proxy function:
+
+    var slice = [].slice,
+        wrapper = function( topic, context, callback, priority ) {
+            var fn = function() {
+                return callback.apply( this, [ topic ].concat( slice.call( arguments, 0 ) ) );
+            };
+            return amplify.subscribe( topic, context, fn, priority );
+        },
+        subscribe = function( topic, context, callback, priority ) {
+            var index = 0,
+                topics = topic.split( /\s/ ),
+                length = topics.length,
+                res = {};
+            if ( arguments.length === 3 && typeof callback === "number" ) {
+                priority = callback;
+                callback = context;
+                context = null;
+            }
+            if ( arguments.length === 2 ) {
+                callback = context;
+                context = null;
+            }
+            priority = priority || 10;
+            for ( ; index < length; index++ ) {
+                res[ topics[ index ] ] = wrapper.call( this, topics[ index ], context, callback, priority );
+            }
+            // returns a topic/subscription hash in order to support 1-n topics
+            return res;
+        };
+
+    var fn = function( topic, data ) {
+            console.log( "The " + topic + " says '" + data.bar + "'." );
+        },
+        callbacks = subscribe( "lion kitty dog", fn );
+
+    amplify.publish( "lion", { bar: "RAWR!" } );         // The lion says 'RAWR!'.
+    amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
+    amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
+
+    amplify.unsubscribe( "lion", callbacks["lion"] );
+
+    amplify.publish( "lion", { bar: "RAWR!" } );         // Nothing happens - we unsubscribed above
+    amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
+    amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.
+
