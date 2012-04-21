@@ -115,3 +115,25 @@ proceeding.
 	
 	amplify.publish( "priorityexample", { foo: "bar" } );
 	amplify.publish( "priorityexample", { foo: "oops" } );
+
+### Subscribing to multiple topics
+
+Subscribe to "foo", "bar" and "baz", using the same callback.
+
+    amplify.subscribe( "foo bar baz", function( data ) {
+        console.log( "data: " + data );
+    } );
+
+### Subscribing to multiple topics and identifying the topic published
+
+When subscribing to multiple topics you can pass the option `topic` parameter 
+at the end of the callback function. This will give you access to the topic that 
+is being published. 
+
+	amplify.subscribe( "lion kitty dog", function( data, topic ) {
+		console.log( "The " + topic + " says '" + data.bar + "'." );
+	});
+
+	amplify.publish( "lion", { bar: "RAWR!" } );         // The lion says 'RAWR!'.
+	amplify.publish( "kitty", { bar: "meow" } );         // The kitty says 'meow'.
+	amplify.publish( "dog", { bar: "Woof!" } );          // The dog says 'Woof!'.

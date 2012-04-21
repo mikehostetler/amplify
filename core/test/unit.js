@@ -155,7 +155,7 @@ test( "unsubscribe during publish", function() {
 });
 
 test( "multiple subscriptions", function() {
-	expect( 4 );
+	expect( 6 );
 
 	amplify.subscribe( "sub-a-1 sub-a-2 sub-a-3", function() {
 		ok( true );
@@ -174,4 +174,18 @@ test( "multiple subscriptions", function() {
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-3" );
+
+	// Test for Ticket #46
+	amplify.subscribe( "sub-c-1 sub-c-2", function( foo, topic ) {
+		if ( topic === "sub-c-1" ) {
+			ok( true );
+		} else if (topic === "sub-c-2") {
+			ok( true );
+		} else {
+			ok( false );
+		}
+	});
+
+	amplify.publish( "sub-c-2", "hello, world!" );
+	amplify.publish( "sub-c-1", "hello, world!" );
 });
