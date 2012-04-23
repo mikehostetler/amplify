@@ -21,7 +21,7 @@ Subscribe to a message.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
 
-You can find out which topic is currently being processed by accessing the `topic` property on your callback method. This is especially helpful when dealing with multiple topics in a single subscription. *Important: `topic` is only available for the duration of the callback function&rsquo;s execution. If you defer/throttle or otherwise delay accessing the topic, it may no longer be the correct topic.* The easiest way to access this property is to use a named callback method.
+You can find out which topic is currently being published by accessing the `topic` property on your callback method. This is especially helpful when dealing with multiple topics in a single subscription. *Important: `topic` is only available for the duration of the callback function's execution. If you defer/throttle or otherwise delay accessing the topic, it may no longer be the correct topic.* The easiest way to access this property is to use a named callback method.
 
 <pre><code>amplify.unsubscribe( string topic, function callback )</code></pre>
 
