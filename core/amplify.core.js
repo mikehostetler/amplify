@@ -14,6 +14,10 @@ var slice = [].slice,
 
 var amplify = global.amplify = {
 	publish: function( topic ) {
+	    if((topic === undefined) || (topic === null)) {
+	        throw new Error("You must provide a valid topic to publish to subscriptions.");
+		}
+			
 		var args = slice.call( arguments, 1 ),
 			topicSubscriptions,
 			subscription,
@@ -37,6 +41,10 @@ var amplify = global.amplify = {
 	},
 
 	subscribe: function( topic, context, callback, priority ) {
+	    if((topic === undefined) || (topic === null)) {
+	        throw new Error("You must provide a valid topic to create a subscription.");
+		}
+		
 		if ( arguments.length === 3 && typeof callback === "number" ) {
 			priority = callback;
 			callback = context;
@@ -83,6 +91,10 @@ var amplify = global.amplify = {
 	},
 
 	unsubscribe: function( topic, callback ) {
+	    if((topic === undefined) || (topic === null)) {
+	        throw new Error("You must provide a valid topic to remove a subscription.");
+		}
+		
 		if ( !subscriptions[ topic ] ) {
 			return;
 		}

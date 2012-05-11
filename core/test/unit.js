@@ -1,5 +1,30 @@
 module( "amplify.core pubsub" );
 
+test( "topic", function() {
+	expect(3);
+	
+	try {
+		amplify.publish(undefined, function() {} );
+	}
+	catch (err) {
+		ok(true, err);
+	}
+	
+	try {
+		amplify.subscribe(undefined, function() {} );
+	}
+	catch (err) {
+		ok(true, err);
+	}
+	
+	try {
+		amplify.unsubscribe(undefined, function() {} );
+	}
+	catch (err) {
+		ok(true, err);
+	} 
+});
+
 test( "continuation", function() {
 	expect( 7 );
 	amplify.subscribe( "continuation", function() {
