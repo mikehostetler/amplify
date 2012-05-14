@@ -14,7 +14,7 @@ var slice = [].slice,
 
 var amplify = global.amplify = {
 	publish: function( topic ) {
-	    if((topic === undefined) || (topic === null)) {
+	    if( typeof topic !== "string") {
 	        throw new Error("You must provide a valid topic to publish to subscriptions.");
 		}
 			
@@ -41,7 +41,7 @@ var amplify = global.amplify = {
 	},
 
 	subscribe: function( topic, context, callback, priority ) {
-	    if((topic === undefined) || (topic === null)) {
+	    if( typeof topic !== "string") {
 	        throw new Error("You must provide a valid topic to create a subscription.");
 		}
 		
@@ -91,7 +91,7 @@ var amplify = global.amplify = {
 	},
 
 	unsubscribe: function( topic, callback ) {
-	    if((topic === undefined) || (topic === null)) {
+	    if( typeof topic !== "string") {
 	        throw new Error("You must provide a valid topic to remove a subscription.");
 		}
 		
