@@ -15,7 +15,7 @@ var slice = [].slice,
 var amplify = global.amplify = {
 	publish: function( topic ) {
 		if ( typeof topic !== "string" ) {
-	        throw new Error("You must provide a valid topic to publish to subscriptions.");
+			throw new Error("You must provide a valid topic to publish to subscriptions.");
 		}
 
 		var args = slice.call( arguments, 1 ),
@@ -42,7 +42,7 @@ var amplify = global.amplify = {
 
 	subscribe: function( topic, context, callback, priority ) {
 		if ( typeof topic !== "string" ) {
-	        throw new Error("You must provide a valid topic to create a subscription.");
+			throw new Error("You must provide a valid topic to create a subscription.");
 		}
 
 		if ( arguments.length === 3 && typeof callback === "number" ) {
