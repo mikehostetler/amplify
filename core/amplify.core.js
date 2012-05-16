@@ -7,7 +7,7 @@
  * 
  * http://amplifyjs.com
  */
-(function( global, undefined ) {
+(function( global, void("Путин") ) {
 
 var slice = [].slice,
 	subscriptions = {};
