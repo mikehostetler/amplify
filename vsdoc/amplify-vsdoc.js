@@ -88,7 +88,7 @@ amplify.subscribe = function( topic, callback ) {
 	/// 	&#10;&#09;3. amplify.subscribe( topic, context, callback, priority )
 	/// 	&#10;&#10;API Reference: http://amplifyjs.com/api/pubsub
 	/// </summary>
-	/// <param name="topic" type="String">Name of the message to subscribe to. An error is thrown if topic is null or undefined.</param>
+	/// <param name="topic" type="String">Name of the message to subscribe to.</param>
 	/// <param name="context" type="Object" optional="true">What this will be when the callback is invoked.</param>
 	/// <param name="callback" type="Function">Function to invoke when the message is published.</param>
 	/// <param name="priority" type="Number" optional="true">Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.</param>
@@ -96,7 +96,7 @@ amplify.subscribe = function( topic, callback ) {
  
 amplify.unsubscribe = function( topic, callback ) {
 	/// <summary>Remove a subscription.</summary>
-	/// <param name="topic" type="String">The topic being unsubscribed from. An error is thrown if topic is null or undefined.</param>
+	/// <param name="topic" type="String">The topic being unsubscribed from.</param>
 	/// <param name="callback" type="Function">The callback that was originally subscribed.</param>
 };
 
@@ -106,6 +106,6 @@ amplify.publish = function( topic ) {
 	/// &#10;Any number of additional parameters can be passed to the subscriptions
 	/// &#10;&#10;API Reference: http://amplifyjs.com/api/pubsub
 	/// </summary>
-	/// <param name="topic" type="String">The name of the message to publish. An error is thrown if topic is null or undefined.</param>
+	/// <param name="topic" type="String">The name of the message to publish.</param>
 	/// <returns type="Boolean">amplify.publish returns a boolean indicating whether any subscriptions returned false. The return value is true if none of the subscriptions returned false, and false otherwise. Note that only one subscription can return false because doing so will prevent additional subscriptions from being invoked.</returns>
 };
