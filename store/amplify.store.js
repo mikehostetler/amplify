@@ -1,15 +1,15 @@
 /*!
  * Amplify Store - Persistent Client-Side Storage @VERSION
- * 
+ *
  * Copyright 2011 appendTo LLC. (http://appendto.com/team)
  * Dual licensed under the MIT or GPL licenses.
  * http://appendto.com/open-source-licenses
- * 
+ *
  * http://amplifyjs.com
  */
 (function( amplify, undefined ) {
 
-var store = amplify.store = function( key, value, options, type ) {
+var store = amplify.store = function( key, value, options ) {
 	var type = store.type;
 	if ( options && options.type && options.type in store.types ) {
 		type = options.type;
@@ -30,9 +30,9 @@ store.addType = function( type, storage ) {
 		options.type = type;
 		return store( key, value, options );
 	};
-}
+};
 store.error = function() {
-	return "amplify.store quota exceeded"; 
+	return "amplify.store quota exceeded";
 };
 
 var rprefix = /^__amplify__/;
