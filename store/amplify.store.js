@@ -112,11 +112,14 @@ function createFromStorageInterface( storageType, storage ) {
 // localStorage + sessionStorage
 // IE 8+, Firefox 3.5+, Safari 4+, Chrome 4+, Opera 10.5+, iPhone 2+, Android 2+
 for ( var webStorageType in { localStorage: 1, sessionStorage: 1 } ) {
-	// try/catch for file protocol in Firefox
+	// try/catch for file protocol in Firefox and Private Browsing in Safari 5
 	try {
-		if ( window[ webStorageType ].getItem ) {
-			createFromStorageInterface( webStorageType, window[ webStorageType ] );
-		}
+		// Safari 5 in Private Browsing mode exposes localStorage
+		// but doesn't allow storing data, so we attempt to store and remove an item.
+		// This will unfortunately give us a false negative if we're at the limit.
+		window[ webStorageType ].setItem( "__amplify__", "x" );
+		window[ webStorageType ].removeItem( "__amplify__" );
+		createFromStorageInterface( webStorageType, window[ webStorageType ] );
 	} catch( e ) {}
 }
 
