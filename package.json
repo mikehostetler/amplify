@@ -1,0 +1,33 @@
+{
+  "author": "appendTo (http://appendto.com/)",
+  "name": "amplify",
+  "description": "AmplifyJS is a set of components for data management and application communication.",
+  "version": "1.1.0",
+  "homepage": "http://amplifyjs.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/appendto/amplify.git"
+  },
+  "bugs": {
+    "url": "http://github.com/appendto/amplify/issues/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    },
+    {
+      "type": "GPL",
+      "url": "http://www.opensource.org/licenses/GPL-2.0"
+    }
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.3.9",
+    "rimraf": "2.0.1"
+  },
+  "optionalDependencies": {}
+}
