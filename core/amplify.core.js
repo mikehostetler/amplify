@@ -1,10 +1,10 @@
 /*!
  * Amplify Core @VERSION
- * 
+ *
  * Copyright 2011 appendTo LLC. (http://appendto.com/team)
  * Dual licensed under the MIT or GPL licenses.
  * http://appendto.com/open-source-licenses
- * 
+ *
  * http://amplifyjs.com
  */
 (function( global, undefined ) {
@@ -58,14 +58,14 @@ var amplify = global.amplify = {
 			if ( !subscriptions[ topic ] ) {
 				subscriptions[ topic ] = [];
 			}
-	
+
 			var i = subscriptions[ topic ].length - 1,
 				subscriptionInfo = {
 					callback: callback,
 					context: context,
 					priority: priority
 				};
-	
+
 			for ( ; i >= 0; i-- ) {
 				if ( subscriptions[ topic ][ i ].priority <= priority ) {
 					subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
