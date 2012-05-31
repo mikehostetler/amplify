@@ -166,7 +166,7 @@ if ( "globalStorage" in amplify.store.types ) {
 	module( "amplify.store.globalStorage", {
 		setup: function() {
 			var key,
-				store = globalStorage[ location.hostname ];
+				store = window.globalStorage[ location.hostname ];
 			try {
 				while ( key = store.key( 0 ) ) {
 					store.removeItem( key );

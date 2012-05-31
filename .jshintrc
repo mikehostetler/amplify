@@ -1,0 +1,27 @@
+{
+	"boss": true,
+	"browser": true,
+	"curly": true,
+	"eqnull": true,
+	"eqeqeq": true,
+	"expr": true,
+	"jquery": true,
+	"latedef": true,
+	"noarg": true,
+	"smarttabs": true,
+	"trailing": true,
+	"undef": true,
+	"predef": [
+		"amplify",
+		"asyncTest",
+		"deepEqual",
+		"equal",
+		"expect",
+		"module",
+		"ok",
+		"start",
+		"strictEqual",
+		"stop",
+		"test"
+	]
+}

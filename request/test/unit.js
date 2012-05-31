@@ -790,7 +790,7 @@ asyncTest( "cache: true", function() {
 	var ajaxCalls = 0;
 	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
 		if ( xhr.statusText !== "abort" ) {
-			ok( !ajaxCalls++, "ajax call completed" );
+			ok( !(ajaxCalls++), "ajax call completed" );
 		}
 	});
 	amplify.request.define( "memory-cache", "ajax", {
@@ -953,7 +953,7 @@ if ( amplify.store ) {
 		var ajaxCalls = 0;
 		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
 			if ( xhr.statusText !== "abort" ) {
-				ok( !ajaxCalls++, "ajax call completed" );
+				ok( !(ajaxCalls++), "ajax call completed" );
 			}
 		});
 		amplify.request.define( "persist-cache", "ajax", {

@@ -116,7 +116,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 	}, defnSettings );
 
 	return function( settings, request ) {
-		var xhr,
+		var xhr, handleResponse,
 			url = defnSettings.url,
 			abort = request.abort,
 			ajaxSettings = $.extend( true, {}, defnSettings, { data: settings.data } ),
@@ -151,28 +151,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 				}
 			};
 
-		amplify.publish( "request.ajax.preprocess",
-			defnSettings, settings, ajaxSettings, ampXHR );
-
-		$.extend( ajaxSettings, {
-			success: function( data, status ) {
-				handleResponse( data, status );
-			},
-			error: function( _xhr, status ) {
-				handleResponse( null, status );
-			},
-			beforeSend: function( _xhr, _ajaxSettings ) {
-				xhr = _xhr;
-				ajaxSettings = _ajaxSettings;
-				var ret = defnSettings.beforeSend ?
-					defnSettings.beforeSend.call( this, ampXHR, ajaxSettings ) : true;
-				return ret && amplify.publish( "request.before.ajax",
-					defnSettings, settings, ajaxSettings, ampXHR );
-			}
-		});
-		$.ajax( ajaxSettings );
-
-		function handleResponse( data, status ) {
+		handleResponse = function( data, status ) {
 			$.each( xhrProps, function( i, key ) {
 				try {
 					ampXHR[ key ] = xhr[ key ];
@@ -199,7 +178,28 @@ amplify.request.types.ajax = function( defnSettings ) {
 			// this can happen if a request is aborted
 			// TODO: figure out if this breaks polling or multi-part responses
 			handleResponse = $.noop;
-		}
+		};
+
+		amplify.publish( "request.ajax.preprocess",
+			defnSettings, settings, ajaxSettings, ampXHR );
+
+		$.extend( ajaxSettings, {
+			success: function( data, status ) {
+				handleResponse( data, status );
+			},
+			error: function( _xhr, status ) {
+				handleResponse( null, status );
+			},
+			beforeSend: function( _xhr, _ajaxSettings ) {
+				xhr = _xhr;
+				ajaxSettings = _ajaxSettings;
+				var ret = defnSettings.beforeSend ?
+					defnSettings.beforeSend.call( this, ampXHR, ajaxSettings ) : true;
+				return ret && amplify.publish( "request.before.ajax",
+					defnSettings, settings, ajaxSettings, ampXHR );
+			}
+		});
+		$.ajax( ajaxSettings );
 
 		request.abort = function() {
 			ampXHR.abort();
@@ -262,6 +262,13 @@ amplify.subscribe( "request.ajax.preprocess", function( defnSettings, settings, 
 
 var cache = amplify.request.cache = {
 	_key: function( resourceId, url, data ) {
+		function chunk() {
+			return data.charCodeAt( i++ ) << 24 |
+				data.charCodeAt( i++ ) << 16 |
+				data.charCodeAt( i++ ) << 8 |
+				data.charCodeAt( i++ ) << 0;
+		}
+
 		data = url + data;
 		var length = data.length,
 			i = 0,
@@ -269,13 +276,6 @@ var cache = amplify.request.cache = {
 
 		while ( i < length ) {
 			checksum ^= chunk();
-		}
-
-		function chunk() {
-			return data.charCodeAt( i++ ) << 24 |
-				data.charCodeAt( i++ ) << 16 |
-				data.charCodeAt( i++ ) << 8 |
-				data.charCodeAt( i++ ) << 0;
 		}
 
 		return "request-" + resourceId + "-" + checksum;
