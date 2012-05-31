@@ -1,5 +1,30 @@
 module( "amplify.core pubsub" );
 
+test( "topic", function() {
+	expect( 3 );
+
+	try {
+		amplify.publish( undefined, function() {} );
+	} catch( err ) {
+		strictEqual( err.message, "You must provide a valid topic to publish.",
+			"error with no topic to publish" );
+	}
+
+	try {
+		amplify.subscribe( undefined, function() {} );
+	} catch( err ) {
+		strictEqual( err.message, "You must provide a valid topic to create a subscription.",
+			"error with no topic to subscribe" );
+	}
+
+	try {
+		amplify.unsubscribe( undefined, function() {} );
+	} catch( err ) {
+		strictEqual( err.message, "You must provide a valid topic to remove a subscription.",
+			"error with no topic to unsubscribe" );
+	}
+});
+
 test( "continuation", function() {
 	expect( 7 );
 	amplify.subscribe( "continuation", function() {
