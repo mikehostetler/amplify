@@ -350,6 +350,8 @@ amplify.request.decoders = {
 		} else if ( data.status === "error" ) {
 			delete data.status;
 			error( data, "error" );
+		} else {
+			error( null, "error" );
 		}
 	}
 };

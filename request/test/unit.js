@@ -1284,6 +1284,40 @@ asyncTest( "decoder: jsend - error with details", function() {
 	});
 });
 
+asyncTest( "decoder: jsend - invalid reponse", function() {
+	expect( 8 );
+
+	amplify.request.define( "test", "ajax", {
+		url: "data/data.json",
+		dataType: "json",
+		decoder: "jsend"
+	});
+	subscribe( "request.error", function( settings, data, status ) {
+		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		strictEqual( data, null, "error message: data" );
+		equal( status, "error", "error message: status" );
+	});
+	subscribe( "request.complete", function( settings, data, status ) {
+		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		strictEqual( data, null, "complete message: data" );
+		equal( status, "error", "complete message: status" );
+		start();
+	});
+	subscribe( "request.success", function() {
+		ok( false, "success message published" );
+	});
+	amplify.request({
+		resourceId: "test",
+		success: function() {
+			ok( false, "success callback invoked" );
+		},
+		error: function( data, status ) {
+			strictEqual( data, null, "error callback: data" );
+			equal( status, "error", "error callback: status" );
+		}
+	});
+});
+
 asyncTest( "decoder: custom", function() {
 	expect( 11 );
 
