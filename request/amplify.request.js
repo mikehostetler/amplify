@@ -1,10 +1,10 @@
 /*!
  * Amplify Request @VERSION
- * 
+ *
  * Copyright 2011 appendTo LLC. (http://appendto.com/team)
  * Dual licensed under the MIT or GPL licenses.
  * http://appendto.com/open-source-licenses
- * 
+ *
  * http://amplifyjs.com
  */
 (function( amplify, undefined ) {
@@ -222,8 +222,8 @@ amplify.subscribe( "request.ajax.preprocess", function( defnSettings, settings, 
 
 	ajaxSettings.url = ajaxSettings.url.replace( rurlData, function ( m, key ) {
 		if ( key in data ) {
-		    mappedKeys.push( key );
-		    return data[ key ];
+			mappedKeys.push( key );
+			return data[ key ];
 		}
 	});
 
@@ -319,7 +319,7 @@ if ( amplify.store ) {
 				return false;
 			}
 			var success = ampXHR.success;
-			ampXHR.success = function( data ) {	
+			ampXHR.success = function( data ) {
 				amplify.store[ type ]( cacheKey, data, { expires: resource.cache.expires } );
 				success.apply( this, arguments );
 			};
@@ -359,11 +359,11 @@ amplify.request.decoders = {
 amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
 	var _success = ampXHR.success,
 		_error = ampXHR.error,
-		decoder = $.isFunction( resource.decoder )
-			? resource.decoder
-			: resource.decoder in amplify.request.decoders
-				? amplify.request.decoders[ resource.decoder ]
-				: amplify.request.decoders._default;
+		decoder = $.isFunction( resource.decoder ) ?
+			resource.decoder :
+			resource.decoder in amplify.request.decoders ?
+				amplify.request.decoders[ resource.decoder ] :
+				amplify.request.decoders._default;
 
 	if ( !decoder ) {
 		return;
