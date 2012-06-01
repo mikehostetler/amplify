@@ -33,7 +33,7 @@ test( "invalid resource id", function() {
 
 	try {
 		amplify.request();
-		ok( false, "should throw error with no resrouceId" );
+		ok( false, "should throw error with no resourceId" );
 	} catch( e ) {
 		equal( e, "amplify.request: no resourceId provided" );
 	}
@@ -74,14 +74,14 @@ asyncTest( "request( id )", function() {
 		equal( settings.resourceId, "test", "before message: settings.resourceId" );
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, {},
 			"success message: settings.data" );
 		deepEqual( data, { simple: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, {},
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
@@ -106,14 +106,14 @@ asyncTest( "request( id, fn )", function() {
 		equal( settings.resourceId, "test", "before message: settings.resourceId" );
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, {},
 			"success message: settings.data" );
 		deepEqual( data, { simple: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, {},
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
@@ -141,14 +141,14 @@ asyncTest( "request( id, data, fn )", function() {
 		equal( settings.resourceId, "test", "before message: settings.resourceId" );
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"success message: settings.data" );
 		deepEqual( data, { simple: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
@@ -176,14 +176,14 @@ asyncTest( "request( hash ) success", function() {
 		equal( settings.resourceId, "test", "before message: settings.resourceId" );
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"success message: settings.data" );
 		deepEqual( data, { simple: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
@@ -215,14 +215,14 @@ asyncTest( "request( hash ) error", function() {
 		equal( settings.resourceId, "test", "before message: settings.resourceId" );
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"error message: settings.data" );
 		deepEqual( data, { simple: true }, "error message: data" );
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, { foo: "bar", baz: 1 },
 			"complete message: settings.data" );
 		deepEqual( data, { simple: true }, "complete message: data" );
@@ -340,13 +340,13 @@ asyncTest( "request( id )", function() {
 		ok( "abort" in xhr, "before.ajax message: xhr object provided" );
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, {}, "success message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, {}, "complete message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
@@ -366,13 +366,13 @@ asyncTest( "request( id, fn )", function() {
 		dataType: "json"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, {}, "success message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, {}, "complete message: settings.data" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
@@ -393,13 +393,13 @@ asyncTest( "request( id, data, fn )", function() {
 		type: "POST"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( settings.data, { open: "source" }, "success message: settings.data" );
 		deepEqual( data, { open: "source", echoed: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( settings.data, { open: "source" }, "complete message: settings.data" );
 		deepEqual( data, { open: "source", echoed: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
@@ -419,12 +419,12 @@ asyncTest( "request( hash ) success", function() {
 		dataType: "json"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( data, { foo: "bar" }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { foo: "bar" }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
 		start();
@@ -452,12 +452,12 @@ asyncTest( "request( hash ) error", function() {
 		dataType: "json"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( data, null, "error message: data" );
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, null, "complete message: data" );
 		equal( status, "error", "complete message: status" );
 		start();
@@ -1072,12 +1072,12 @@ asyncTest( "decoder: Function - success", function() {
 		}
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( data, { baz: "qux" }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { baz: "qux" }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
 		start();
@@ -1111,12 +1111,12 @@ asyncTest( "decoder: Function - error", function() {
 		}
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( data, { baz: "qux" }, "error message: data" );
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { baz: "qux" }, "complete message: data" );
 		equal( status, "error", "complete message: status" );
 		start();
@@ -1145,12 +1145,12 @@ asyncTest( "decoder: jsend - success", function() {
 		decoder: "jsend"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( data, { unwrapped: true }, "success message: data" );
 		equal( status, "success", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { unwrapped: true }, "complete message: data" );
 		equal( status, "success", "complete message: status" );
 		start();
@@ -1179,12 +1179,12 @@ asyncTest( "decoder: jsend - fail", function() {
 		decoder: "jsend"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( data, { broken: true }, "error message: data" );
 		equal( status, "fail", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { broken: true }, "complete message: data" );
 		equal( status, "fail", "complete message: status" );
 		start();
@@ -1213,12 +1213,12 @@ asyncTest( "decoder: jsend - error", function() {
 		decoder: "jsend"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( data, { message: "it broke" }, "error message: data" );
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { message: "it broke" }, "complete message: data" );
 		equal( status, "error", "complete message: status" );
 		start();
@@ -1247,7 +1247,7 @@ asyncTest( "decoder: jsend - error with details", function() {
 		decoder: "jsend"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		deepEqual( data, {
 			message: "it broke",
 			code: 15,
@@ -1256,7 +1256,7 @@ asyncTest( "decoder: jsend - error with details", function() {
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, {
 			message: "it broke",
 			code: 15,
@@ -1293,12 +1293,12 @@ asyncTest( "decoder: jsend - invalid reponse", function() {
 		decoder: "jsend"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "error message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "error message: settings.resourceId" );
 		strictEqual( data, null, "error message: data" );
 		equal( status, "error", "error message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		strictEqual( data, null, "complete message: data" );
 		equal( status, "error", "complete message: status" );
 		start();
@@ -1337,12 +1337,12 @@ asyncTest( "decoder: custom", function() {
 		decoder: "silly"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( data, { "silly-foo": "bar" }, "success message: data" );
 		equal( status, "silly", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { "silly-foo": "bar" }, "complete message: data" );
 		equal( status, "silly", "complete message: status" );
 		start();
@@ -1381,12 +1381,12 @@ asyncTest( "decoder: jsonp", function() {
 		}
 	});
 	subscribe( "request.success", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "success message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "success message: settings.resourceId" );
 		deepEqual( data, { "decoded-foo": "bar" }, "success message: data" );
 		equal( status, "decoded-jsonp", "success message: status" );
 	});
 	subscribe( "request.complete", function( settings, data, status ) {
-		equal( settings.resourceId, "test", "complete message: settings.resrouceId" );
+		equal( settings.resourceId, "test", "complete message: settings.resourceId" );
 		deepEqual( data, { "decoded-foo": "bar" }, "complete message: data" );
 		equal( status, "decoded-jsonp", "complete message: status" );
 		start();
