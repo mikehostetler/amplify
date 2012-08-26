@@ -1051,6 +1051,39 @@ if ( amplify.store ) {
 		});
 	});
 
+    asyncTest( "cache: flush", storeExpiresLifecycle, function() {
+        expect( 7 );
+
+        var expectAjax = true;
+        amplify.request.define( "data-cache-url", "ajax", {
+            url: "data/echo-raw.php?{foo}",
+            cache: "persist"
+        });
+        subscribe( "request.before.ajax", function() {
+            ok( expectAjax );
+        });
+        amplify.request( "data-cache-url", { foo: "bar" }, function( data ) {
+            equal( data, "bar", "data; empty cache" );
+            amplify.request( "data-cache-url", { foo: "qux" }, function( data ) {
+                equal( data, "qux", "different data; empty cache" );
+                expectAjax = false;
+                amplify.request( "data-cache-url", { foo: "bar" }, function( data ) {
+                    equal( data, "bar", "data; cached" );
+                    expectAjax = true;
+                    amplify.request( {
+                        resourceId: "data-cache-url",
+                        data: { foo: "bar" },
+                        flushCache: true,
+                        success: function( data ) {
+                            equal( data, "bar", "data; flush cache" );
+                            start();
+                        }
+                    });
+                });
+            });
+        });
+    });
+
 	test( "cache types", function() {
 		$.each( amplify.store.types, function( type ) {
 			ok( type in amplify.request.cache, type );

@@ -289,7 +289,7 @@ var cache = amplify.request.cache = {
 					ajaxSettings.url, ajaxSettings.data ),
 				duration = resource.cache;
 
-			if ( cacheKey in memoryStore ) {
+			if ( cacheKey in memoryStore && !settings.flushCache ) {
 				ampXHR.success( memoryStore[ cacheKey ] );
 				return false;
 			}
@@ -314,7 +314,7 @@ if ( amplify.store ) {
 					ajaxSettings.url, ajaxSettings.data ),
 				cached = amplify.store[ type ]( cacheKey );
 
-			if ( cached ) {
+			if ( cached && !settings.flushCache ) {
 				ajaxSettings.success( cached );
 				return false;
 			}
