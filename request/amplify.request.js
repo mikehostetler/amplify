@@ -133,7 +133,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 					return xhr.getResponseHeader( key );
 				},
 				overrideMimeType: function( type ) {
-					return xhr.overrideMideType( type );
+					return xhr.overrideMimeType( type );
 				},
 				abort: function() {
 					aborted = true;
