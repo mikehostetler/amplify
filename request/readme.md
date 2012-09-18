@@ -13,7 +13,7 @@ client/server interaction.
 
 Requests made through `amplify.request` will always be resolved asynchronously,
 even if the resource invokes the callbacks immediately.
-This ensures that you will never having timing problems if the request definition is changed in the future.
+This ensures that you will never have timing problems if the request definition is changed in the future.
 
 Just getting started? Take a look at the [examples][examples] section
 below for a few of the popular use cases with `amplify.request`.
@@ -394,7 +394,7 @@ This example assumes the following envelope format:
 parameter appears in the default success or error callbacks when using
 an ajax definition.
 
-	amplfiy.request.define( "statusExample1", "ajax", {
+	amplify.request.define( "statusExample1", "ajax", {
 		//...
 	});
 	
@@ -419,7 +419,7 @@ appropriate status will be set by `amplify.request`.
 
 **A basic decoder example:**
 
-	amplfiy.request.define( "statusExample2", "ajax", {
+	amplify.request.define( "statusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			if ( status === "success" ) {
 				success( data );
@@ -441,7 +441,7 @@ appropriate status will be set by `amplify.request`.
 
 **A request is aborted by using the object returned by a request call:**
 
-	amplfiy.request.define( "statusExample3", "ajax", {
+	amplify.request.define( "statusExample3", "ajax", {
 		//...
 	});
 	
@@ -461,8 +461,7 @@ appropriate status will be set by `amplify.request`.
 ### Subscribing to status events
 
 For an alternative to handling issues and statuses you can subscribe to a series of
-globally available message that are published during the request
-process.
+globally available messages that are published during the request process.
 
 	subscribe( "request.error", function callback );
 
@@ -504,7 +503,7 @@ parameter for the callback function.
 
 **An example with a success callback:**
 
-	amplfiy.request.define( "customStatusExample", "ajax", {
+	amplify.request.define( "customStatusExample", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			var customStatus = status;
 			if ( someWarningCondition ) {
@@ -524,7 +523,7 @@ parameter for the callback function.
 
 **An example with an error callback:**
 
-	amplfiy.request.define( "customStatusExample2", "ajax", {
+	amplify.request.define( "customStatusExample2", "ajax", {
 		decoder: function( data, status, xhr, success, error ) {
 			var customStatus = status;
 			if ( status === "error" && someCriticalCondition ) {
