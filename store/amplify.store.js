@@ -1,7 +1,7 @@
 /*!
  * Amplify Store - Persistent Client-Side Storage @VERSION
  *
- * Copyright 2011 appendTo LLC. (http://appendto.com/team)
+ * Copyright 2012 appendTo LLC. (http://appendto.com/team)
  * Dual licensed under the MIT or GPL licenses.
  * http://appendto.com/open-source-licenses
  *
