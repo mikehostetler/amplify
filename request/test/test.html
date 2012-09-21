@@ -11,6 +11,16 @@
 	<script src="../../core/amplify.core.js"></script>
 	<script src="../../store/amplify.store.js"></script>
 	<script src="../amplify.request.js"></script>
+	<script>
+	QUnit.reset = (function( reset ) {
+		return function() {
+			// Ensure jQuery events and data on the fixture are properly removed
+			$( "#qunit-fixture" ).empty();
+			// Let QUnit reset the fixture
+			reset.apply( this, arguments );
+		};
+	})( QUnit.reset );
+	</script>
 	<script src="unit.js"></script>
 </head>
 <body>
