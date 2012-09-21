@@ -789,7 +789,7 @@ asyncTest( "cache: true", function() {
 
 	var ajaxCalls = 0;
 	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
-		if ( xhr.statusText !== "abort" ) {
+		if ( !(/^(abort|canceled)$/).test( xhr.statusText ) ) {
 			ok( !(ajaxCalls++), "ajax call completed" );
 		}
 	});
@@ -884,10 +884,10 @@ asyncTest( "cache with data-replaced URL", function() {
 
 asyncTest( "cache: Number", function() {
 	expect( 22 );
-	
+
 	var shouldCache = false;
 	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
-		if ( xhr.statusText !== "abort" ) {
+		if ( !(/^(abort|canceled)$/).test( xhr.statusText ) ) {
 			ok( !shouldCache, "ajax call completed" );
 		}
 	});
@@ -952,7 +952,7 @@ if ( amplify.store ) {
 
 		var ajaxCalls = 0;
 		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
-			if ( xhr.statusText !== "abort" ) {
+			if ( !(/^(abort|canceled)$/).test( xhr.statusText ) ) {
 				ok( !(ajaxCalls++), "ajax call completed" );
 			}
 		});
@@ -997,7 +997,7 @@ if ( amplify.store ) {
 
 		var shouldCache = false;
 		$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
-			if ( xhr.statusText !== "abort" ) {
+			if ( !(/^(abort|canceled)$/).test( xhr.statusText ) ) {
 				ok( !shouldCache, "ajax call completed" );
 			}
 		});

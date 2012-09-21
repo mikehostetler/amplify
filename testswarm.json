@@ -6,7 +6,10 @@
 				"browsers": "popularbetamobile",
 				"suites": {
 					"core": "core/test/test.html",
-					"request": "request/test/test.html?jquery=1.7.2",
+					"request": "request/test/test.html?jquery=1.8.2",
+					"request 1.8.1": "request/test/test.html?jquery=1.8.1",
+					"request 1.8.0": "request/test/test.html?jquery=1.8.0",
+					"request 1.7.2": "request/test/test.html?jquery=1.7.2",
 					"request 1.7.1": "request/test/test.html?jquery=1.7.1",
 					"request 1.7": "request/test/test.html?jquery=1.7",
 					"request 1.6.4": "request/test/test.html?jquery=1.6.4",
