@@ -1,0 +1,6 @@
+{
+	"./amplify.js": [ "./amplify.core.js", "./amplify.request.js", "./amplify.store.js" ],
+	"./amplify.core.js": [ "./amplify.core.js" ],
+	"./amplify.request.js": [ "./amplify.request.js" ],
+	"./amplify.store.js": [ "./amplify.store.js" ]
+}

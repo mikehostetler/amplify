@@ -1,0 +1,17 @@
+{
+	"source": "src",
+	"spec": "test",
+	"output": {
+		"full": "lib",
+		"partial": {
+			"../vsdoc/amplify-vsdoc.js": "./lib"
+		}
+	},
+	"anvil.jshint": {
+		"all": true
+	},
+	"anvil.uglify" : {
+		"all": true
+	},
+	"dependencies": [ "anvil.jshint", "anvil.uglify" ]
+}
