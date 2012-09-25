@@ -8,7 +8,7 @@
 		}
 	},
 	"anvil.jshint": {
-		"all": true
+		"exclude": [ "amplify-vsdoc.js" ]
 	},
 	"anvil.uglify" : {
 		"all": true
