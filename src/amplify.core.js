@@ -1,12 +1,3 @@
-/*!
- * Amplify Core @VERSION
- *
- * Copyright 2011 appendTo LLC. (http://appendto.com/team)
- * Dual licensed under the MIT or GPL licenses.
- * http://appendto.com/open-source-licenses
- *
- * http://amplifyjs.com
- */
 (function( global, undefined ) {
 
 var slice = [].slice,
