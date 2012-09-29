@@ -200,3 +200,21 @@ test( "multiple subscriptions", function() {
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-3" );
 });
+
+test( "topic on callback", function () {
+	expect( 2 );
+
+	var firstTime = true;
+
+	amplify.subscribe( "topic-a-1 topic-a-2 topic-a-3", function namedCallback() {
+		if ( firstTime ) {
+			strictEqual( namedCallback.topic, "topic-a-2", "topic provided" );
+			firstTime = false;
+		} else {
+			strictEqual( namedCallback.topic, "topic-a-1", "topic provided" );
+		}
+	});
+
+	amplify.publish( "topic-a-2" );
+	amplify.publish( "topic-a-1" );
+});

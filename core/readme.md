@@ -14,12 +14,14 @@ It is possible to implement the publish and subscribe model by using jQuery cust
 
 Subscribe to a message.
 
-* `topic`: Name of the message to subscribe to.
+* `topic`: Name of the message to subscribe to. Multiple topics can be provided, separated by a space.
 * [`context`]: What `this` will be when the callback is invoked.
 * `callback`: Function to invoke when the message is published.
 * [`priority`]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.
 
 > Returning `false` from a subscription will prevent any additional subscriptions from being invoked and will cause `amplify.publish` to return `false`.
+
+You can find out which topic is currently being published by accessing the `topic` property on your callback method. This is especially helpful when dealing with multiple topics in a single subscription. *Important: `topic` is only available for the duration of the callback function's execution. If you defer/throttle or otherwise delay accessing the topic, it may no longer be the correct topic.* The easiest way to access this property is to use a named callback method.
 
 <pre><code>amplify.unsubscribe( string topic, function callback )</code></pre>
 
@@ -115,3 +117,22 @@ proceeding.
 	
 	amplify.publish( "priorityexample", { foo: "bar" } );
 	amplify.publish( "priorityexample", { foo: "oops" } );
+
+### Subscribe to multiple topics in a single callback
+
+You can subscribe to multiple topics by separating them by spaces. If you name your callback function, you can access the topic currently being handled through the `topic` property.
+
+	amplify.subscribe( "topic1 topic2 topic3", function topicCallback( data ) {
+		if ( topicCallback.topic === "topic1" ) {
+			// Do something for topic1
+		} else {
+			// Do something different for topic2 and topic 3
+		}
+
+		// More code that runs for any of the three topics
+	});
+
+	//...
+
+	amplify.publish( "topic1", { foo: "bar" } );
+	amplify.publish( "topic2", { foo: "baz" } );
