@@ -8,10 +8,27 @@
 		}
 	},
 	"anvil.jshint": {
-		"exclude": [ "amplify-vsdoc.js" ]
+		"exclude": [ "amplify-vsdoc.js" ],
+		"ignore": [
+			{ "reason": "Expected a conditional expression and instead saw an assignment." },
+			{ "reason": "Value of 'error' may be overwritten in IE." }
+		],
+		"options": {
+			"globals": {
+				"jQuery": false
+			},
+			"maxdepth": 5,
+			"maxstatements": 35,
+			"maxcomplexity": 15
+		}
 	},
 	"anvil.uglify" : {
 		"all": true
+	},
+	"anvil.token": {
+		"sourceData": {
+			"hello": "world"
+		}
 	},
 	"dependencies": [ "anvil.jshint", "anvil.uglify" ]
 }
