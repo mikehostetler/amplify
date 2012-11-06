@@ -1,3 +1,3 @@
-// import("core.js")
-// import("store.js")
-// import("request.js")
+// import "core.js"
+// import "store.js"
+// import "request.js"
