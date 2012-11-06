@@ -30,5 +30,12 @@
 			"hello": "world"
 		}
 	},
+	"anvil.headers": {
+		"headers": {
+			"amplify.core.*": "core-header.js",
+			"amplify.request.*": "request-header.js",
+			"amplify.store.*": "store-header.js"
+		}
+	},
 	"dependencies": [ "anvil.jshint", "anvil.uglify" ]
 }
