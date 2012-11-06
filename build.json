@@ -11,7 +11,8 @@
 		"exclude": [ "amplify-vsdoc.js" ],
 		"ignore": [
 			{ "reason": "Expected a conditional expression and instead saw an assignment." },
-			{ "reason": "Value of 'error' may be overwritten in IE." }
+			{ "reason": "Value of 'error' may be overwritten in IE." },
+			{ "file": "amplify-vsdoc.js", "reason": "Mixed spaces and tabs." }
 		],
 		"options": {
 			"globals": {
