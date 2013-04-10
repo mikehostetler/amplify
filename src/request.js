@@ -79,7 +79,6 @@ amplify.format = function ( resourceId, data ) {
 
 	if ( typeof settings === "string" ) {
 		if ( isFunction( data ) ) {
-			callback = data;
 			data = {};
 		}
 		settings = {
