@@ -73,8 +73,26 @@ amplify.request = function( resourceId, data, callback ) {
 	return request;
 };
 
+amplify.format = function ( resourceId, data ) {
+	
+	var settings = resourceId || {};
+
+	if ( typeof settings === "string" ) {
+		if ( isFunction( data ) ) {
+			data = {};
+		}
+		settings = {
+			resourceId: resourceId,
+			data: data || {}
+		};
+	}
+	
+	return amplify.request.urls[ settings.resourceId ]( settings );
+};
+
 amplify.request.types = {};
 amplify.request.resources = {};
+amplify.request.urls = {};
 amplify.request.define = function( resourceId, type, settings ) {
 	if ( typeof type === "string" ) {
 		if ( !( type in amplify.request.types ) ) {
@@ -84,6 +102,8 @@ amplify.request.define = function( resourceId, type, settings ) {
 		settings.resourceId = resourceId;
 		amplify.request.resources[ resourceId ] =
 			amplify.request.types[ type ]( settings );
+		amplify.request.urls[ resourceId ] = 
+			amplify.request.types["define"]( settings );
 	} else {
 		// no pre-processor or settings for one-off types (don't invoke)
 		amplify.request.resources[ resourceId ] = type;
@@ -100,6 +120,28 @@ amplify.request.define = function( resourceId, type, settings ) {
 
 var xhrProps = [ "status", "statusText", "responseText", "responseXML", "readyState" ],
     rurlData = /\{([^\}]+)\}/g;
+    
+amplify.request.types.define = function ( defnSettings ) {
+	return function( settings ) {
+		var url = defnSettings.url;
+		var data = settings.data;
+		var mappedKeys = [];
+		if ( typeof data !== "string" ) {
+			data = $.extend( true, {}, defnSettings.data, data );
+			
+			url = url.replace( rurlData, function ( m, key ) {
+				if ( key in data ) {
+				    mappedKeys.push( key );
+				    return data[ key ];
+				}
+			});
+			
+			return url;
+		}
+		
+		return "";
+	};
+};
 
 amplify.request.types.ajax = function( defnSettings ) {
 	defnSettings = $.extend({
