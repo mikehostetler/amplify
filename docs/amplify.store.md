@@ -111,8 +111,8 @@ An in-memory store is provided as a fallback if none of the other storage types 
 	myStoredValues.storeExample1.foo; // bar
 	myStoredValues.storeExample2; // baz
 
-<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/hZgDw/embedded/js,html,result/"> </iframe>
-[Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/demo/store/implicit/)
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/FKuJJ/embedded/js,html,result/"> </iframe>
+[Open this example in jsFiddle](http://jsfiddle.net/FKuJJ/)
 
 ### Store data explicitly with session storage
 
@@ -121,8 +121,8 @@ An in-memory store is provided as a fallback if none of the other storage types 
 	var myStoredValue2 = amplify.store.sessionStorage( "explicitExample" );
 	myStoredValue2.foo2; // baz
 
-<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/awirick/qM5Db/embedded/js,html,result/"> </iframe>
-[Open this example in jsFiddle](http://jsfiddle.net/gh/get/jquery/1.5/appendto/amplify/tree/master/demo/store/sessionstorage/)
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/DWa92/embedded/js,html,result/"> </iframe>
+[Open this example in jsFiddle](http://jsfiddle.net/DWa92/)
 
 ## Known Issues
 
