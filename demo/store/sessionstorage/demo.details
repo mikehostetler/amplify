@@ -6,7 +6,7 @@ authors:
   - The appendTo Team
 resources:
   - http://github.com/appendto/amplify/raw/master/lib/amplify.core.js
-  - http://github.com/douglascrockford/JSON-js/raw/master/json2.js
+  - http://cdnjs.cloudflare.com/ajax/libs/json2/20121008/json2.js
   - http://github.com/appendto/amplify/raw/master/lib/amplify.store.js
 ...
 */
