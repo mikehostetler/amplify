@@ -24,7 +24,9 @@
 		}
 	},
 	"anvil.uglify" : {
-		"all": true
+		"exclude": [
+			"./amplify-vsdoc.js"
+		]
 	},
 	"anvil.token": {
 		"sourceData": {
