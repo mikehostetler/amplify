@@ -391,7 +391,7 @@ asyncTest( "request( id, fn )", function() {
 
 asyncTest( "request( id, data, fn )", function() {
 	expect( 10 );
-	
+
 	amplify.request.define( "test", "ajax", {
 		url: "data/echo.php",
 		dataType: "json",
@@ -538,7 +538,7 @@ asyncTest( "prevent request - request.before", function() {
 
 asyncTest( "prevent request - request.before.ajax", function() {
 	expect( 3 );
-	
+
 	amplify.request.define( "test", "ajax", {
 		url: "data/data.json",
 		dataType: "json"
@@ -1043,6 +1043,48 @@ asyncTest( "cache: persist - expires", function() {
 				start();
 			});
 		}, 500 );
+	});
+});
+
+asyncTest( "cache: jsonp", function () {
+	expect(8);
+
+	amplify.request.define( "test", "ajax", {
+		url: "data/jsonp.php",
+		dataType: "jsonp",
+		decoder: function( data, status, xhr, success, error ) {
+			deepEqual( data, { foo: "bar" }, "data in decoder" );
+			equal( status, "success", "status in decoder" );
+			ok( "abort" in xhr, "xhr in decoder" );
+			var decodedData = {};
+			$.each( data, function( key, value ) {
+				decodedData[ "decoded-" + key ] = value;
+			});
+			success( decodedData, "decoded-jsonp" );
+		}
+	});
+	// subscribe( "request.success", function( settings, data, status ) {
+	// });
+	subscribe( "request.complete", function( settings, data, status ) {
+		start();
+	});
+	// subscribe( "request.error", function() {
+	// });
+	amplify.request({
+		resourceId: "test",
+		success: function( data, status ) {
+			ok(true, "An assertion");
+		},
+		error: function() {
+		}
+	});
+	amplify.request({
+		resourceId: "test",
+		success: function( data, status ) {
+			ok(true, "Another assertion");
+		},
+		error: function() {
+		}
 	});
 });
 
