@@ -1047,15 +1047,21 @@ asyncTest( "cache: persist - expires", function() {
 });
 
 asyncTest( "cache: jsonp", function () {
-	expect(8);
+	expect(2);
+
+	var ajaxCalls = 0;
+
+	$( "#ajax-listener" ).ajaxComplete(function( event, xhr ) {
+		if ( !(/^(abort|canceled)$/).test( xhr.statusText ) ) {
+			ok( !(ajaxCalls++), "ajax call completed" );
+		}
+	});
 
 	amplify.request.define( "test", "ajax", {
 		url: "data/jsonp.php",
 		dataType: "jsonp",
+		cache: true,
 		decoder: function( data, status, xhr, success, error ) {
-			deepEqual( data, { foo: "bar" }, "data in decoder" );
-			equal( status, "success", "status in decoder" );
-			ok( "abort" in xhr, "xhr in decoder" );
 			var decodedData = {};
 			$.each( data, function( key, value ) {
 				decodedData[ "decoded-" + key ] = value;
@@ -1063,29 +1069,36 @@ asyncTest( "cache: jsonp", function () {
 			success( decodedData, "decoded-jsonp" );
 		}
 	});
-	// subscribe( "request.success", function( settings, data, status ) {
-	// });
+
+	subscribe( "request.success", function( settings, data, status ) {
+	});
+
 	subscribe( "request.complete", function( settings, data, status ) {
 		start();
 	});
-	// subscribe( "request.error", function() {
-	// });
+
+	subscribe( "request.error", function() {
+	});
+
 	amplify.request({
 		resourceId: "test",
 		success: function( data, status ) {
-			ok(true, "An assertion");
+			// ok(true, "First call succeeded");
 		},
 		error: function() {
 		}
 	});
+
 	amplify.request({
 		resourceId: "test",
 		success: function( data, status ) {
-			ok(true, "Another assertion");
+			// ok(true, "Another assertion");
 		},
 		error: function() {
 		}
 	});
+
+	equal( ajaxCalls, 1, "Second ajax call didn't return cached data" );
 });
 
 test( "cache types", function() {
