@@ -1,14 +1,28 @@
 <!doctype html>
 <html>
-  <head>
-    <title>amplify.js test suites</title>
-  </head>
-  <body>
-    <h1>amplify.js test suites</h1>
-    <ul>
-      <li><a href="/test/core" target="_blank">core</a></li>
-      <li><a href="/test/request" target="_blank">request</a></li>
-      <li><a href="/test/store" target="_blank">store</a></li>
-    </ul>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>AmplifyJS Test Suites</title>
+  <link rel="stylesheet" href="../../external/qunit.css">
+  <link rel="stylesheet" href="../../external/qunit-composite.css">
+  <script src="../../external/json2.js"></script>
+  <script src="../../external/qunit.js"></script>
+  <script src="../../external/qunit-composite.js"></script>
+  <script src="../testswarm.js"></script>
+  <script>
+  QUnit.testSuites("Amplify JS",[
+    { name: "Core", path: "core/test.html" },
+    { name: "Store", path: "store/test.html" },
+    { name: "Request", path: "request/test.html" }
+  ]);
+  </script>
+</head>
+<body>
+  <h1 id="qunit-header">AmplifyJS Test Suites</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <iframe id="other-page" src="other-page.html" style="display: none;"></iframe>
+</body>
 </html>
