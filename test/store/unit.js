@@ -1,3 +1,5 @@
+/*global amplify, test, asyncTest, start, expect, equal, deepEqual*/
+'use strict';
 module( "amplify.store" );
 
 test( "amplify.store.addType", function() {

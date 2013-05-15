@@ -1,3 +1,6 @@
+/*global amplify, test, asyncTest, start, expect, equal, deepEqual, strictEqual, ok*/
+'use strict';
+
 (function() {
 
 var subscriptions = {};
@@ -317,15 +320,17 @@ module( "amplify.request.define - ajax", lifecycle );
 asyncTest( "request( id )", function() {
 	expect( 23 );
 
+  var url = '/test/request/static/data.json';
+
 	var ajax = $.ajax;
 	$.ajax = function( settings ) {
-		equal( settings.url, "data/data.json", "correct url" );
+		equal( settings.url, url, "correct url" );
 		equal( settings.dataType, "json", "correct dataType" );
 		equal( settings.type, "GET", "default type" );
 		ajax.apply( this, arguments );
 	};
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: url,
 		dataType: "json"
 	});
 	subscribe( "request.before", function( settings ) {
@@ -334,12 +339,12 @@ asyncTest( "request( id )", function() {
 	});
 	subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, xhr ) {
 		equal( resource.resourceId, "test", "before.ajax message: resource.resourceId" );
-		equal( resource.url, "data/data.json", "before.ajax message: resource.url" );
+		equal( resource.url, url, "before.ajax message: resource.url" );
 		equal( resource.dataType, "json", "before.ajax message: resource.dataType" );
 		equal( resource.type, "GET", "before.ajax message: resource.type" );
 		equal( settings.resourceId, "test", "before.ajax message: settings.resourceId" );
 		deepEqual( settings.data, {}, "before.ajax message: settings.data" );
-		equal( ajaxSettings.url, "data/data.json", "before.ajax message: ajaxSettings.url" );
+		equal( ajaxSettings.url, url, "before.ajax message: ajaxSettings.url" );
 		equal( ajaxSettings.dataType, "json", "before.ajax message: ajaxSettings.dataType" );
 		equal( ajaxSettings.type, "GET", "before.ajax message: ajaxSettings.type" );
 		ok( "abort" in xhr, "before.ajax message: xhr object provided" );
@@ -367,7 +372,7 @@ asyncTest( "request( id, fn )", function() {
 	expect( 10 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
@@ -393,7 +398,7 @@ asyncTest( "request( id, data, fn )", function() {
 	expect( 10 );
 	
 	amplify.request.define( "test", "ajax", {
-		url: "data/echo.php",
+		url: "/test/request/echo",
 		dataType: "json",
 		type: "POST"
 	});
@@ -420,7 +425,7 @@ asyncTest( "request( hash ) success", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json"
 	});
 	subscribe( "request.success", function( settings, data, status ) {
@@ -453,7 +458,7 @@ asyncTest( "request( hash ) error", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/missing.html",
+		url: "/test/request/static/missing.html",
 		dataType: "json"
 	});
 	subscribe( "request.error", function( settings, data, status ) {
@@ -486,12 +491,12 @@ asyncTest( "prevent request - beforeSend", function() {
 	expect( 10 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		// should execute 2 times
 		beforeSend: function( xhr, settings ) {
 			ok( "abort" in xhr, "xhr object provided" );
-			equal( settings.url.substring( 0, 20 ), "data/data.json?pass=", "correct url" );
+			equal( settings.url.substr(0, settings.url.indexOf('=') + 1), "/test/request/static/data.json?pass=", "correct url" );
 			equal( settings.dataType, "json", "correct dataType" );
 			return settings.url.substring( settings.url.length - 4 ) === "true";
 		}
@@ -517,7 +522,7 @@ asyncTest( "prevent request - request.before", function() {
 	expect( 4 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json"
 	});
 	subscribe( "request.before", function( settings ) {
@@ -540,7 +545,7 @@ asyncTest( "prevent request - request.before.ajax", function() {
 	expect( 3 );
 	
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json"
 	});
 	subscribe( "request.before.ajax", function( resouce, settings ) {
@@ -649,7 +654,7 @@ asyncTest( "data as string", function() {
 	expect( 1 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/echo-raw.php",
+		url: "/test/request/echoraw",
 		type: "POST"
 	});
 	amplify.request( "test", "sending {raw} [data]", function( data ) {
@@ -711,7 +716,7 @@ asyncTest( "abort", function() {
 	expect( 9 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/delay.php",
+		url: "/test/request/delay",
 		dataType: "json",
 		cache: false
 	});
@@ -753,7 +758,7 @@ asyncTest( "ampXHR", function() {
 	amplify.request.define( "ampXHR", "ajax", {
 		// prevent caching to ensure we get proper headers
 		cache: false,
-		url: "data/headers.php",
+		url: "/test/request/headers",
 		dataType: "json"
 	});
 	subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, xhr ) {
@@ -770,7 +775,7 @@ asyncTest( "ampXHR", function() {
 			"ampXHR.getAllResponseHeaders()" );
 		equal( ampXHR.status, 200, "ampXHR.status" );
 		equal( ampXHR.statusText, "success", "ampXHR.statusText" );
-		equal( ampXHR.responseText, "{\"header\":\"custom request header\"}",
+		equal( ampXHR.responseText, JSON.stringify({header: "custom request header"}),
 			"ampXHR.responseText" );
 	});
 	subscribe( "request.complete", function() {
@@ -799,7 +804,7 @@ asyncTest( "cache: true", function() {
 		}
 	});
 	amplify.request.define( "memory-cache", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		cache: true
 	});
@@ -838,7 +843,7 @@ asyncTest( "cache with data", function() {
 
 	var expectAjax = true;
 	amplify.request.define( "data-cache", "ajax", {
-		url: "data/echo-raw.php",
+		url: "/test/request/echoraw",
 		cache: true
 	});
 	subscribe( "request.before.ajax", function() {
@@ -868,7 +873,7 @@ asyncTest( "cache with data-replaced URL", function() {
 
 	var expectAjax = true;
 	amplify.request.define( "data-cache-url", "ajax", {
-		url: "data/echo-raw.php?{foo}",
+		url: "/test/request/echoraw?{foo}",
 		cache: true
 	});
 	subscribe( "request.before.ajax", function() {
@@ -897,7 +902,7 @@ asyncTest( "cache: Number", function() {
 		}
 	});
 	amplify.request.define( "cache-duration", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		cache: 500
 	});
@@ -952,7 +957,7 @@ asyncTest( "cache: persist - no expires", function() {
 		}
 	});
 	amplify.request.define( "persist-cache", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		cache: "persist"
 	});
@@ -998,7 +1003,7 @@ asyncTest( "cache: persist - expires", function() {
 	});
 
 	amplify.request.define( "persist-cache", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		cache: { type: "persist", expires: 450 }
 	});
@@ -1056,7 +1061,7 @@ asyncTest( "decoder: Function - success", function() {
 	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		decoder: function( data, status, xhr, success, error ) {
 			deepEqual( data, { foo: "bar" }, "data in decoder" );
@@ -1095,7 +1100,7 @@ asyncTest( "decoder: Function - error", function() {
 	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		decoder: function( data, status, xhr, success, error ) {
 			deepEqual( data, { foo: "bar" }, "data in decoder" );
@@ -1134,7 +1139,7 @@ asyncTest( "decoder: jsend - success", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/jsend.json",
+		url: "/test/request/static/jsend.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
@@ -1168,7 +1173,7 @@ asyncTest( "decoder: jsend - fail", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/jsend-fail.json",
+		url: "/test/request/static/jsend-fail.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
@@ -1202,7 +1207,7 @@ asyncTest( "decoder: jsend - error", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/jsend-error.json",
+		url: "/test/request/static/jsend-error.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
@@ -1236,7 +1241,7 @@ asyncTest( "decoder: jsend - error with details", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/jsend-error2.json",
+		url: "/test/request/static/jsend-error2.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
@@ -1282,7 +1287,7 @@ asyncTest( "decoder: jsend - invalid reponse", function() {
 	expect( 8 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		decoder: "jsend"
 	});
@@ -1326,7 +1331,7 @@ asyncTest( "decoder: custom", function() {
 		success( sillyData, "silly" );
 	};
 	amplify.request.define( "test", "ajax", {
-		url: "data/data.json",
+		url: "/test/request/static/data.json",
 		dataType: "json",
 		decoder: "silly"
 	});
@@ -1361,7 +1366,7 @@ asyncTest( "decoder: jsonp", function() {
 	expect( 11 );
 
 	amplify.request.define( "test", "ajax", {
-		url: "data/jsonp.php",
+		url: "/test/request/jsonp",
 		dataType: "jsonp",
 		decoder: function( data, status, xhr, success, error ) {
 			deepEqual( data, { foo: "bar" }, "data in decoder" );

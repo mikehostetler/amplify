@@ -27,7 +27,10 @@
   "dependencies": {},
   "devDependencies": {
     "anvil.uglify": "0.1.0",
-    "rimraf": "2.0.1"
+    "rimraf": "2.0.1",
+    "strata": "0.20.1",
+    "underscore": "latest",
+    "async": "latest"
   },
   "optionalDependencies": {}
 }
