@@ -8,8 +8,6 @@ var strata = require('strata'),
 var PORT = process.argv[2] || 1982; //1982 is strata default
 
 strata.use(strata.commonLogger);
-strata.use(strata.contentType);
-strata.use(strata.contentLength);
 strata.use(strata.file, __dirname);
 
 strata.get('/', function (env, callback) {

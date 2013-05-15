@@ -1,5 +1,6 @@
 'use strict';
 var strata = require('strata'),
+  _ = require('underscore'),
   HEADERS = require('./headers');
 
 function bufferStream(stream, callback) {
@@ -16,9 +17,9 @@ function bufferStream(stream, callback) {
 
 module.exports = function (callback) {
   strata.get('/test/request/echoraw', function (env, callback) {
-    if (env.queryString.length > 0) {
-      var queryString = encodeURIComponent(env.queryString);
-      return callback(200, HEADERS.text, queryString);
+    var req = strata.Request(env);
+    if (req.queryString.length > 0) {
+      return callback(200, HEADERS.text, req.queryString);
     }
     callback(200, HEADERS.text, 'empty');
   });
