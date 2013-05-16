@@ -13,8 +13,7 @@ var routes = [
   require('./echo-route'),
   require('./echoraw-route'),
   require('./headers-route'),
-  require('./jsonp-route'),
-  require('./static-route')
+  require('./jsonp-route')
 ];
 
 module.exports = {
