@@ -124,7 +124,7 @@ test( "data", function() {
 });
 
 test( "unsubscribe", function() {
-	expect( 4 );
+	expect( 6 );
 	var order = 0;
 
 	amplify.subscribe( "unsubscribe", function() {
@@ -158,41 +158,64 @@ test( "unsubscribe", function() {
 	} catch ( e ) {
 		ok( false, "error with invalid topic" );
 	}
+
 	amplify.publish( "unsubscribe" );
+
+	var counter = 0;
+	var fn3 = function () {
+		counter++;
+	};
+
+	amplify.subscribe( "counter", fn3 );
+	amplify.subscribe( "counter", function () { });
+	amplify.subscribe( "counter", fn3 );
+	amplify.publish( "counter" );
+	strictEqual( counter, 2, "Two calls made" );
+	
+	amplify.unsubscribe( "counter", fn3 );
+	amplify.publish( "counter" );
+
+	strictEqual( counter, 2, "Both subscriptions were unsubscribed" );
 });
 
 test( "unsubscribe with context", function () {
-	expect( 3 );
-	
-	var calls = 0;
+	expect( 5 );
 
-	var A = function () {
+	var calls = "";
+
+	var A = function ( name ) {
+		this.name = name;
 		amplify.subscribe('myevent', this, this.doIt)
 	};
 
 	A.prototype = {
 		doIt: function () {
-			calls += 1;
+			calls += this.name;
 		}
 	}
 
-	var x = new A(), y = new A();
+	var x = new A( "x" ), y = new A( "y" );
 
 	amplify.publish( 'myevent' );
-
-	strictEqual( calls, 2, "There should be two calls" );
+	strictEqual( calls, "xy", "There should be two calls" );
 
 	amplify.unsubscribe('myevent', y.doIt);
-
 	amplify.publish( 'myevent' );	
+	strictEqual( calls, "xy", "There should be no new calls" );
 
-	strictEqual( calls, 3, "There should be one new call" );
-
-	amplify.unsubscribe('myevent', x.doIt);
+	x = new A( "x" );
+	y = new A( "y" );
 
 	amplify.publish( 'myevent' );
+	strictEqual( calls, "xyxy", "There should be two new calls" );
 
-	strictEqual( calls, 3, "There should be no new calls" );
+	amplify.unsubscribe('myevent', y, y.doIt);
+	amplify.publish( 'myevent' );
+	strictEqual( calls, "xyxyx", "There should be one new call" );
+
+	amplify.unsubscribe('myevent', x, x.doIt);
+	amplify.publish( 'myevent' );
+	strictEqual( calls, "xyxyx", "There should be no new calls" );
 });
 
 test( "unsubscribe during publish", function() {

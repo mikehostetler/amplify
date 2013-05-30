@@ -26,6 +26,7 @@ Subscribe to a message.
 Remove a subscription.
 
 * `topic`: The topic being unsubscribed from.
+* [`context`]: If provided, only subscriptions with a matching context will be unsubscribed.
 * `callback`: The callback that was originally subscribed.
 
 <pre><code>amplify.publish( string topic, ... )</code></pre>

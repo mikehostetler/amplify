@@ -2,7 +2,7 @@
   "author": "appendTo (http://appendto.com/)",
   "name": "amplify",
   "description": "AmplifyJS is a set of components for data management and application communication.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "homepage": "http://amplifyjs.com/",
   "repository": {
     "type": "git",

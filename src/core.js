@@ -81,9 +81,14 @@ var amplify = global.amplify = {
 		return callback;
 	},
 
-	unsubscribe: function( topic, callback ) {
+	unsubscribe: function( topic, context, callback ) {
 		if ( typeof topic !== "string" ) {
 			throw new Error( "You must provide a valid topic to remove a subscription." );
+		}
+
+		if ( arguments.length === 2 ) {
+			callback = context;
+			context = null;
 		}
 
 		if ( !subscriptions[ topic ] ) {
@@ -95,8 +100,13 @@ var amplify = global.amplify = {
 
 		for ( ; i < length; i++ ) {
 			if ( subscriptions[ topic ][ i ].callback === callback ) {
-				subscriptions[ topic ].splice( i, 1 );
-				break;
+				if ( !context || subscriptions[ topic ][ i ].context === context ) {
+					subscriptions[ topic ].splice( i, 1 );
+					
+					// Adjust counter and length for removed item
+					i--;
+					length--;
+				}
 			}
 		}
 	}
