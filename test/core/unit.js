@@ -161,6 +161,40 @@ test( "unsubscribe", function() {
 	amplify.publish( "unsubscribe" );
 });
 
+test( "unsubscribe with context", function () {
+	expect( 3 );
+	
+	var calls = 0;
+
+	var A = function () {
+		amplify.subscribe('myevent', this, this.doIt)
+	};
+
+	A.prototype = {
+		doIt: function () {
+			calls += 1;
+		}
+	}
+
+	var x = new A(), y = new A();
+
+	amplify.publish( 'myevent' );
+
+	strictEqual( calls, 2, "There should be two calls" );
+
+	amplify.unsubscribe('myevent', y.doIt);
+
+	amplify.publish( 'myevent' );	
+
+	strictEqual( calls, 3, "There should be one new call" );
+
+	amplify.unsubscribe('myevent', x.doIt);
+
+	amplify.publish( 'myevent' );
+
+	strictEqual( calls, 3, "There should be no new calls" );
+});
+
 test( "unsubscribe during publish", function() {
 	expect( 3 );
 
