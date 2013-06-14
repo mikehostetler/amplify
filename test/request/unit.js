@@ -1057,7 +1057,7 @@ test( "cache types", function() {
 	});
 });
 
-asyncTest( "cache: jsonp with no specific callback", function () {
+asyncTest( "cache: jsonp with auto-generated callback", function () {
 	expect(5);
 
   amplify.request.define( "jsonp-cache", "ajax", {
@@ -1092,7 +1092,46 @@ asyncTest( "cache: jsonp with no specific callback", function () {
 	});
 });
 
-asyncTest( "cache: jsonp with `jsonp` parameter defining specific callback", function () {
+asyncTest( "cache: jsonp with custom callback key and function", function () {
+	expect(5);
+
+	amplify.request.define( "jsonp-cache", "ajax", {
+		url: "/test/request/jsonp/custom_key?custom_key=custom_function",
+		dataType: "jsonp",
+		jsonp: false,
+		jsonpCallback: 'custom_function',
+		cache: { type: "persist", expires: 450 }
+	});
+
+	var timesAjaxTriggered = 0;
+
+	subscribe( "request.before.ajax", function( resource ) {
+		console.log('before');
+		equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+		timesAjaxTriggered += 1;
+	});
+
+	subscribe( "request.error", function(settings, data, status) {
+		console.log('error', status);
+		ok(false, "error message published: " + status);
+	});
+
+	var expectedData = {foo: 'bar'};
+
+	amplify.request( "jsonp-cache", function( actualData ) {
+		deepEqual( actualData, expectedData, "first request callback" );
+		amplify.request( "jsonp-cache", function( actualData ) {
+			deepEqual( actualData, expectedData, "first request callback" );
+			amplify.request('jsonp-cache', function (actualData) {
+				deepEqual(actualData, expectedData, "third request callback" );
+				equal(timesAjaxTriggered, 1, 'ajax should have been triggered once');
+				start();
+			});
+		});
+	});
+});
+
+asyncTest( "cache: jsonp with `jsonp` parameter defining specific callback key with auto-generated callback function", function () {
 	expect(5);
 
   var callbackKey = 'call_back_key';
@@ -1130,7 +1169,7 @@ asyncTest( "cache: jsonp with `jsonp` parameter defining specific callback", fun
 	});
 });
 
-asyncTest( "cache: jsonp with `jsonpCallback` parameter defining specific callback", function () {
+asyncTest( "cache: jsonp with `jsonpCallback` parameter defining specific callback function with default callback key", function () {
 	expect(5);
 
 	var callbackFunctionName = 'cb1234567890_0987654321';
