@@ -1057,6 +1057,118 @@ test( "cache types", function() {
 	});
 });
 
+asyncTest( "cache: jsonp with no specific callback", function () {
+	expect(5);
+
+  amplify.request.define( "jsonp-cache", "ajax", {
+    url: "/test/request/jsonp",
+    dataType: "jsonp",
+    cache: { type: "persist", expires: 450 }
+  });
+
+  var timesAjaxTriggered = 0;
+
+  subscribe( "request.before.ajax", function( resource ) {
+    equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+    timesAjaxTriggered += 1;
+  });
+
+  subscribe( "request.error", function(settings, data, status) {
+    ok(false, "error message published: " + status);
+  });
+
+  var expectedData = {foo: 'bar'};
+
+	amplify.request( "jsonp-cache", function( actualData ) {
+		deepEqual( actualData, expectedData, "first request callback" );
+		amplify.request( "jsonp-cache", function( actualData ) {
+			deepEqual( actualData, expectedData, "first request callback" );
+			amplify.request('jsonp-cache', function (actualData) {
+				deepEqual(actualData, expectedData, "third request callback" );
+				equal(timesAjaxTriggered, 1, 'ajax should have been triggered once');
+				start();
+			});
+		});
+	});
+});
+
+asyncTest( "cache: jsonp with `jsonp` parameter defining specific callback", function () {
+	expect(5);
+
+  var callbackKey = 'call_back_key';
+
+	amplify.request.define( "jsonp-cache", "ajax", {
+		url: "/test/request/jsonp/" + callbackKey,
+		dataType: "jsonp",
+		jsonp: callbackKey,
+		cache: { type: "persist", expires: 450 }
+	} );
+
+	var timesAjaxTriggered = 0;
+
+	subscribe( "request.before.ajax", function( resource ) {
+		equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+		timesAjaxTriggered += 1;
+	});
+
+	subscribe( "request.error", function(settings, data, status) {
+		ok(false, "error message published: " + status);
+	});
+
+	var expectedData = {foo: 'bar'};
+
+	amplify.request( "jsonp-cache", function( actualData ) {
+		deepEqual( actualData, expectedData, "first request callback" );
+		amplify.request( "jsonp-cache", function( actualData ) {
+			deepEqual( actualData, expectedData, "first request callback" );
+			amplify.request('jsonp-cache', function (actualData) {
+				deepEqual(actualData, expectedData, "third request callback" );
+				equal(timesAjaxTriggered, 1, 'ajax should have been triggered once');
+				start();
+			});
+		});
+	});
+});
+
+asyncTest( "cache: jsonp with `jsonpCallback` parameter defining specific callback", function () {
+	expect(5);
+
+	var callbackFunctionName = 'cb1234567890_0987654321';
+
+  amplify.request.define( "jsonp-cache", "ajax", {
+    url: "/test/request/jsonp",
+    dataType: "jsonp",
+//    jsonp: false,
+    jsonpCallback: callbackFunctionName,
+		cache: { type: "persist", expires: 450 }
+  });
+
+	var timesAjaxTriggered = 0;
+
+	subscribe( "request.before.ajax", function( resource ) {
+		equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+		timesAjaxTriggered += 1;
+	});
+
+	subscribe( "request.error", function(settings, data, status) {
+		ok(false, "error message published: " + status);
+	});
+
+	var expectedData = {foo: 'bar'};
+
+	amplify.request( "jsonp-cache", function( actualData ) {
+		deepEqual( actualData, expectedData, "first request callback" );
+		amplify.request( "jsonp-cache", function( actualData ) {
+			deepEqual( actualData, expectedData, "first request callback" );
+			amplify.request('jsonp-cache', function (actualData) {
+				deepEqual(actualData, expectedData, "third request callback" );
+				equal(timesAjaxTriggered, 1, 'ajax should have been triggered once');
+				start();
+			});
+		});
+	});
+});
+
 asyncTest( "decoder: Function - success", function() {
 	expect( 11 );
 
