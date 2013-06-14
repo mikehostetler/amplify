@@ -1138,7 +1138,6 @@ asyncTest( "cache: jsonp with `jsonpCallback` parameter defining specific callba
   amplify.request.define( "jsonp-cache", "ajax", {
     url: "/test/request/jsonp",
     dataType: "jsonp",
-//    jsonp: false,
     jsonpCallback: callbackFunctionName,
 		cache: { type: "persist", expires: 450 }
   });
