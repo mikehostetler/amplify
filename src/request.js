@@ -1,4 +1,7 @@
+/*global amplify*/
+
 (function( amplify, undefined ) {
+'use strict';
 
 function noop() {}
 function isFunction( obj ) {
@@ -44,12 +47,14 @@ amplify.request = function( resourceId, data, callback ) {
 		resource = amplify.request.resources[ settings.resourceId ],
 		success = settings.success || noop,
 		error = settings.error || noop;
+
 	settings.success = async( function( data, status ) {
 		status = status || "success";
 		amplify.publish( "request.success", settings, data, status );
 		amplify.publish( "request.complete", settings, data, status );
 		success( data, status );
 	});
+
 	settings.error = async( function( data, status ) {
 		status = status || "error";
 		amplify.publish( "request.error", settings, data, status );
@@ -93,13 +98,11 @@ amplify.request.define = function( resourceId, type, settings ) {
 }( amplify ) );
 
 
-
-
-
 (function( amplify, $, undefined ) {
+'use strict';
 
 var xhrProps = [ "status", "statusText", "responseText", "responseXML", "readyState" ],
-    rurlData = /\{([^\}]+)\}/g;
+		rurlData = /\{([^\}]+)\}/g;
 
 amplify.request.types.ajax = function( defnSettings ) {
 	defnSettings = $.extend({
@@ -175,6 +178,31 @@ amplify.request.types.ajax = function( defnSettings ) {
 			defnSettings, settings, ajaxSettings, ampXHR );
 
 		$.extend( ajaxSettings, {
+			isJSONP: function () {
+				return (/jsonp/gi).test(this.dataType);
+			},
+			cacheURL: function () {
+				if (!this.isJSONP()) {
+					return this.url;
+				}
+
+				var callbackName = 'callback';
+
+				// possible for the callback function name to be overridden
+				if (this.hasOwnProperty('jsonp')) {
+					if (this.jsonp !== false) {
+						callbackName = this.jsonp;
+					} else {
+						if (this.hasOwnProperty('jsonpCallback')) {
+							callbackName = this.jsonpCallback;
+						}
+					}
+				}
+
+				// search and replace callback parameter in query string with empty string
+				var callbackRegex = new RegExp('&?' + callbackName + '=[^&]*&?', 'gi');
+				return this.url.replace(callbackRegex, '');
+			},
 			success: function( data, status ) {
 				handleResponse( data, status );
 			},
@@ -190,6 +218,14 @@ amplify.request.types.ajax = function( defnSettings ) {
 					defnSettings, settings, ajaxSettings, ampXHR );
 			}
 		});
+
+		// cache all JSONP requests
+		if (ajaxSettings.isJSONP()) {
+			$.extend(ajaxSettings, {
+				cache: true
+			});
+		}
+
 		$.ajax( ajaxSettings );
 
 		request.abort = function() {
@@ -253,6 +289,11 @@ amplify.subscribe( "request.ajax.preprocess", function( defnSettings, settings, 
 
 var cache = amplify.request.cache = {
 	_key: function( resourceId, url, data ) {
+		data = url + data;
+		var length = data.length,
+			i = 0;
+
+		/*jshint bitwise:false*/
 		function chunk() {
 			return data.charCodeAt( i++ ) << 24 |
 				data.charCodeAt( i++ ) << 16 |
@@ -260,14 +301,11 @@ var cache = amplify.request.cache = {
 				data.charCodeAt( i++ ) << 0;
 		}
 
-		data = url + data;
-		var length = data.length,
-			i = 0,
-			checksum = chunk();
-
+		var checksum = chunk();
 		while ( i < length ) {
 			checksum ^= chunk();
 		}
+		/*jshint bitwise:true*/
 
 		return "request-" + resourceId + "-" + checksum;
 	},
@@ -277,7 +315,7 @@ var cache = amplify.request.cache = {
 		return function( resource, settings, ajaxSettings, ampXHR ) {
 			// data is already converted to a string by the time we get here
 			var cacheKey = cache._key( settings.resourceId,
-					ajaxSettings.url, ajaxSettings.data ),
+					ajaxSettings.cacheURL(), ajaxSettings.data ),
 				duration = resource.cache;
 
 			if ( cacheKey in memoryStore ) {
