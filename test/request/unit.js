@@ -320,7 +320,7 @@ module( "amplify.request.define - ajax", lifecycle );
 asyncTest( "request( id )", function() {
 	expect( 23 );
 
-  var url = '/test/request/static/data.json';
+	var url = '/test/request/static/data.json';
 
 	var ajax = $.ajax;
 	$.ajax = function( settings ) {
@@ -1060,24 +1060,24 @@ test( "cache types", function() {
 asyncTest( "cache: jsonp with auto-generated callback", function () {
 	expect(5);
 
-  amplify.request.define( "jsonp-cache", "ajax", {
-    url: "/test/request/jsonp",
-    dataType: "jsonp",
-    cache: { type: "persist", expires: 450 }
-  });
+	amplify.request.define( "jsonp-cache", "ajax", {
+		url: "/test/request/jsonp",
+		dataType: "jsonp",
+		cache: { type: "persist", expires: 450 }
+	});
 
-  var timesAjaxTriggered = 0;
+	var timesAjaxTriggered = 0;
 
-  subscribe( "request.before.ajax", function( resource ) {
-    equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
-    timesAjaxTriggered += 1;
-  });
+	subscribe( "request.before.ajax", function( resource ) {
+		equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+		timesAjaxTriggered += 1;
+	});
 
-  subscribe( "request.error", function(settings, data, status) {
-    ok(false, "error message published: " + status);
-  });
+	subscribe( "request.error", function(settings, data, status) {
+		ok(false, "error message published: " + status);
+	});
 
-  var expectedData = {foo: 'bar'};
+	var expectedData = {foo: 'bar'};
 
 	amplify.request( "jsonp-cache", function( actualData ) {
 		deepEqual( actualData, expectedData, "first request callback" );
@@ -1134,7 +1134,7 @@ asyncTest( "cache: jsonp with custom callback key and function", function () {
 asyncTest( "cache: jsonp with `jsonp` parameter defining specific callback key with auto-generated callback function", function () {
 	expect(5);
 
-  var callbackKey = 'call_back_key';
+	var callbackKey = 'call_back_key';
 
 	amplify.request.define( "jsonp-cache", "ajax", {
 		url: "/test/request/jsonp/" + callbackKey,
@@ -1174,12 +1174,12 @@ asyncTest( "cache: jsonp with `jsonpCallback` parameter defining specific callba
 
 	var callbackFunctionName = 'cb1234567890_0987654321';
 
-  amplify.request.define( "jsonp-cache", "ajax", {
-    url: "/test/request/jsonp",
-    dataType: "jsonp",
-    jsonpCallback: callbackFunctionName,
+	amplify.request.define( "jsonp-cache", "ajax", {
+		url: "/test/request/jsonp",
+		dataType: "jsonp",
+		jsonpCallback: callbackFunctionName,
 		cache: { type: "persist", expires: 450 }
-  });
+	});
 
 	var timesAjaxTriggered = 0;
 
