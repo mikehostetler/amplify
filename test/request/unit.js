@@ -1405,7 +1405,7 @@ asyncTest( "decoder: jsonp", function() {
 	});
 });
 
-asyncTest("dataMap: dataMap stringify root array", function() {
+asyncTest("dataMap: stringify data that is an array", function() {
 	expect(1);
 
 	amplify.request.define( "test", "ajax", {
@@ -1415,7 +1415,7 @@ asyncTest("dataMap: dataMap stringify root array", function() {
 		dataMap: JSON.stringify,
 		contentType: 'application/json; charset=utf-8'
 	});
-	amplify.subscribe( "request.complete", function( settings, settings1, settings2 ) {
+	subscribe( "request.complete", function( settings, settings1, settings2 ) {
 		start();
 	});
 	subscribe( "request.error", function() {
@@ -1424,32 +1424,6 @@ asyncTest("dataMap: dataMap stringify root array", function() {
 	amplify.request({
 		resourceId: "test",
 		data: [{key: "value"}],
-		success: function( data, status ) {
-			equal(data.is_array, true, "data sent");
-		},
-		error: function() {
-			ok( false, "error callback invoked" );
-		}
-	});
-});
-asyncTest("dataMap: stringify root array", function() {
-	expect(1);
-
-	amplify.request.define( "test", "ajax", {
-		url: "/test/request/is_array",
-		dataType: "json",
-		type: "POST",
-		contentType: 'application/json; charset=utf-8'
-	});
-	amplify.subscribe( "request.complete", function( settings, settings1, settings2 ) {
-		start();
-	});
-	subscribe( "request.error", function() {
-		ok( false, "error message published" );
-	});
-	amplify.request({
-		resourceId: "test",
-		data: JSON.stringify([{key: "value"}]),
 		success: function( data, status ) {
 			equal(data.is_array, true, "data sent");
 		},
