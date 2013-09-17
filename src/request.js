@@ -220,7 +220,7 @@ amplify.request.types.ajax = function( defnSettings ) {
 		});
 
 		// cache all JSONP requests
-		if (ajaxSettings.isJSONP()) {
+		if (ajaxSettings.cache && ajaxSettings.isJSONP()) {
 			$.extend(ajaxSettings, {
 				cache: true
 			});

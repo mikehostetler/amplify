@@ -1057,6 +1057,40 @@ test( "cache types", function() {
 	});
 });
 
+asyncTest( "cache: jsonp without cache should be left alone", function () {
+	expect(7);
+
+	amplify.request.define( "jsonp-cache", "ajax", {
+		url: "/test/request/jsonp",
+		dataType: "jsonp"
+	});
+
+	var timesAjaxTriggered = 0;
+
+	subscribe( "request.before.ajax", function( resource ) {
+		equal( resource.resourceId, "jsonp-cache", "before.ajax message: resource.resourceId" );
+		timesAjaxTriggered += 1;
+	});
+
+	subscribe( "request.error", function(settings, data, status) {
+		ok(false, "error message published: " + status);
+	});
+
+	var expectedData = {foo: 'bar'};
+
+	amplify.request( "jsonp-cache", function( actualData ) {
+		deepEqual( actualData, expectedData, "first request callback" );
+		amplify.request( "jsonp-cache", function( actualData ) {
+			deepEqual( actualData, expectedData, "second request callback" );
+			amplify.request('jsonp-cache', function (actualData) {
+				deepEqual(actualData, expectedData, "third request callback" );
+				equal(timesAjaxTriggered, 3, 'ajax should have been triggered three times');
+				start();
+			});
+		});
+	});
+});
+
 asyncTest( "cache: jsonp with auto-generated callback", function () {
 	expect(5);
 
