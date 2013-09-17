@@ -340,7 +340,7 @@ if ( amplify.store ) {
 	$.each( amplify.store.types, function( type ) {
 		cache[ type ] = function( resource, settings, ajaxSettings, ampXHR ) {
 			var cacheKey = cache._key( settings.resourceId,
-					ajaxSettings.url, ajaxSettings.data ),
+					ajaxSettings.cacheURL(), ajaxSettings.data ),
 				cached = amplify.store[ type ]( cacheKey );
 
 			if ( cached ) {
