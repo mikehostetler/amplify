@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>Request | API | AmplifyJS - A Component Library for jQuery</title>
+
+  
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.1.0">
+  
+  <script>
+    document.documentElement.className += (window.devicePixelRatio >= 2 ? " x2" : " x1");
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css?v=1.1.0" />
+  <link rel="stylesheet" media="handheld" href="/css/handheld.css?v=1.1.0" />
+
+
+  <script src="/js/modernizr-1.5.min.js?v=1.1.0"></script>
+
+
+</head>
+<body class=" sub">
+
+  <header class="body">
+    <h1 id="logo"><a href="/">AmplifyJS</a></h1>
+    <nav class="site">
+      <ul>
+        <li class="download"><a class="download-link" href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip">Download</a></li>
+        <li  class="active" ><a href="/api/request/">Documentation</a></li>
+        
+        <li ><a href="/community/">Community</a></li>
+        <li ><a href="/support/">Support</a></li>
+      </ul>
+    </nav>
+    <nav class="components">
+      <ul>
+        <li title="AmplifyJS Request" class="cpt-request active"><a href="/api/request/"><strong>Request</strong></a></li>
+        <li title="AmplifyJS Storage" class="cpt-storage "><a href="/api/store/"><strong>Store</strong></a></li>
+        <li title="AmplifyJS Pub/Sub" class="cpt-bus "><a href="/api/pubsub/"><strong>Pub/Sub</strong></a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <section class="body"><header class="section">
+  <hgroup>
+    <h2>Request</h2>
+    	<h3>AmplifyJS API Documentation <cite><code>core/amplify.core.js</code></cite></h3>
+  </hgroup>
+<div class="download">
+  <a href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip" class="red_button download-link"><span>Download <em>v1.1.2</em></span></a>
+  <span><a href="https://github.com/appendto/amplify">Source on Github</a> | <a href="/api/request">Documentation</a></span>
+</div></header>
+<article>
+	<div class="content">
+
+<h1 id="amplifyrequest">amplify.request</h1>
+
+<p><code>amplify.request</code> is an abstraction layer that can be used for any kind of request for data.
+<code>amplify.request</code> sets out to separate the data retrieval and caching mechanisms from data requestors.</p>
+
+<p>Using the <code>amplify.request.define</code> function you can create and maintain
+your entire server interface and caching policy in a single place,
+reducing the impact of any server interface changes. Components that
+need data can retrieve the data through <code>amplify.request</code> without
+concern for data caching, server interface, resource location,
+data types, wrappers, and all the other specificities of the
+client/server interaction.</p>
+
+<p>Requests made through <code>amplify.request</code> will always be resolved asynchronously,
+even if the resource invokes the callbacks immediately.
+This ensures that you will never having timing problems if the request definition is changed in the future.</p>
+
+<p>Just getting started? Take a look at the <a href="#examples" title="examples">examples</a> section
+below for a few of the popular use cases with <code>amplify.request</code>.</p>
+
+<p><strong>NOTE:</strong> <code>amplify.request</code> depends on the use of jQuery 1.4 or higher when the <code>ajax</code> request type is used.</p>
+
+<h2 id="usage">Usage</h2>
+
+<pre><code>amplify.request( string resourceId [, hash data [, function callback ]] )
+</code></pre>
+
+<p>Request a resource.</p>
+
+<ul>
+<li><code>resourceId</code>: Identifier string for the resource.</li>
+<li><code>data</code>: A set of key/value pairs of data to be sent to the resource.</li>
+<li><code>callback</code>: A function to invoke if the resource is retrieved successfully.</li>
+</ul>
+
+<pre><code>amplify.request( hash settings )</code></pre>
+
+<p>Request a resource.</p>
+
+<ul>
+<li><code>settings</code>: A set of key/value pairs of settings for the request.
+<ul><li><code>resourceId</code>: Identifier string for the resource.</li>
+<li><code>data</code> (optional): Data associated with the request.</li>
+<li><code>success</code> (optional): Function to invoke on success.</li>
+<li><code>error</code> (optional): Function to invoke on error.</li></ul></li>
+</ul>
+
+<pre><code>amplify.request.define(
+    string resourceId, string requestType [, hash settings ] )</code></pre>
+
+<p>Define a resource.</p>
+
+<ul>
+<li><code>resourceId</code>: Identifier string for the resource.</li>
+<li><code>requestType</code>: The type of data retrieval method from the server.
+See the <a href="#request_types" title="request types">request types</a> sections for more information.</li>
+<li><code>settings</code>: A set of key/value pairs that relate to the server
+communication technology. The following settings are available:
+<ul><li>Any settings found in jQuery.ajax().</li>
+<li><code>cache</code>: See the <a href="#cache" title="caching">cache</a> section for more details.</li>
+<li><code>decoder</code>: See the <a href="#decoders" title="decoders">decoder</a> section for more details.</li></ul></li>
+</ul>
+
+<pre><code>amplify.request.define( string resourceId, function resource )</code></pre>
+
+<p>Define a custom request.</p>
+
+<ul>
+<li><code>resourceId</code>: Identifier string for the resource.</li>
+<li><code>resource</code>: Function to handle requests. Receives a hash with the following properties:
+<ul><li><code>resourceId</code>: Identifier string for the resource.</li>
+<li><code>data</code>: Data provided by the user.</li>
+<li><code>success</code>: Callback to invoke on success.</li>
+<li><code>error</code>: Callback to invoke on error.</li></ul></li>
+</ul>
+
+<h2 id="requesttypes">Request Types</h2>
+
+<h3 id="builtintypes">Built-in Types</h3>
+
+<p><code>amplify.request</code> comes with a built-in <code>ajax</code> type.</p>
+
+<p><strong>NOTE:</strong> The <code>ajax</code> request type depends on the use of jQuery 1.4 or higher.</p>
+
+<h3 id="customtypes">Custom Types</h3>
+
+<p>You can choose to create additional types by adding to the <code>amplify.request.types</code> hash.
+There is also an option to define custom one-off types for single requests.</p>
+
+<h2 id="datahandling">Data Handling</h2>
+
+<h3 id="predefineddata">Pre-defined Data</h3>
+
+<p>When defining an ajax request, you can provide data in the definition.
+This data will be merged (via a deep extend) with any data provided with the request.
+Data provided with the request will override data provided in the definition.</p>
+
+<h3 id="datamapping">Data Mapping</h3>
+
+<p>Data maps allow you to modify the data for an ajax request before the data is sent.
+You can use a hash to map keys or you can use a function for complete flexibility.</p>
+
+<h3 id="urlsubstitutionrouting">URL substitution/routing</h3>
+
+<p>You can define variables in the URL of an ajax request by wrapping the variable in curly braces, e.g., <code>&quot;/user/{id}&quot;</code>.
+The variable will be replaced by the respective value from the data provided in the request.
+Whenever a variable is replaced, the value is removed from the data (not submitted as GET/POST data).
+If there are variables that are not replaced, they will remain in the URL.</p>
+
+<h3 id="decoders">Decoders</h3>
+
+<p>Decoders allow you to parse an ajax response before calling the success or error callback.
+This allows you to return data marked with a status and react accordingly.
+This also allows you to manipulate the data any way you want before passing the data along to the callback.</p>
+
+<h4 id="builtindecoders">Built-in Decoders</h4>
+
+<p><a href="http://labs.omniti.com/labs/jsend">JSend</a> is a built in decoder
+provided with the library.</p>
+
+<h4 id="customdecoders">Custom decoders</h4>
+
+<p>You can define new decoders by adding to the <code>amplify.request.decoders</code> hash. 
+A popular use case for decoders is when you have a JSON envelope that
+must be unpacked with each response from the server.</p>
+
+<p>You can also define custom one-off decoders for single requests, which
+is specified as a function in the settings hash for
+<code>amplify.request.define</code>.</p>
+
+<pre><code>amplify.request.decoders.decoderName = 
+    function( hash data, string status, object xhr,
+              function success, function error )
+</code></pre>
+
+<p>Define a decoder. <code>decoderName</code> should be replaced with the decoder name
+of your choosing.</p>
+
+<ul>
+<li><code>data</code>: Data returned from the ajax request.</li>
+<li><code>status</code>: Status of the ajax request. See the <a href="#handling_status" title="handling status">handling status</a> section below.</li>
+<li><code>xhr</code>: A wrapped xhr object used to make the request.</li>
+<li><code>success</code>: Callback to invoke on success.</li>
+<li><code>error</code>: Callback to invoke on error.</li>
+</ul>
+
+<h2 id="cache">Cache</h2>
+
+<h3 id="inmemorycache">In-memory Cache</h3>
+
+<p>There is a built-in memory cache. You can pass a boolean to enable caching of a request, e.g., <code>cache: true</code>.
+You can also pass a number to specify that the response should be cached for a certain amount of time.
+For example, <code>cache: 30</code> will cache the response for 30 milliseconds.</p>
+
+<ul>
+<li><code>cache: boolean</code> Cache the data in memory for the remainder of this page load.</li>
+<li><code>cache: number</code> Cache the data in memory for the specified number of milliseconds.</li>
+</ul>
+
+<h3 id="namedcaches">Named Caches</h3>
+
+<ul>
+<li><code>cache: string</code> Cache the data using a pre-defined caching mechanism.</li>
+</ul>
+
+<pre><code>cache: {
+    type: string,
+    expires: number
+}
+</code></pre>
+
+<p>Cache the data using a pre-defined caching mechanism for the specified number
+of milliseconds.</p>
+
+<h4 id="persistentclientsidecache">Persistent Client-side Cache</h4>
+
+<p>You can also persist a cache if <code>amplify.store</code> has been loaded.
+You can specify <code>cache: &quot;persist&quot;</code> to cache in the default store
+or you can specify any of the specific stores available, e.g., <code>cache: &quot;localStorage&quot;</code>.
+You can also use the hash form listed above to store in a persistent cache with
+an expiration.</p>
+
+<p><em>Note: You must include <code>amplify.store.js</code> before <code>amplify.request.js</code> to use persistent caches.</em></p>
+
+<h3 id="customcache">Custom Cache</h3>
+
+<p>You can also create additional cache types by adding to the <code>amplify.request.cache</code> hash.</p>
+
+<pre><code>amplify.request.cache.customCacheName = 
+    function( hash resource, hash settings, hash ajaxSettings )
+</code></pre>
+
+<p>Definition for a caching mechanism. <code>customCacheName</code> should be replaced
+with the custom name of your choosing.</p>
+
+<ul>
+<li><code>resource</code>: The definition of the resource being requested.</li>
+<li><code>settings</code>: The settings for the request.</li>
+<li><code>ajaxSettings</code>: The settings that will be passed to <code>jQuery.ajax()</code>.</li>
+</ul>
+
+<h2 id="examples">Examples</h2>
+
+<p>The examples assume that the request location returns the following as
+json unless specified otherwise:</p>
+
+<pre><code>{
+    "foo" : "bar",
+    "baz" : "qux"
+}
+</code></pre>
+
+<h3 id="setupandusearequestutilizingajax">Set up and use a request utilizing Ajax</h3>
+
+<pre><code>amplify.request.define( "ajaxExample1", "ajax", {
+    url: "/myApiUrl",
+    dataType: "json",
+    type: "GET"
+});
+
+// later in code
+amplify.request( "ajaxExample1", function( data ) {
+    data.foo; // bar
+});
+</code></pre>
+
+<h3 id="setupandusearequestutilizingajaxandcaching">Set up and use a request utilizing Ajax and Caching</h3>
+
+<pre><code>amplify.request.define( "ajaxExample2", "ajax", {
+    url: "/myApiUrl",
+    dataType: "json",
+    type: "GET",
+    cache: "persist"
+});
+
+// later in code
+amplify.request( "ajaxExample2", function( data ) {
+    data.foo; // bar
+});
+
+// a second call will result in pulling from the cache
+amplify.request( "ajaxExample2", function( data ) {
+    data.baz; // qux
+})
+</code></pre>
+
+<h3 id="setupandusearestfulrequestutilizingajax">Set up and use a RESTful request utilizing Ajax</h3>
+
+<pre><code>amplify.request.define( "ajaxRESTFulExample", "ajax", {
+    url: "/myRestFulApi/{type}/{id}",
+    type: "GET"
+})
+
+// later in code
+amplify.request( "ajaxRESTFulExample",
+    {
+        type: "foo",
+        id: "bar"
+    },
+    function( data ) {
+        // /myRESTFulApi/foo/bar was the URL used
+        data.foo; // bar
+    }
+);
+</code></pre>
+
+<h3 id="postdatawithajax">POST data with Ajax</h3>
+
+<pre><code>amplify.request.define( "ajaxPostExample", "ajax", {
+    url: "/myRestFulApi",
+    type: "POST"
+})
+
+// later in code
+amplify.request( "ajaxPostExample",
+    {
+        type: "foo",
+        id: "bar"
+    },
+    function( data ) {
+        data.foo; // bar
+    }
+);
+</code></pre>
+
+<h3 id="usingdatamaps">Using data maps</h3>
+
+<p>When searching Twitter, the key for the search phrase is <code>q</code>.
+If we want a more descriptive name, such as <code>term</code>, we can use a data map:</p>
+
+<pre><code>amplify.request.define( "twitter-search", "ajax", {
+    url: "http://search.twitter.com/search.json",
+    dataType: "jsonp",
+    dataMap: {
+        term: "q"
+    }
+});
+
+amplify.request( "twitter-search", { term: "amplifyjs" }, ... );
+</code></pre>
+
+<p>Similarly, we can create a request that searches for mentions, by accepting a username:</p>
+
+<pre><code>amplify.request.define( "twitter-mentions", "ajax", {
+    url: "http://search.twitter.com/search.json",
+    dataType: "jsonp",
+    dataMap: function( data ) {
+        return {
+            q: "@" + data.user
+        };
+    }
+});
+
+amplify.request( "twitter-mentions", { user: "amplifyjs" }, ... );
+</code></pre>
+
+<h3 id="settingupandusingdecoders">Setting up and using decoders</h3>
+
+<p>This example assumes the following envelope format:</p>
+
+<p><strong>Success:</strong></p>
+
+<pre><code>{
+    "status": "success",
+    "data" : {
+        "foo": "bar",
+        "baz": "qux"
+    }
+}
+</code></pre>
+
+<p><strong>Fail ( or Error ):</strong></p>
+
+<pre><code>{
+    "status": "fail",
+    "message": "failure message."
+}
+</code></pre>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>amplify.request.decoders.appEnvelope =
+    function ( data, status, xhr, success, error ) {
+        if ( data.status === "success" ) {
+            success( data.data );
+        } else if ( data.status === "fail" || data.status === "error" ) {
+            error( data.message, data.status );
+        } else {
+            error( data.message , "fatal" );
+        }
+    };
+
+amplify.request.define( "decoderExample", "ajax", {
+    url: "/myAjaxUrl",
+    type: "POST",
+    decoder: "appEnvelope"
+});
+
+amplify.request({
+    resourceId: "decoderExample",
+    success: function( data ) {
+        data.foo; // bar
+    },
+    error: function( message, level ) {
+        alert( "always handle errors with alerts." );
+    }
+});
+</code></pre>
+
+<h3 id="postwithcachingandsingleusedecoder">POST with caching and single-use decoder</h3>
+
+<p>This example assumes the following envelope format:</p>
+
+<p><strong>Success:</strong></p>
+
+<pre><code>{
+    "status": "success",
+    "data" : {
+        "foo": "bar",
+        "baz": "qux"
+    }
+}
+</code></pre>
+
+<p><strong>Fail ( or Error ):</strong></p>
+
+<pre><code>{
+    "status": "fail",
+    "message": "failure message."
+}
+</code></pre>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>amplify.request.define( "decoderSingleExample", "ajax", {
+    url: "/myAjaxUrl",
+    type: "POST",
+    decoder: function ( data, status, xhr, success, error ) {
+        if ( data.status === "success" ) {
+            success( data.data );
+        } else if ( data.status === "fail" || data.status === "error" ) {
+            error( data.message, data.status );
+        } else {
+            error( data.message , "fatal" );
+        }
+    }
+});
+
+amplify.request({
+    resourceId: "decoderSingleExample",
+    success: function( data ) {
+        data.foo; // bar
+    },
+    error: function( message, level ) {
+        alert( "always handle errors with alerts." );
+    }
+});
+</code></pre>
+
+<h2 id="handlingstatus">Handling Status</h2>
+
+<h3 id="statusinsuccessanderrorcallbacks">Status in Success and Error Callbacks</h3>
+
+<p><code>amplify.request</code> comes with built in support for status. The status
+parameter appears in the default success or error callbacks when using
+an ajax definition.</p>
+
+<pre><code>amplify.request.define( "statusExample1", "ajax", {
+    //...
+});
+
+amplify.request({
+    resourceId: "statusExample1",
+    success: function( data, status ) {
+    },
+    error: function( data, status ) {
+    }
+});
+</code></pre>
+
+<p>With the success callback, the only default status is <code>success</code>.
+With the error callback two default statuses are possible: <code>error</code> and
+<code>abort</code>.</p>
+
+<h3 id="statuscodesanddecoders">Status Codes and Decoders</h3>
+
+<p>When specifying a custom decoder for request definition a status code
+will be passed in as a parameter. You can determine results from a request based on
+this status. When a success or error callback is executed, the
+appropriate status will be set by <code>amplify.request</code>.</p>
+
+<p><strong>A basic decoder example:</strong></p>
+
+<pre><code>amplify.request.define( "statusExample2", "ajax", {
+    decoder: function( data, status, xhr, success, error ) {
+        if ( status === "success" ) {
+            success( data );
+        } else {
+            error( data );
+        }
+    }
+});
+
+amplify.request({
+    resourceId: "statusExample2",
+    success: function( data, status ) {
+        // status will be "success"
+    },
+    error: function( data, status ) {
+        // status could be "error" or "abort"
+    }
+});
+</code></pre>
+
+<p><strong>A request is aborted by using the object returned by a request call:</strong></p>
+
+<pre><code>amplify.request.define( "statusExample3", "ajax", {
+    //...
+});
+
+var myRequest = amplify.request({
+    resourceId: "statusExample3",
+    success: function( data, status ) {
+        // status will be "success"
+    },
+    error: function( data, status ) {
+        // status could be "abort"
+    }
+});
+
+// sometime later in code
+myRequest.abort();
+</code></pre>
+
+<h3 id="subscribingtostatusevents">Subscribing to status events</h3>
+
+<p>For an alternative to handling issues and statuses you can subscribe to a series of
+globally available message that are published during the request
+process.</p>
+
+<pre><code>subscribe( "request.error", function callback );
+</code></pre>
+
+<p>Subscribe a function to be executed when any error callback is invoked
+for any request.</p>
+
+<pre><code>subscribe( "request.success", function callback );
+</code></pre>
+
+<p>Subscribe a function to be executed when any success callback is invoked
+for any request.</p>
+
+<pre><code>subscribe( "request.complete", function callback );
+</code></pre>
+
+<p>Subscribe a function to be executed when any request complete,
+regardless of error or success.</p>
+
+<p>The subscriptions and statuses can be used to create issue handlers:</p>
+
+<pre><code>subscribe( "request.error", function( settings, data, status ) {
+    if ( status === "abort" ) {
+        // deal with explicit abort of request
+    } else {
+        // deal with normal error
+    }
+});
+</code></pre>
+
+<h3 id="statuseswithjsend">Statuses with jsend</h3>
+
+<p>The jsend request type has an extra default status. The <a href="http://labs.omniti.com/labs/jsend">jsend
+spec</a> includes a fail status. If a
+jsend fail occurs, the error callback ( and appropriate error
+subscriptions ) will be called with a status of <code>fail</code>.</p>
+
+<h3 id="customizingstatuses">Customizing statuses</h3>
+
+<p>When calling a success or error callback through a decoder you can
+specify a custom status to be sent to the callback as the second
+parameter for the callback function.</p>
+
+<p><strong>An example with a success callback:</strong></p>
+
+<pre><code>amplify.request.define( "customStatusExample", "ajax", {
+    decoder: function( data, status, xhr, success, error ) {
+        var customStatus = status;
+        if ( someWarningCondition ) {
+            customStatus = "warning";
+        }
+        success( data, "warning" )
+    }
+});
+
+amplify.request({
+    resourceId: "customStatusExample",
+    success: function( data, status ) {
+        // status could be "success" or "warning"
+    }
+});
+</code></pre>
+
+<p><strong>An example with an error callback:</strong></p>
+
+<pre><code>amplify.request.define( "customStatusExample2", "ajax", {
+    decoder: function( data, status, xhr, success, error ) {
+        var customStatus = status;
+        if ( status === "error" &amp;&amp; someCriticalCondition ) {
+            customStatus = "zomg";
+        }
+        if ( status != "success" ) {
+            error( data, customStatus );
+        }
+    }
+});
+
+amplify.request({
+    resourceId: "customStatusExample2",
+    error: function( data, status ) {
+        // status could be "error", "abort", or "zomg"
+    }
+});
+</code></pre>
+
+<p></div>
+<!--
+<div class="">
+  <a href="http://appendto.com/webinar/webinar-introduction-amplify"><img src="/images/free-webinar-amplify.png" width="585" height="130" alt="Free Webinar: Introduction to AmplifyJS" /></a>
+</div>
+--></article>
+
+
+<aside>
+
+<div class="widget widget-navigation">
+  <ul>
+    <li  class="active" ><a href="/api/request/">Request</a></li>
+    <li ><a href="/api/store/">Store</a></li>
+    <li ><a href="/api/pubsub/">Pub/Sub</a></li>
+  </ul>
+</div>
+  
+</aside>  </section>
+  
+  <div id="footer">
+    <a id="appendTo" href="http://appendto.com"><span>appendTo, LLC.</span></a>
+    <p class="copyright">
+      The article content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons Attribution-NoDerivs 3.0 Unported License</a>. The code examples shown (unless sourced from an existing project) are dual licensed under the <a rel="license" href="http://creativecommons.org/licenses/MIT/">MIT</a> or <a rel="license" href="http://creativecommons.org/licenses/GPL/2.0/deed.en">GPL</a> licenses. All other site content including site graphics are &copy; by <a href="http://appendto.com">appendTo, LLC</a>. All rights reserved.
+
+    </p>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write('<script src="/js/jquery-1.4.2.min.js"><\/script>')</script>
+
+  <script src="/js/jquery.color.js?v=1.1.0"></script>
+  <script src="/js/script.js?v=1.1.0"></script>
+
+  <!--[if lt IE 7 ]>
+    <script src="/js/dd_belatedpng.js?v=1"></script>
+  <![endif]-->
+
+  <script>
+   var _gaq = [['_setAccount', 'UA-10552823-6'], ['_trackPageview']]; 
+   (function(d, t) {
+    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.async = true; g.src = '//www.google-analytics.com/ga.js'; s.parentNode.insertBefore(g, s);
+   })(document, 'script');
+  </script>
+  <script type="text/javascript" language="javascript">
+    var hs_portalid=90547; 
+    var hs_salog_version = "2.00";
+    var hs_ppa = "appendto.app9.hubspot.com";
+    document.write(unescape("%3Cscript src='" + document.location.protocol + "//" + hs_ppa + "/salog.js.aspx' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+</body>
+</html>

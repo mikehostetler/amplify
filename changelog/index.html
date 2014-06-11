@@ -1,0 +1,175 @@
+<p><!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>Changelog | AmplifyJS - A Component Library for jQuery</title>
+
+  
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.1.0">
+  
+  <script>
+    document.documentElement.className += (window.devicePixelRatio >= 2 ? " x2" : " x1");
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css?v=1.1.0" />
+  <link rel="stylesheet" media="handheld" href="/css/handheld.css?v=1.1.0" />
+
+
+  <script src="/js/modernizr-1.5.min.js?v=1.1.0"></script>
+
+
+</head>
+<body class=" sub">
+
+  <header class="body">
+    <h1 id="logo"><a href="/">AmplifyJS</a></h1>
+    <nav class="site">
+      <ul>
+        <li class="download"><a class="download-link" href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip">Download</a></li>
+        <li ><a href="/api/request/">Documentation</a></li>
+        
+        <li ><a href="/community/">Community</a></li>
+        <li ><a href="/support/">Support</a></li>
+      </ul>
+    </nav>
+    <nav class="components">
+      <ul>
+        <li title="AmplifyJS Request" class="cpt-request "><a href="/api/request/"><strong>Request</strong></a></li>
+        <li title="AmplifyJS Storage" class="cpt-storage "><a href="/api/store/"><strong>Store</strong></a></li>
+        <li title="AmplifyJS Pub/Sub" class="cpt-bus "><a href="/api/pubsub/"><strong>Pub/Sub</strong></a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <section class="body"><header class="section">
+  <hgroup>
+    <h2>Changelog</h2>
+  </hgroup>
+<div class="download">
+  <a href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip" class="red_button download-link"><span>Download <em>v1.1.2</em></span></a>
+  <span><a href="https://github.com/appendto/amplify">Source on Github</a> | <a href="/api/request">Documentation</a></span>
+</div></header>
+<article>
+	<div class="content"></p>
+
+<h2 id="changelogforamplifyjs110">Changelog for AmplifyJS 1.1.0</h2>
+
+<ul>
+<li><em>Feature Change</em>: amplify.request - force all requests to be async</li>
+<li><em>Enhancement</em>: amplify.request - added dataMap option to ajax requests</li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/21">amplify.core - fixed race condition when unsubscribing inside a handler #21</a></li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/18">amplify.core - core: fixed bug with subscribing a handler to multiple topics (#18)</a></li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/31">amplify.store - Fixed userData detection in IE when userData is disabled #31</a> <a href="https://github.com/appendto/amplify/issues/17">#17</a></li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/23">amplify.store - fixed expiration for in-memory storage (#23)</a></li>
+</ul>
+
+<h2 id="changelogforamplifyjs100">Changelog for AmplifyJS 1.0.0</h2>
+
+<ul>
+<li><em>Upgrade Action</em>: In addressing a bug with amplify.store use with multiple tabs/windows, please be sure to <a href="https://gist.github.com/1018755">include the following script</a> if you were using amplify.store prior to 1.0.0.</li>
+<li><em>New Feature</em>: <a href="https://github.com/appendto/amplify/issues/15">VSDoc created</a></li>
+<li><em>New Feature</em>: <a href="https://github.com/appendto/amplify/issues/11">amplify.subscribe allows for subscribing to multiple messages in a single call</a></li>
+<li><em>Enhancement</em>: <a href="https://github.com/appendto/amplify/pull/14">amplify.request URL parameter replacement improved speed</a></li>
+<li><em>Enhancement</em>: Documentation improvements <a href="https://github.com/appendto/amplify/issues/13">Issue #13</a> <a href="https://github.com/appendto/amplify/issues/12">Issue #12</a></li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/10">amplify.store IE9 localStorage &amp; sessionStorage unlimited storage bug</a></li>
+<li><em>Bug Fix</em>: <a href="https://github.com/appendto/amplify/issues/16">amplify.store safe concurrent use in multiple browser tabs/windows</a></li>
+</ul>
+
+<h2 id="changelogforamplifyjs10beta">Changelog for AmplifyJS 1.0beta</h2>
+
+<h3 id="overallchanges">Overall Changes</h3>
+
+<ul>
+<li>We removed the dependency of jQuery from the core (pub/sub), store, and base request components. The ajax request type still uses jQuery, but you can create your own request.type that uses another library or technology if you need.</li>
+<li>We moved all of our Unit Tests into TestSwarm to assist us in testing across multiple browsers. You can participate in helping us make AmplifyJS better by running the <a href="http://swarm.amplifyjs.com">test suite</a> against your desktop and mobile devices.</li>
+</ul>
+
+<h3 id="amplifystorechanges">amplify.store Changes</h3>
+
+<ul>
+<li><em>New Feature</em>: Added consistent error handling when exceeding the storage limit in various browsers</li>
+<li><em>New Feature</em>: We now auto-expire old data if the store hits the storage limit</li>
+<li><em>Bug Fix</em>: A fix was made to handle the file protocol correctly in Firefox</li>
+<li><em>Bug Fix</em>: Firefox 2 now defaults to use globalStorage instead of sessionStorage</li>
+<li><em>Bug Fix</em>: Store now works when newer versions of IEs run in IE 7 mode</li>
+<li><em>Breaking Change</em>: Removed cookie support. The reason for this is that cookies shouldn&#39;t be used for persisting large data sets. Since cookies are passed along with the request header it decreases performance and cookies are limited in their capacity. If you need cookie support, please consider using the <a href="https://github.com/appendto/jquery-jsoncookie">appendTo jQuery cookie plugin</a></li>
+</ul>
+
+<h3 id="ampifyrequestchanges">ampify.request Changes</h3>
+
+<ul>
+<li><em>New Feature</em>: We now support an abort method so that you can stop a request that is in progress</li>
+<li><em>Breaking Change</em>: If you created a custom request.type, then you will need to update it to conform to this new feature</li>
+<li><em>New Feature</em>: Added the ability to expire persistent caches</li>
+<li><em>New Feature</em>: You can now subscribe to <a href="http://amplifyjs.com/api/request/#subscribing_to_status_events">global status messages</a></li>
+<li><em>New Feature</em>: More consistent ajax support across various jQuery versions</li>
+<li><em>Bug Fix</em>: Cache now works when data is merged into the URL</li>
+<li><em>Experimental</em>: We had initially talked about adding an ajax-poll request.type, but upon further discussion we decided to hold off on an official implementation so we could abstract the API to include support for other multiple response such as web sockets, server-side events, etc... In the meantime, you can use an <a href="https://github.com/appendto/amplify-request-ajax-poll">unofficial ajax-poll request.type</a> that we have published. We would love to hear your feedback concerning this new API.</li>
+</ul>
+
+<h3 id="amplifycorechanges">amplify.core Changes</h3>
+
+<ul>
+<li>No noticeable changes were made for this component</li>
+</ul>
+
+<p></div>
+<!--
+<div class="">
+  <a href="http://appendto.com/webinar/webinar-introduction-amplify"><img src="/images/free-webinar-amplify.png" width="585" height="130" alt="Free Webinar: Introduction to AmplifyJS" /></a>
+</div>
+--></article>
+
+
+<aside>
+
+
+  
+</aside>  </section>
+  
+  <div id="footer">
+    <a id="appendTo" href="http://appendto.com"><span>appendTo, LLC.</span></a>
+    <p class="copyright">
+      The article content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons Attribution-NoDerivs 3.0 Unported License</a>. The code examples shown (unless sourced from an existing project) are dual licensed under the <a rel="license" href="http://creativecommons.org/licenses/MIT/">MIT</a> or <a rel="license" href="http://creativecommons.org/licenses/GPL/2.0/deed.en">GPL</a> licenses. All other site content including site graphics are &copy; by <a href="http://appendto.com">appendTo, LLC</a>. All rights reserved.
+
+    </p>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write('<script src="/js/jquery-1.4.2.min.js"><\/script>')</script>
+
+  <script src="/js/jquery.color.js?v=1.1.0"></script>
+  <script src="/js/script.js?v=1.1.0"></script>
+
+  <!--[if lt IE 7 ]>
+    <script src="/js/dd_belatedpng.js?v=1"></script>
+  <![endif]-->
+
+  <script>
+   var _gaq = [['_setAccount', 'UA-10552823-6'], ['_trackPageview']]; 
+   (function(d, t) {
+    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.async = true; g.src = '//www.google-analytics.com/ga.js'; s.parentNode.insertBefore(g, s);
+   })(document, 'script');
+  </script>
+  <script type="text/javascript" language="javascript">
+    var hs_portalid=90547; 
+    var hs_salog_version = "2.00";
+    var hs_ppa = "appendto.app9.hubspot.com";
+    document.write(unescape("%3Cscript src='" + document.location.protocol + "//" + hs_ppa + "/salog.js.aspx' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+</body>
+</html></p>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>Pub&#x2F;Sub | API | AmplifyJS - A Component Library for jQuery</title>
+
+  
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
+  <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+  
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.1.0">
+  
+  <script>
+    document.documentElement.className += (window.devicePixelRatio >= 2 ? " x2" : " x1");
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css?v=1.1.0" />
+  <link rel="stylesheet" media="handheld" href="/css/handheld.css?v=1.1.0" />
+
+
+  <script src="/js/modernizr-1.5.min.js?v=1.1.0"></script>
+
+
+</head>
+<body class=" sub">
+
+  <header class="body">
+    <h1 id="logo"><a href="/">AmplifyJS</a></h1>
+    <nav class="site">
+      <ul>
+        <li class="download"><a class="download-link" href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip">Download</a></li>
+        <li  class="active" ><a href="/api/request/">Documentation</a></li>
+        
+        <li ><a href="/community/">Community</a></li>
+        <li ><a href="/support/">Support</a></li>
+      </ul>
+    </nav>
+    <nav class="components">
+      <ul>
+        <li title="AmplifyJS Request" class="cpt-request "><a href="/api/request/"><strong>Request</strong></a></li>
+        <li title="AmplifyJS Storage" class="cpt-storage "><a href="/api/store/"><strong>Store</strong></a></li>
+        <li title="AmplifyJS Pub/Sub" class="cpt-bus active"><a href="/api/pubsub/"><strong>Pub/Sub</strong></a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <section class="body"><header class="section">
+  <hgroup>
+    <h2>Pub&#x2F;Sub</h2>
+    	<h3>AmplifyJS API Documentation <cite><code>core/amplify.core.js</code></cite></h3>
+  </hgroup>
+<div class="download">
+  <a href="http:&#x2F;&#x2F;pub.a2cdn.net&#x2F;amplify&#x2F;amplify-1.1.2.zip" class="red_button download-link"><span>Download <em>v1.1.2</em></span></a>
+  <span><a href="https://github.com/appendto/amplify">Source on Github</a> | <a href="/api/request">Documentation</a></span>
+</div></header>
+<article>
+	<div class="content">
+
+<h1 id="amplifycore">amplify core</h1>
+
+<p>The AmplifyJS core library provides two methods (<code>amplify.publish</code> and <code>amplify.subscribe</code>). AmplifyJS provides methods to facilitate the Publish and Subscribe messaging pattern in your front-end application. The idea is that someone is broadcasting one or more messages (publishing) and someone else is listening to one or more messages (subscribing). By separating your logic out like this it allows for loose coupling of your components, which results in less brittle and more reusable code.</p>
+
+<p>It is possible to implement the publish and subscribe model by using jQuery custom events, however, the AmplifyJS pub/sub component provides a slightly cleaner interface, prevents collisions between custom events and method names, and allows a priority to your messages.</p>
+
+<h2 id="usage">Usage</h2>
+
+<pre><code>amplify.subscribe( string topic, function callback )
+amplify.subscribe( string topic, object context, function callback )
+amplify.subscribe( string topic, function callback, number priority )
+amplify.subscribe(
+    string topic, object context, function callback, number priority )
+</code></pre>
+
+<p>Subscribe to a message.</p>
+
+<ul>
+<li><code>topic</code>: Name of the message to subscribe to.</li>
+<li>[<code>context</code>]: What <code>this</code> will be when the callback is invoked.</li>
+<li><code>callback</code>: Function to invoke when the message is published.</li>
+<li>[<code>priority</code>]: Priority relative to other subscriptions for the same message. Lower values have higher priority. Default is 10.</li>
+</ul>
+
+<blockquote>
+  <p>Returning <code>false</code> from a subscription will prevent any additional subscriptions from being invoked and will cause <code>amplify.publish</code> to return <code>false</code>.</p>
+</blockquote>
+
+<pre><code>amplify.unsubscribe( string topic, function callback )</code></pre>
+
+<p>Remove a subscription.</p>
+
+<ul>
+<li><code>topic</code>: The topic being unsubscribed from.</li>
+<li><code>callback</code>: The callback that was originally subscribed.</li>
+</ul>
+
+<pre><code>amplify.publish( string topic, ... )</code></pre>
+
+<p>Publish a message.</p>
+
+<ul>
+<li><code>topic</code>: The name of the message to publish.</li>
+<li>Any additional parameters will be passed to the subscriptions.</li>
+</ul>
+
+<blockquote>
+  <p><code>amplify.publish</code> returns a boolean indicating whether any subscriptions returned <code>false</code>.
+  The return value is <code>true</code> if none of the subscriptions returned <code>false</code>, and <code>false</code> otherwise. Note that only one subscription can return <code>false</code> because doing so will prevent additional subscriptions from being invoked.</p>
+</blockquote>
+
+<h2 id="examples">Examples</h2>
+
+<h3 id="subscribeandpublishwithnodata">Subscribe and publish with no data</h3>
+
+<p>Subscribing to a topic with no data allows a generic message to be
+published on the bus for any event (user or code related) that needs communicated but no data
+is needed along with the event.</p>
+
+<pre><code>amplify.subscribe( "nodataexample", function() {
+    alert( "nodataexample topic published!" );
+});
+
+//...
+
+amplify.publish( "nodataexample" );
+</code></pre>
+
+<h3 id="subscribeandpublishwithdata">Subscribe and publish with data</h3>
+
+<p>The majority usage of a pub/sub system includes passing data from the
+publisher to any subscriptions listening to the topic.</p>
+
+<pre><code>amplify.subscribe( "dataexample", function( data ) {
+    alert( data.foo ); // bar
+});
+
+//...
+
+amplify.publish( "dataexample", { foo: "bar" } );
+</code></pre>
+
+<p>You can choose to pass multiple parameters to any subscriber as well.</p>
+
+<pre><code>amplify.subscribe( "dataexample2", function( param1, param2 ) {
+    alert( param1 + param2 ); // barbaz
+});
+
+//...
+
+amplify.publish( "dataexample2", "bar", "baz" );
+</code></pre>
+
+<h3 id="subscribeandpublishwithcontextanddata">Subscribe and publish with context and data</h3>
+
+<p>Often there is a need to operate within a context for a subscription
+callback. It can be a reasonable strategy to have the context be set to
+a jQuery object that will be used inside of the subscription, or even a
+native DOM element.</p>
+
+<blockquote>
+  <p>Note: the following example assumes jQuery is already loaded on the
+  page, and assumes at least one paragraph exists within the body of the page.</p>
+</blockquote>
+
+<pre><code>amplify.subscribe( "datacontextexample", $( "p:first" ), function( data ) {
+    this.text( data.exampleText ); // first p element would have "foo bar baz" as text
+});
+
+//...
+
+amplify.publish( "datacontextexample", { exampleText: "foo bar baz" } );
+</code></pre>
+
+<h3 id="subscribetoatopicwithhighpriority">Subscribe to a topic with high priority</h3>
+
+<p>Subscribing to a topic with high priority can be useful as an error
+handler or anytime data may need to be checked or augmented before
+proceeding.</p>
+
+<pre><code>amplify.subscribe( "priorityexample", function( data ) {
+    alert( data.foo );
+});
+
+amplify.subscribe( "priorityexample", function( data ) {
+    if ( data.foo === "oops" ) {
+        return false;
+    }
+}, 1 );
+
+//...
+
+amplify.publish( "priorityexample", { foo: "bar" } );
+amplify.publish( "priorityexample", { foo: "oops" } );
+</code></pre>
+
+<p></div>
+<!--
+<div class="">
+  <a href="http://appendto.com/webinar/webinar-introduction-amplify"><img src="/images/free-webinar-amplify.png" width="585" height="130" alt="Free Webinar: Introduction to AmplifyJS" /></a>
+</div>
+--></article>
+
+
+<aside>
+
+<div class="widget widget-navigation">
+  <ul>
+    <li ><a href="/api/request/">Request</a></li>
+    <li ><a href="/api/store/">Store</a></li>
+    <li  class="active" ><a href="/api/pubsub/">Pub/Sub</a></li>
+  </ul>
+</div>
+  
+</aside>  </section>
+  
+  <div id="footer">
+    <a id="appendTo" href="http://appendto.com"><span>appendTo, LLC.</span></a>
+    <p class="copyright">
+      The article content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons Attribution-NoDerivs 3.0 Unported License</a>. The code examples shown (unless sourced from an existing project) are dual licensed under the <a rel="license" href="http://creativecommons.org/licenses/MIT/">MIT</a> or <a rel="license" href="http://creativecommons.org/licenses/GPL/2.0/deed.en">GPL</a> licenses. All other site content including site graphics are &copy; by <a href="http://appendto.com">appendTo, LLC</a>. All rights reserved.
+
+    </p>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>!window.jQuery && document.write('<script src="/js/jquery-1.4.2.min.js"><\/script>')</script>
+
+  <script src="/js/jquery.color.js?v=1.1.0"></script>
+  <script src="/js/script.js?v=1.1.0"></script>
+
+  <!--[if lt IE 7 ]>
+    <script src="/js/dd_belatedpng.js?v=1"></script>
+  <![endif]-->
+
+  <script>
+   var _gaq = [['_setAccount', 'UA-10552823-6'], ['_trackPageview']]; 
+   (function(d, t) {
+    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.async = true; g.src = '//www.google-analytics.com/ga.js'; s.parentNode.insertBefore(g, s);
+   })(document, 'script');
+  </script>
+  <script type="text/javascript" language="javascript">
+    var hs_portalid=90547; 
+    var hs_salog_version = "2.00";
+    var hs_ppa = "appendto.app9.hubspot.com";
+    document.write(unescape("%3Cscript src='" + document.location.protocol + "//" + hs_ppa + "/salog.js.aspx' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+</body>
+</html>
