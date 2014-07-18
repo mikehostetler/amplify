@@ -22,7 +22,6 @@ var amplify = global.amplify = {
 		}
 
 		topicSubscriptions = subscriptions[ topic ].slice();
-		
 		for ( length = topicSubscriptions.length; i < length; i++ ) {
 			subscription = topicSubscriptions[ i ];
 			ret = subscription.callback.apply( subscription.context, args );
