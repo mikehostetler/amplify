@@ -11,3 +11,10 @@ Documentation is available online in the [AmplifyJS API site](http://amplifyjs.c
 ## TestSwarm
 
 Testswarm is available at [http://swarm.amplifyjs.com](http://swarm.amplifyjs.com)
+
+## License
+Copyright (c) 2011 appendTo LLC.
+
+Dual licensed under the MIT or GPL licenses.
+
+[http://appendto.com/open-source-licenses](http://appendto.com/open-source-licenses)
