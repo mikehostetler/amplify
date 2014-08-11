@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>AmplifyJS</id>
+        <version>1.1.2</version>
+        <title>AmplifyJS</title>
+        <authors>http://appendto.com</authors>
+        <licenseUrl>http://amplifyjs.com/#licenses</licenseUrl>
+        <projectUrl>http://amplifyjs.com</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>AmplifyJS solves the following problems: 1. Ajax Request Management - amplify.request provides a clean and elegant request abstraction for all types of data, even allowing for transformation prior to consumption. 2. Client Side Component Communication - amplify.publish/subscribe provides a clean, performant API for component to component communication. 3. Client Side Browser &amp; Mobile Device Storage - amplify.store takes the confusion out of HTML5 localStorage. It doesn't get simpler than using amplify.store(key, data)! It even works flawlessly on mobile devices.</description>
+        <summary>AmplifyJS is a set of components designed to solve common web application problems with a simplistic API.</summary>
+        <language>es-US</language>
+        <tags>javascript jquery html5</tags>
+        <dependencies>
+            <dependency id="jQuery" version="1.4" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="lib\amplify-vsdoc.js" target="content\Scripts\amplify-vsdoc.js" />
+        <file src="lib\amplify.js" target="content\Scripts\amplify.js" />
+        <file src="lib\amplify.min.js" target="content\Scripts\amplify.min.js" />
+        <file src="lib\amplify.core.js" target="content\Scripts\amplify\amplify.core.js" />
+        <file src="lib\amplify.core.min.js" target="content\Scripts\amplify\amplify.core.min.js" />
+        <file src="lib\amplify.request.js" target="content\Scripts\amplify\amplify.request.js" />
+        <file src="lib\amplify.request.min.js" target="content\Scripts\amplify\amplify.request.min.js" />
+        <file src="lib\amplify.store.js" target="content\Scripts\amplify\amplify.store.js" />
+        <file src="lib\amplify.store.min.js" target="content\Scripts\amplify\amplify.store.min.js" />
+        <file src="GPL-LICENSE.txt" target="content\Scripts\GPL-LICENSE.txt" />
+        <file src="MIT-LICENSE.txt" target="content\Scripts\MIT-LICENSE.txt" />
+        <file src="nuget-readme.txt" target="content\Scripts\README.txt" />
+    </files>
+</package>
