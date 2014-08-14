@@ -16,8 +16,9 @@ var amplify = global.amplify = {
 			i = 0,
 			ret;
 
+		//If there not subscriptions please return null to clarify things.
 		if ( !subscriptions[ topic ] ) {
-			return true;
+			return null;
 		}
 
 		topicSubscriptions = subscriptions[ topic ].slice();
