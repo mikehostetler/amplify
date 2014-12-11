@@ -26,6 +26,22 @@ store.error = function() {
 	return "amplify.store quota exceeded";
 };
 
+function getExpiresMSec(expires) {				// Provides for more flexible handling of expires option
+	if (typeof expires === "string") { 			// Handle expires strings: "never" & string date
+		var lcExpires = expires.toLowerCase();
+		if (lcExpires === "never") {
+			expires = 1000*60*60*24*365*50;		// 50 years into the future
+		}
+		else if (lcExpires === "tomorrow") {
+			expires = 1000*60*60*24;		// 1 day into the future
+		}
+		else {
+			expires = (new Date(expires)).getTime() - (new Date()).getTime();  // Convert a supplied date string into a millisecond offset;
+		}
+	}
+	return expires;
+}
+
 var rprefix = /^__amplify__/;
 function createFromStorageInterface( storageType, storage ) {
 	store.addType( storageType, function( key, value, options ) {
@@ -79,7 +95,7 @@ function createFromStorageInterface( storageType, storage ) {
 			} else {
 				parsed = JSON.stringify({
 					data: value,
-					expires: options.expires ? now + options.expires : null
+					expires: options.expires ? now + getExpiresMSec(options.expires) : null
 				});
 				try {
 					storage.setItem( key, parsed );
@@ -209,7 +225,7 @@ if ( !store.types.localStorage && window.globalStorage ) {
 				prevValue = div.getAttribute( key );
 				parsed = JSON.stringify({
 					data: value,
-					expires: (options.expires ? (now + options.expires) : null)
+					expires: options.expires ? now + getExpiresMSec(options.expires) : null
 				});
 				div.setAttribute( key, parsed );
 			}
@@ -279,7 +295,7 @@ if ( !store.types.localStorage && window.globalStorage ) {
 			timeout[ key ] = setTimeout(function() {
 				delete memory[ key ];
 				delete timeout[ key ];
-			}, options.expires );
+			}, getExpiresMSec(options.expires) );
 		}
 
 		return value;
