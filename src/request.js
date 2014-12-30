@@ -386,13 +386,14 @@ amplify.request.decoders = {
 };
 
 amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
-	var _success = ampXHR.success,
-		_error = ampXHR.error,
-		decoder = $.isFunction( resource.decoder ) ?
-			resource.decoder :
-			resource.decoder in amplify.request.decoders ?
-				amplify.request.decoders[ resource.decoder ] :
-				amplify.request.decoders._default;
+  var _success = ampXHR.success,
+    _error = ampXHR.error,
+    decoder = resource.decoder || settings.decoder,
+    decoder = $.isFunction( decoder ) ?
+      decoder :
+      decoder in amplify.request.decoders ?
+        amplify.request.decoders[ decoder ] :
+        amplify.request.decoders._default;
 
 	if ( !decoder ) {
 		return;
