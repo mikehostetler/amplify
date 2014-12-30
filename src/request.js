@@ -388,7 +388,7 @@ amplify.request.decoders = {
 amplify.subscribe( "request.before.ajax", function( resource, settings, ajaxSettings, ampXHR ) {
   var _success = ampXHR.success,
     _error = ampXHR.error,
-    decoder = resource.decoder || settings.decoder,
+    decoder = settings.decoder || resource.decoder,
     decoder = $.isFunction( decoder ) ?
       decoder :
       decoder in amplify.request.decoders ?
