@@ -112,4 +112,4 @@ var amplify = global.amplify = {
 	}
 };
 
-}( this ) );
+}( window ) );
