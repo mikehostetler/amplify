@@ -171,7 +171,7 @@ test( "unsubscribe", function() {
 	amplify.subscribe( "counter", fn3 );
 	amplify.publish( "counter" );
 	strictEqual( counter, 2, "Two calls made" );
-	
+
 	amplify.unsubscribe( "counter", fn3 );
 	amplify.publish( "counter" );
 
@@ -200,7 +200,7 @@ test( "unsubscribe with context", function () {
 	strictEqual( calls, "xy", "There should be two calls" );
 
 	amplify.unsubscribe('myevent', y.doIt);
-	amplify.publish( 'myevent' );	
+	amplify.publish( 'myevent' );
 	strictEqual( calls, "xy", "There should be no new calls" );
 
 	x = new A( "x" );
@@ -247,13 +247,34 @@ test( "multiple subscriptions", function() {
 	amplify.subscribe( "sub-b-1 sub-b-2", function() {
 		ok( true );
 	});
-	
+
 	// Test for Ticket #18
 	amplify.subscribe( "sub-b-1 sub-b-3", function() {
 		ok( true );
 	});
-	
+
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-2" );
 	amplify.publish( "sub-b-3" );
+});
+
+test( "uniqueness", function() {
+	expect( 1 );
+
+	function firstCallback(){
+		ok( true, "first subscriber called" );
+	};
+	function secondCallback(){
+		ok( true, "second subscriber called" );
+	};
+
+	amplify.allowDuplicates(false);
+	amplify.subscribe( "uniqueness", firstCallback);
+	amplify.subscribe( "uniqueness", firstCallback);
+	amplify.subscribe( "uniqueness", secondCallback);
+	amplify.subscribe( "uniqueness", secondCallback);
+
+	strictEqual( amplify.getSubscriptions("uniqueness").length, 2,
+		"No listener should be added more than once to the same topic" );
+
 });
