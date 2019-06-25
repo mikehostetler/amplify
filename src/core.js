@@ -3,7 +3,30 @@
 var slice = [].slice,
 	subscriptions = {};
 
+var duplicatesAllowed = true;
+
 var amplify = global.amplify = {
+
+	allowDuplicates: function(allow){
+		duplicatesAllowed = allow;
+	},
+
+	getSubscriptions: function(topic){
+		//Generate a read-only copy of the subscriptions.
+		return JSON.parse(JSON.stringify(subscriptions[ topic ]));
+	},
+
+	isSubscribed: function (topic, callback){
+		var found = false;
+		for (var i = subscriptions[ topic ].length - 1; i >= 0 ; i--) {
+			if(subscriptions[ topic ][i].callback === callback){
+				found = true;
+				break;
+			}
+		}
+		return found;
+	},
+
 	publish: function( topic ) {
 		if ( typeof topic !== "string" ) {
 			throw new Error( "You must provide a valid topic to publish." );
@@ -58,23 +81,25 @@ var amplify = global.amplify = {
 				subscriptions[ topic ] = [];
 			}
 
-			var i = subscriptions[ topic ].length - 1,
-				subscriptionInfo = {
-					callback: callback,
-					context: context,
-					priority: priority
-				};
+			if(duplicatesAllowed || !this.isSubscribed(topic, callback)){
+				var i = subscriptions[ topic ].length - 1,
+					subscriptionInfo = {
+						callback: callback,
+						context: context,
+						priority: priority
+					};
 
-			for ( ; i >= 0; i-- ) {
-				if ( subscriptions[ topic ][ i ].priority <= priority ) {
-					subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
-					added = true;
-					break;
+				for ( ; i >= 0; i-- ) {
+					if ( subscriptions[ topic ][ i ].priority <= priority ) {
+						subscriptions[ topic ].splice( i + 1, 0, subscriptionInfo );
+						added = true;
+						break;
+					}
 				}
-			}
 
-			if ( !added ) {
-				subscriptions[ topic ].unshift( subscriptionInfo );
+				if ( !added ) {
+					subscriptions[ topic ].unshift( subscriptionInfo );
+				}
 			}
 		}
 
@@ -102,7 +127,7 @@ var amplify = global.amplify = {
 			if ( subscriptions[ topic ][ i ].callback === callback ) {
 				if ( !context || subscriptions[ topic ][ i ].context === context ) {
 					subscriptions[ topic ].splice( i, 1 );
-					
+
 					// Adjust counter and length for removed item
 					i--;
 					length--;
